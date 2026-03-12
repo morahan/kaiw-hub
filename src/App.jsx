@@ -1,31 +1,36 @@
-import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { SignedIn, SignedOut, RedirectToSignIn } from '@clerk/react';
 import Login from './pages/Login';
 import Hub from './pages/Hub';
 import AgentDashboard from './pages/AgentDashboard';
 import Layout from './components/Layout';
 
 function ProtectedRoute({ children }) {
-  const isAuthenticated = localStorage.getItem('kaiw_auth');
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-  return children;
+  return (
+    <SignedIn>
+      {children}
+    </SignedIn>
+  );
 }
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={
+          <SignedOut>
+            <Login />
+          </SignedOut>
+        } />
         <Route path="/" element={
-          <ProtectedRoute>
+          <SignedIn>
             <Layout />
-          </ProtectedRoute>
+          </SignedIn>
         }>
           <Route index element={<Hub />} />
           <Route path=":agent" element={<AgentDashboard />} />
         </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
