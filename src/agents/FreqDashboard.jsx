@@ -1,4 +1,3 @@
-import { SignedIn, UserButton } from '@clerk/react';
 import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { Activity, Mic, Volume2, MessageSquare, FolderOpen, RefreshCw, CheckCircle, XCircle, AlertTriangle, Zap, Server, Music } from 'lucide-react';

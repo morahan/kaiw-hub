@@ -1,4 +1,3 @@
-import { SignedIn, UserButton } from '@clerk/react';
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import './App.css'
 
