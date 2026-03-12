@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from 'react-router-dom';
-import { UserButton, SignOutButton } from '@clerk/react';
+import { UserButton } from '@clerk/react';
 import './Layout.css';
 
 function Layout() {
