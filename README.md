@@ -1,16 +1,53 @@
-# React + Vite
+# kaiw.io Hub
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Agent Dashboard Hub - The central dashboard for all AI agents.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This is the main hub for accessing individual agent dashboards. Each agent has their own dedicated dashboard accessible through this portal.
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 🔐 Authentication via Clerk
+- 📊 Individual agent dashboards
+- 🎨 Modern dark theme
+- 📱 Responsive design
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- React + Vite
+- React Router
+- Clerk Authentication
+- Recharts
+
+## Deployment
+
+Automatically deployed to Vercel on push to main branch.
+
+## Available Agents
+
+- Marty ⚡
+- Aria 🎵
+- Renzo 🔥
+- Kaia 🌊
+- Thea 🏛️
+- Badger 🦡
+- Greta 📚
+- Freq 🎛️
+- Quanta ⏱️
+- Maverick 🚦
+- Reno 📈
+- Buddy 🐕
+
+## Development
+
+```bash
+npm install
+npm run dev
+```
+
+## Build
+
+```bash
+npm run build
+```
