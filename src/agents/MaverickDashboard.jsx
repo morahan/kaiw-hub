@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './App.css';
+import './css/maverickDashboard.css';
 
 const agent = { name: 'maverick', emoji: '🚦', role: 'Resource', color: '' };
 

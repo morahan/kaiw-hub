@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { SignedIn, UserButton } from '@clerk/react';
+import { useAuth, UserButton } from '@clerk/react';
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
-import './App.css';
+import './css/martyDashboard.css';
 
 const agent = { name: 'Marty', emoji: '⚡', role: 'Team Lead', color: '#3b82f6' };
 
@@ -31,10 +31,21 @@ const recentTasks = [
 ];
 
 function App() {
+  const { isSignedIn } = useAuth();
   const [tasks, setTasks] = useState(recentTasks);
 
+  if (!isSignedIn) {
+    return (
+      <div className="dashboard">
+        <div className="not-signed-in">
+          <h2>Please sign in to view this dashboard</h2>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <SignedIn>
+    <>
     <div className="dashboard">
       <header style={{ '--color': agent.color }}>
         <span className="emoji">{agent.emoji}</span>
@@ -125,7 +136,7 @@ function App() {
         </div>
       </div>
     </div>
-    </SignedIn>
+    </>
   );
 }
 

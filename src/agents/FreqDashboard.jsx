@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { Activity, Mic, Volume2, MessageSquare, FolderOpen, RefreshCw, CheckCircle, XCircle, AlertTriangle, Zap, Server, Music } from 'lucide-react';
 import { motion } from 'framer-motion';
-import './App.css';
+import './css/freqDashboard.css';
 
 // Agent voice configuration mapping
 const AGENT_VOICES = {

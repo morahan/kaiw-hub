@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { SignedIn, UserButton } from '@clerk/react'
-import './App.css'
+import { useAuth, UserButton } from '@clerk/react'
+import './css/theaDashboard.css'
 
 const reviewHistory = [
   { id: 'REV-001', title: 'Dead Hangs', author: 'Renzo', verdict: 'revise', score: 8.5, date: '2026-02-17', type: 'article' },
@@ -25,6 +25,7 @@ const activityLog = [
 ]
 
 function App() {
+  const { isSignedIn } = useAuth();
   const [time, setTime] = useState(new Date())
   const [activeView, setActiveView] = useState('dashboard')
   const [selectedReview, setSelectedReview] = useState(null)
@@ -53,8 +54,17 @@ function App() {
     alert(`${verdict.toUpperCase()} - This would trigger the review kickback workflow.`)
   }
 
+  if (!isSignedIn) {
+    return (
+      <div className="dashboard">
+        <div className="not-signed-in">
+          <h2>Please sign in to view Thea's dashboard</h2>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <SignedIn>
     <div className="dashboard">
       <header className="header">
         <div className="logo">
@@ -255,7 +265,6 @@ function App() {
         <span>MiniMax M2.5</span>
       </footer>
     </div>
-    </SignedIn>
   )
 }
 

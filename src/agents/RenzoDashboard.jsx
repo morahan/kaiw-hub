@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
-import './App.css'
+import './css/renzoDashboard.css'
 
 // ========== NEW FEATURES ==========
 

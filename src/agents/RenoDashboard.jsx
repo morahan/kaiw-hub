@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './App.css';
+import './css/renoDashboard.css';
 
 const agent = { name: 'reno', emoji: '📈', role: 'Investment', color: '' };
 

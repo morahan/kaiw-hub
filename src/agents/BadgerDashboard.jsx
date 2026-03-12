@@ -1,14 +1,25 @@
-import { SignedIn, UserButton } from '@clerk/react';
+import { useAuth, UserButton } from '@clerk/react';
 import { useState } from 'react';
-import './App.css';
+import './css/badgerDashboard.css';
 
 const agent = { name: 'badger', emoji: '🦡', role: 'Coding', color: '' };
 
 function App() {
+  const { isSignedIn } = useAuth();
   const [recent] = useState([
     { id: 1, text: 'Sample activity 1', status: 'done' },
     { id: 2, text: 'Sample activity 2', status: 'pending' },
   ]);
+
+  if (!isSignedIn) {
+    return (
+      <div className="dashboard">
+        <div className="not-signed-in">
+          <h2>Please sign in to view this dashboard</h2>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard">

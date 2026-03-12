@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { SignedIn, SignedOut, SignIn, UserButton } from '@clerk/react';
-import './App.css';
+import { useAuth, SignIn, UserButton } from '@clerk/react';
+import './css/kaiaDashboard.css';
 
 const API_BASE = 'http://localhost:3001/api';
 
 function App() {
+  const { isSignedIn } = useAuth();
   const [stats, setStats] = useState(null);
   const [topTrends, setTopTrends] = useState([]);
   const [pendingTrends, setPendingTrends] = useState([]);
@@ -73,8 +74,17 @@ function App() {
   const maxCat = Math.max(...categories.map(c => c.count), 1);
   const maxPlat = Math.max(...platforms.map(p => p.count), 1);
 
+  if (!isSignedIn) {
+    return (
+      <div className="dashboard">
+        <div className="ocean-bg">
+          <h2>Please sign in to view Kaia's dashboard</h2>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <SignedIn>
     <div className="dashboard">
       <div className="ocean-bg">
         <div className="bubble bubble-1"></div>
@@ -315,7 +325,6 @@ function App() {
         <p>🌊 Kaia Dashboard v2.1 — Riding the trend wave</p>
       </footer>
     </div>
-    </SignedIn>
   );
 }
 

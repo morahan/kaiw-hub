@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './App.css';
+import './css/quantaDashboard.css';
 
 const agent = { name: 'quanta', emoji: '⏱️', role: 'Data', color: '' };
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import './App.css';
+import './css/ariaDashboard.css';
 
 const agent = { name: 'Aria', emoji: '🎵', role: 'Personal Assistant', color: '#a855f7' };
 
