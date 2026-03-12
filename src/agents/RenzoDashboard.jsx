@@ -466,6 +466,110 @@ function ClipboardHistory({ isOpen, onClose }) {
   )
 }
 
+// ========== DRAFTS MANAGER ==========
+
+function DraftsManager({ isOpen, onClose, drafts, onLoadDraft, onDeleteDraft }) {
+  const [selectedDraft, setSelectedDraft] = useState(null)
+  const [filter, setFilter] = useState('all')
+  
+  if (!isOpen) return null
+  
+  const filteredDrafts = filter === 'all' 
+    ? drafts 
+    : drafts.filter(d => d.category === filter)
+  
+  const categories = [...new Set(drafts.map(d => d.category).filter(Boolean))]
+  
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr)
+    const now = new Date()
+    const diffMins = Math.floor((now - date) / 60000)
+    if (diffMins < 60) return `${diffMins}m ago`
+    if (diffMins < 1440) return `${Math.floor(diffMins / 60)}h ago`
+    return date.toLocaleDateString()
+  }
+  
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content drafts-modal" onClick={e => e.stopPropagation()}>
+        <div className="modal-header">
+          <h3>📁 Drafts Manager</h3>
+          <button className="modal-close" onClick={onClose}>×</button>
+        </div>
+        
+        {drafts.length === 0 ? (
+          <div className="drafts-empty">
+            <span>📝</span>
+            <p>No drafts yet</p>
+            <span className="drafts-empty-hint">Start writing to save your first draft</span>
+          </div>
+        ) : (
+          <>
+            <div className="drafts-filters">
+              <button 
+                className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
+                onClick={() => setFilter('all')}
+              >
+                All ({drafts.length})
+              </button>
+              {categories.map(cat => (
+                <button 
+                  key={cat}
+                  className={`filter-btn ${filter === cat ? 'active' : ''}`}
+                  onClick={() => setFilter(cat)}
+                >
+                  {cat} ({drafts.filter(d => d.category === cat).length})
+                </button>
+              ))}
+            </div>
+            
+            <div className="drafts-list">
+              {filteredDrafts.map((draft, i) => (
+                <div 
+                  key={i} 
+                  className={`draft-item ${selectedDraft === i ? 'selected' : ''}`}
+                  onClick={() => setSelectedDraft(i)}
+                >
+                  <div className="draft-item-header">
+                    <span className="draft-title">{draft.title || 'Untitled'}</span>
+                    <span className="draft-date">{formatDate(draft.date)}</span>
+                  </div>
+                  <div className="draft-meta">
+                    <span className="draft-words">{draft.words || draft.content?.split(/\s+/).filter(w => w).length || 0} words</span>
+                    {draft.category && <span className="draft-category">{draft.category}</span>}
+                  </div>
+                  {selectedDraft === i && (
+                    <div className="draft-actions">
+                      <button 
+                        className="draft-load-btn"
+                        onClick={(e) => { e.stopPropagation(); onLoadDraft(draft); onClose(); }}
+                      >
+                        📝 Edit
+                      </button>
+                      <button 
+                        className="draft-copy-btn"
+                        onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(draft.content || ''); }}
+                      >
+                        📋 Copy
+                      </button>
+                      <button 
+                        className="draft-delete-btn"
+                        onClick={(e) => { e.stopPropagation(); onDeleteDraft(i); setSelectedDraft(null); }}
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
 // ========== EXISTING COMPONENTS ==========
 
 // Activity Timeline Component
@@ -1428,6 +1532,7 @@ function App() {
   const [showFormula, setShowFormula] = useState(false)
   const [showTopicGenerator, setShowTopicGenerator] = useState(false)
   const [showClipboard, setShowClipboard] = useState(false)
+  const [showDraftsManager, setShowDraftsManager] = useState(false)
   const [showBrainstorm, setShowBrainstorm] = useState(false)
   const [activities, setActivities] = useState(() => {
     const saved = localStorage.getItem('renzo-activities')
@@ -1476,6 +1581,22 @@ function App() {
     setWords(prev => prev + data.words)
     addActivity('draft', `Wrote ${data.words} words: "${data.title.slice(0, 30)}..."`)
     addToast(`Saved ${data.words} words!`, 'success')
+  }
+  
+  // Load a draft into quick write mode
+  const loadDraft = (draft) => {
+    setShowQuickWrite(true)
+    // The QuickWriteMode component needs to be updated to accept initial content
+    addToast(`Loaded: "${draft.title || 'Untitled'}"`, 'info')
+  }
+  
+  // Delete a draft
+  const deleteDraft = (index) => {
+    const draftTitle = drafts[index]?.title || 'Untitled'
+    const newDrafts = drafts.filter((_, i) => i !== index)
+    setDrafts(newDrafts)
+    localStorage.setItem('renzo-drafts', JSON.stringify(newDrafts))
+    addToast(`Deleted: "${draftTitle}"`, 'info')
   }
   
   // Add activity to timeline
@@ -1702,6 +1823,13 @@ function App() {
       )}
       {showTopicGenerator && <TopicGenerator onClose={() => setShowTopicGenerator(false)} />}
       <ClipboardHistory isOpen={showClipboard} onClose={() => setShowClipboard(false)} />
+      <DraftsManager 
+        isOpen={showDraftsManager} 
+        onClose={() => setShowDraftsManager(false)}
+        drafts={drafts}
+        onLoadDraft={loadDraft}
+        onDeleteDraft={deleteDraft}
+      />
       <KeyboardShortcuts isOpen={showShortcuts} onClose={() => setShowShortcuts(false)} />
       <BrainstormMode isOpen={showBrainstorm} onClose={() => setShowBrainstorm(false)} />
       <CommandPalette 
@@ -1728,7 +1856,7 @@ function App() {
         <div className="logo">
           <span className="logo-icon">✍️</span>
           <span className="logo-text">RENZO</span>
-          <span className="logo-badge">v2.7</span>
+          <span className="logo-badge">v2.8</span>
         </div>
         <div className="header-right">
           <NotionSyncStatus onSync={() => addToast('Notion sync complete!', 'success')} />
@@ -1805,6 +1933,11 @@ function App() {
             <span>📋</span>
             <span>Clips</span>
             <span className="feature-hint">C</span>
+          </button>
+          <button className="feature-btn" onClick={() => setShowDraftsManager(true)}>
+            <span>📁</span>
+            <span>Drafts</span>
+            <span className="feature-hint">D</span>
           </button>
           <button className="feature-btn" onClick={() => setShowBrainstorm(true)}>
             <span>🧠</span>
