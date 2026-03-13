@@ -48,15 +48,21 @@ function App() {
       .catch(() => setOuraLoading(false));
   }, []);
 
-  // Fetch real agent status
+  // Fetch real agent status with auto-refresh every 30 seconds
   useEffect(() => {
-    fetch('http://localhost:3001/api/agents')
-      .then(res => res.json())
-      .then(data => {
-        setAgentStatus(data.agents || []);
-        setStatusLoading(false);
-      })
-      .catch(() => setStatusLoading(false));
+    const fetchAgents = () => {
+      fetch('http://localhost:3001/api/agents')
+        .then(res => res.json())
+        .then(data => {
+          setAgentStatus(data.agents || []);
+          setStatusLoading(false);
+        })
+        .catch(() => setStatusLoading(false));
+    };
+    
+    fetchAgents(); // Initial fetch
+    const interval = setInterval(fetchAgents, 30000); // Poll every 30s
+    return () => clearInterval(interval);
   }, []);
 
   // Fetch family data
