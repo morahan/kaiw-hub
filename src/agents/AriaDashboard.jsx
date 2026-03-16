@@ -1,338 +1,269 @@
 import { useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './css/ariaDashboard.css';
 
-const agent = { name: 'Aria', emoji: '🎵', role: 'Personal Assistant', color: '#a855f7', telegram: 'AriaFlowBot' };
+const agent = { name: 'Aria', emoji: '🎵', role: 'Personal Life Assistant', color: '#a855f7', telegram: 'AriaFlowBot' };
 
-const activityData = [
-  { time: '00:00', messages: 0 },
-  { time: '04:00', messages: 0 },
-  { time: '08:00', messages: 12 },
-  { time: '10:00', messages: 28 },
-  { time: '12:00', messages: 45 },
-  { time: '14:00', messages: 32 },
-  { time: '16:00', messages: 55 },
-  { time: '18:00', messages: 48 },
-  { time: '20:00', messages: 22 },
-  { time: '22:00', messages: 8 },
-];
+const FAMILY_COLORS = {
+  michael: { bg: '#a855f7', emoji: '👨' },
+  melissa: { bg: '#e91e8c', emoji: '👩' },
+  elora:   { bg: '#7c3aed', emoji: '👧' },
+  iris:    { bg: '#3b82f6', emoji: '👶' },
+  lola:    { bg: '#f97316', emoji: '🐾' },
+};
 
-const recentActions = [
-  { id: 1, action: 'Scheduled meeting with Renzo', time: '5m ago', type: 'schedule' },
-  { id: 2, action: 'Sent reminder to Badger', time: '12m ago', type: 'reminder' },
-  { id: 3, action: 'Created task for Thea', time: '25m ago', type: 'task' },
-  { id: 4, action: 'Answered user query about Workout Flow', time: '32m ago', type: 'query' },
-  { id: 5, action: 'Updated calendar for Marty', time: '1h ago', type: 'schedule' },
-];
-
-function App() {
-  const [messages, setMessages] = useState([]);
-  const [stats] = useState({ today: 254, week: 1820, pending: 5 });
-  const [agentStatus, setAgentStatus] = useState([]);
-  const [statusLoading, setStatusLoading] = useState(true);
-  const [ouraData, setOuraData] = useState(null);
-  const [ouraLoading, setOuraLoading] = useState(true);
-  const [familyData, setFamilyData] = useState(null);
-  const [familyLoading, setFamilyLoading] = useState(true);
-  const [businessData, setBusinessData] = useState(null);
-  const [businessLoading, setBusinessLoading] = useState(true);
-
-  // Fetch Oura health data
-  useEffect(() => {
-    fetch('http://localhost:3001/api/oura')
-      .then(res => res.json())
-      .then(data => {
-        setOuraData(data);
-        setOuraLoading(false);
-      })
-      .catch(() => setOuraLoading(false));
-  }, []);
-
-  // Fetch real agent status with auto-refresh every 30 seconds
-  useEffect(() => {
-    const fetchAgents = () => {
-      fetch('http://localhost:3001/api/agents')
-        .then(res => res.json())
-        .then(data => {
-          setAgentStatus(data.agents || []);
-          setStatusLoading(false);
-        })
-        .catch(() => setStatusLoading(false));
-    };
-    
-    fetchAgents(); // Initial fetch
-    const interval = setInterval(fetchAgents, 30000); // Poll every 30s
-    return () => clearInterval(interval);
-  }, []);
-
-  // Fetch family data
-  useEffect(() => {
-    fetch('http://localhost:3001/api/family')
-      .then(res => res.json())
-      .then(data => {
-        setFamilyData(data);
-        setFamilyLoading(false);
-      })
-      .catch(() => setFamilyLoading(false));
-  }, []);
-
-  // Fetch business data
-  useEffect(() => {
-    fetch('http://localhost:3001/api/business')
-      .then(res => res.json())
-      .then(data => {
-        setBusinessData(data);
-        setBusinessLoading(false);
-      })
-      .catch(() => setBusinessLoading(false));
-  }, []);
-
-  // Fetch real message data from Aria's session stats
-  useEffect(() => {
-    const fetchMessageStats = async () => {
-      try {
-        // Try to get real message count from OpenClaw API
-        const response = await fetch('http://localhost:3001/api/aria/messages');
-        if (response.ok) {
-          const data = await response.json();
-          // Build hourly distribution from real data
-          const hourlyData = [];
-          const now = new Date();
-          for (let i = 0; i < 12; i++) {
-            const hour = new Date(now.getTime() - (11 - i) * 3600000);
-            hourlyData.push({
-              time: hour.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-              messages: data.hourly?.[i] || 0
-            });
-          }
-          setMessages(hourlyData);
-        }
-      } catch (e) {
-        // No real data available - show empty state
-        console.log('No message data available');
-      }
-    };
-    
-    fetchMessageStats();
-  }, []);
-
-  // Remove the fake animation - only show real data or empty state
+function ScoreRing({ value, max = 100, color, label, sub }) {
+  const r = 28, circ = 2 * Math.PI * r;
+  const pct = value != null ? Math.min(value / max, 1) : 0;
+  const dash = pct * circ;
+  const scoreColor = value == null ? '#444'
+    : value < 60 ? '#ef4444'
+    : value < 80 ? '#eab308'
+    : '#22c55e';
 
   return (
-    <div className="dashboard">
-      <header style={{ '--color': agent.color }}>
-        <div className="header-avatar">
-          <img 
-            src={`https://t.me/i/userpic/120/${agent.telegram}.jpg`} 
-            alt={agent.name}
-            onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
-          />
-          <span className="emoji-fallback">{agent.emoji}</span>
-        </div>
-        <div>
-          <h1>{agent.name}</h1>
-          <p>{agent.role}</p>
-        </div>
-      </header>
-
-      <div className="stats-grid">
-        <div className="stat">
-          <span>Messages Today</span>
-          <strong>{stats.today}</strong>
-          <span className="trend">↑ 12%</span>
-        </div>
-        <div className="stat">
-          <span>This Week</span>
-          <strong>{stats.week}</strong>
-          <span className="trend positive">↑ 18%</span>
-        </div>
-        <div className="stat">
-          <span>Pending Tasks</span>
-          <strong>{stats.pending}</strong>
-        </div>
-        <div className="stat">
-          <span>Avg Response</span>
-          <strong>1.2s</strong>
-        </div>
-      </div>
-
-      {/* Oura Health Section */}
-      <div className="section">
-        <h2>💪 Health (Oura)</h2>
-        {ouraLoading ? (
-          <p style={{ color: '#666' }}>Loading health data...</p>
-        ) : ouraData?.scores ? (
-          <div className="stats-grid">
-            <div className="stat" style={{ borderLeft: '3px solid #8b5cf6' }}>
-              <span>Sleep Score</span>
-              <strong style={{ color: ouraData.scores.sleep < 60 ? '#ef4444' : ouraData.scores.sleep < 80 ? '#eab308' : '#22c55e' }}>
-                {ouraData.scores.sleep}
-              </strong>
-              <span className="trend">Deep: {ouraData.details.sleep.deep}m</span>
-            </div>
-            <div className="stat" style={{ borderLeft: '3px solid #10b981' }}>
-              <span>Readiness</span>
-              <strong style={{ color: ouraData.scores.readiness < 60 ? '#ef4444' : ouraData.scores.readiness < 80 ? '#eab308' : '#22c55e' }}>
-                {ouraData.scores.readiness}
-              </strong>
-              <span className="trend">HRV: {ouraData.details.sleep.hrv}</span>
-            </div>
-            <div className="stat" style={{ borderLeft: '3px solid #f59e0b' }}>
-              <span>Activity</span>
-              <strong>{ouraData.scores.activity}</strong>
-              <span className="trend">{ouraData.details.activity.steps.toLocaleString()} steps</span>
-            </div>
-            <div className="stat" style={{ borderLeft: '3px solid #ec4899' }}>
-              <span>Resting HR</span>
-              <strong>{ouraData.details.sleep.restingHR}</strong>
-              <span className="trend">{ouraData.date}</span>
-            </div>
-          </div>
-        ) : (
-          <p style={{ color: '#666' }}>No health data available</p>
-        )}
-      </div>
-
-      <div className="section">
-        <h2>📝 Recent Actions</h2>
-        <div className="action-list">
-          {recentActions.map(action => (
-            <div key={action.id} className="action-item">
-              <span className="action-text">{action.action}</span>
-              <span className="action-time">{action.time}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Family Section */}
-      <div className="section">
-        <h2>👨‍👩‍👧‍👦 Family</h2>
-        {familyLoading ? (
-          <p style={{ color: '#666' }}>Loading family data...</p>
-        ) : familyData?.family ? (
-          <div className="family-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '12px' }}>
-            {Object.entries(familyData.family).map(([key, data]) => (
-              <div key={key} className="family-card" style={{ 
-                background: '#1a1a1a', 
-                borderRadius: '12px', 
-                padding: '12px',
-                border: '1px solid #333'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <span style={{ 
-                    fontSize: '20px',
-                    background: key === 'michael' ? '#a855f7' : key === 'melissa' ? '#e91e63' : key === 'elora' ? '#9c27b0' : key === 'iris' ? '#2196f3' : '#ff9800',
-                    width: '32px', 
-                    height: '32px', 
-                    borderRadius: '50%', 
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontWeight: 'bold',
-                    color: '#fff'
-                  }}>
-                    {key.charAt(0).toUpperCase()}
-                  </span>
-                  <strong style={{ textTransform: 'capitalize' }}>{key}</strong>
-                </div>
-                {data.birthday && (
-                  <div style={{ fontSize: '12px', color: '#888' }}>🎂 {data.birthday}</div>
-                )}
-                {data.lastActivity && data.lastActivity !== 'unknown' && (
-                  <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
-                    Last: {data.lastActivity}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p style={{ color: '#666' }}>No family data available</p>
-        )}
-      </div>
-
-      {/* Business Section */}
-      <div className="section">
-        <h2>💼 Business (Marty)</h2>
-        {businessLoading ? (
-          <p style={{ color: '#666' }}>Loading business data...</p>
-        ) : businessData ? (
-          <div>
-            <div className="stats-grid">
-              <div className="stat" style={{ borderLeft: '3px solid #f59e0b' }}>
-                <span>Active Tasks</span>
-                <strong>{businessData.metrics?.activeTasks || 0}</strong>
-              </div>
-              <div className="stat" style={{ borderLeft: '3px solid #3b82f6' }}>
-                <span>Data Source</span>
-                <strong style={{ fontSize: '14px' }}>{businessData.source || 'memory'}</strong>
-              </div>
-            </div>
-            {businessData.topTasks?.length > 0 && (
-              <div style={{ marginTop: '12px' }}>
-                <h4 style={{ color: '#888', marginBottom: '8px' }}>Top Tasks</h4>
-                {businessData.topTasks.map((task, i) => (
-                  <div key={i} style={{ 
-                    padding: '8px 12px', 
-                    background: '#1a1a1a', 
-                    borderRadius: '8px', 
-                    marginBottom: '6px',
-                    fontSize: '13px'
-                  }}>
-                    {task.title} <span style={{ color: '#666' }}>• {task.state}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-            {businessData.notes && (
-              <div style={{ marginTop: '12px', fontSize: '12px', color: '#666', fontStyle: 'italic' }}>
-                {businessData.notes}
-              </div>
-            )}
-          </div>
-        ) : (
-          <p style={{ color: '#666' }}>No business data available</p>
-        )}
-      </div>
-
-      <div className="section">
-        <h2>🤖 Agent Status</h2>
-        {statusLoading ? (
-          <p style={{ color: '#666' }}>Loading agent status...</p>
-        ) : (
-          <div className="agent-grid">
-            {agentStatus.map((a, i) => (
-              <div key={i} className={`agent-card ${a.status}`}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ 
-                    width: '8px', 
-                    height: '8px', 
-                    borderRadius: '50%', 
-                    backgroundColor: a.status === 'active' ? '#22c55e' : a.status === 'recent' ? '#3b82f6' : '#666',
-                    display: 'inline-block'
-                  }} />
-                  <strong>{a.name}</strong>
-                </div>
-                <div style={{ fontSize: '12px', color: '#888', marginTop: '4px' }}>
-                  <span>{a.channel || 'unknown'}</span> • <span>{a.lastSeen}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div className="quick-actions">
-        <h2>⚡ Quick Actions</h2>
-        <div className="action-buttons">
-          <button>New Task</button>
-          <button>Send Reminder</button>
-          <button>Schedule Meeting</button>
-        </div>
-      </div>
+    <div className="score-ring-wrap">
+      <svg width="72" height="72" viewBox="0 0 72 72">
+        <circle cx="36" cy="36" r={r} fill="none" stroke="#1e1e2e" strokeWidth="6" />
+        <circle
+          cx="36" cy="36" r={r} fill="none"
+          stroke={color || scoreColor} strokeWidth="6"
+          strokeDasharray={`${dash} ${circ}`}
+          strokeLinecap="round"
+          transform="rotate(-90 36 36)"
+          style={{ transition: 'stroke-dasharray 0.6s ease' }}
+        />
+        <text x="36" y="40" textAnchor="middle" fill="#fff" fontSize="14" fontWeight="700">
+          {value ?? '—'}
+        </text>
+      </svg>
+      <div className="score-ring-label">{label}</div>
+      {sub && <div className="score-ring-sub">{sub}</div>}
     </div>
   );
 }
 
-export default App;
+function StatusDot({ status }) {
+  const color = status === 'active' ? '#22c55e' : status === 'recent' ? '#3b82f6' : '#555';
+  return <span className="status-dot" style={{ background: color }} />;
+}
+
+export default function AriaDashboard() {
+  const [ouraData, setOuraData]       = useState(null);
+  const [familyData, setFamilyData]   = useState(null);
+  const [businessData, setBusinessData] = useState(null);
+  const [agentStatus, setAgentStatus] = useState([]);
+  const [now, setNow]                 = useState(new Date());
+
+  // Tick clock
+  useEffect(() => {
+    const t = setInterval(() => setNow(new Date()), 60000);
+    return () => clearInterval(t);
+  }, []);
+
+  useEffect(() => {
+    fetch('http://localhost:3001/api/oura').then(r => r.json()).then(setOuraData).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    fetch('http://localhost:3001/api/family').then(r => r.json()).then(setFamilyData).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    fetch('http://localhost:3001/api/business').then(r => r.json()).then(setBusinessData).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const load = () =>
+      fetch('http://localhost:3001/api/agents').then(r => r.json())
+        .then(d => setAgentStatus(d.agents || [])).catch(() => {});
+    load();
+    const t = setInterval(load, 30000);
+    return () => clearInterval(t);
+  }, []);
+
+  const greeting = () => {
+    const h = now.getHours();
+    if (h < 5)  return 'Burning the midnight oil 🌙';
+    if (h < 12) return 'Good morning ☀️';
+    if (h < 17) return 'Good afternoon 🌤';
+    if (h < 21) return 'Good evening 🌆';
+    return 'Winding down 🌙';
+  };
+
+  const lateNightWarning = now.getHours() >= 23 || now.getHours() < 4;
+
+  return (
+    <div className="aria-dashboard">
+
+      {/* ── HERO HEADER ── */}
+      <header className="aria-hero">
+        <div className="aria-hero-bg" />
+        <div className="aria-hero-content">
+          <div className="aria-avatar">
+            <img
+              src={`https://t.me/i/userpic/160/${agent.telegram}.jpg`}
+              alt="Aria"
+              onError={e => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }}
+            />
+            <div className="aria-avatar-fallback">🎵</div>
+          </div>
+          <div className="aria-hero-text">
+            <h1>Aria <span className="aria-badge">Personal Assistant</span></h1>
+            <p className="aria-greeting">{greeting()}</p>
+            <p className="aria-time">
+              {now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+              {' · '}
+              {now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+            </p>
+          </div>
+        </div>
+        {lateNightWarning && (
+          <div className="aria-late-banner">
+            🌙 It's late — Michael should probably be sleeping
+          </div>
+        )}
+      </header>
+
+      <div className="aria-body">
+
+        {/* ── HEALTH ── */}
+        <section className="aria-card aria-health">
+          <div className="card-header">
+            <span className="card-icon">💜</span>
+            <h2>Michael's Health</h2>
+            {ouraData?.date && <span className="card-meta">{ouraData.date}</span>}
+          </div>
+
+          {ouraData?.scores ? (
+            <>
+              <div className="score-rings">
+                <ScoreRing value={ouraData.scores.sleep}     label="Sleep"     sub={`${ouraData.details?.sleep?.deep ?? '—'}m deep`} />
+                <ScoreRing value={ouraData.scores.readiness} label="Readiness" sub={`HRV ${ouraData.details?.sleep?.hrv ?? '—'}`} color="#a855f7" />
+                <ScoreRing value={ouraData.scores.activity}  label="Activity"  sub={`${(ouraData.details?.activity?.steps ?? 0).toLocaleString()} steps`} color="#06b6d4" />
+              </div>
+              <div className="health-row">
+                <div className="health-pill">
+                  <span>❤️ Resting HR</span>
+                  <strong>{ouraData.details?.sleep?.restingHR ?? '—'} bpm</strong>
+                </div>
+                <div className="health-pill">
+                  <span>🧠 HRV</span>
+                  <strong>{ouraData.details?.sleep?.hrv ?? '—'} ms</strong>
+                </div>
+                <div className="health-pill">
+                  <span>😴 Total sleep</span>
+                  <strong>{ouraData.details?.sleep?.total ?? '—'}h</strong>
+                </div>
+              </div>
+            </>
+          ) : (
+            <p className="no-data">Oura ring not synced · ring needs charging or sync</p>
+          )}
+        </section>
+
+        {/* ── FAMILY ── */}
+        <section className="aria-card aria-family">
+          <div className="card-header">
+            <span className="card-icon">🏠</span>
+            <h2>Family</h2>
+          </div>
+
+          {familyData?.family ? (
+            <div className="family-grid">
+              {Object.entries(familyData.family).map(([key, data]) => {
+                const meta = FAMILY_COLORS[key] || { bg: '#666', emoji: '👤' };
+                return (
+                  <div key={key} className="family-member">
+                    <div className="family-avatar" style={{ background: meta.bg }}>
+                      {meta.emoji}
+                    </div>
+                    <div className="family-info">
+                      <strong>{key.charAt(0).toUpperCase() + key.slice(1)}</strong>
+                      {data.birthday && <span>🎂 {data.birthday}</span>}
+                      {data.lastActivity && data.lastActivity !== 'unknown' &&
+                        <span className="family-last">↻ {data.lastActivity}</span>
+                      }
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="no-data">Loading family data…</p>
+          )}
+        </section>
+
+        {/* ── BUSINESS PULSE ── */}
+        <section className="aria-card aria-business">
+          <div className="card-header">
+            <span className="card-icon">⚡</span>
+            <h2>Workout Flow Pulse</h2>
+            {businessData?.source && <span className="card-meta">via {businessData.source}</span>}
+          </div>
+
+          {businessData ? (
+            <>
+              <div className="biz-stats">
+                <div className="biz-stat">
+                  <strong>{businessData.metrics?.activeTasks ?? 0}</strong>
+                  <span>Active</span>
+                </div>
+                <div className="biz-stat">
+                  <strong>{businessData.metrics?.todoTasks ?? 0}</strong>
+                  <span>To Do</span>
+                </div>
+                <div className="biz-stat">
+                  <strong>{businessData.metrics?.backlogTasks ?? 0}</strong>
+                  <span>Backlog</span>
+                </div>
+              </div>
+              {businessData.topTasks?.length > 0 && (
+                <ul className="task-list">
+                  {businessData.topTasks.slice(0, 4).map((t, i) => (
+                    <li key={i} className="task-item">
+                      <span className={`task-dot ${t.state?.toLowerCase().replace(' ', '-')}`} />
+                      <span className="task-title">{t.title}</span>
+                      <span className="task-state">{t.state}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {businessData.notes && <p className="biz-note">{businessData.notes}</p>}
+            </>
+          ) : (
+            <p className="no-data">Loading business data…</p>
+          )}
+        </section>
+
+        {/* ── TEAM STATUS ── */}
+        <section className="aria-card aria-team">
+          <div className="card-header">
+            <span className="card-icon">🤖</span>
+            <h2>Team Status</h2>
+            <span className="card-meta">
+              {agentStatus.filter(a => a.status === 'active').length} active
+            </span>
+          </div>
+
+          <div className="team-grid">
+            {agentStatus.length > 0 ? agentStatus.map((a, i) => (
+              <div key={i} className="team-member">
+                <StatusDot status={a.status} />
+                <span className="team-name">{a.name}</span>
+                <span className="team-last">{a.lastSeen}</span>
+              </div>
+            )) : (
+              <p className="no-data">Loading team status…</p>
+            )}
+          </div>
+        </section>
+
+      </div>
+
+      <footer className="aria-footer">
+        <span>🎵 Aria · Personal Life Assistant · Opus 4.6</span>
+        <span>Refreshes every 30s</span>
+      </footer>
+    </div>
+  );
+}
