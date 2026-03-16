@@ -1,13 +1,62 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, sans-serif; background: #0a0a0f; color: #fff; min-height: 100vh; }
-.dashboard { max-width: 800px; margin: 0 auto; padding: 2rem; }
+.dashboard { max-width: 1200px; margin: 0 auto; padding: 2rem; }
 header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #222; }
 header .emoji { font-size: 3rem; }
 header h1 { font-size: 2rem; background: linear-gradient(90deg, var(--color), #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-header p { color: #666; }
-.section { background: #111; border: 1px solid #222; border-radius: 12px; padding: 1.5rem; }
-.section h2 { font-size: 1rem; color: #666; margin-bottom: 1rem; }
-.item { display: flex; justify-content: space-between; padding: 0.75rem; border-radius: 8px; margin-bottom: 0.5rem; background: #0a0a0f; }
-.item.done .badge { color: #22c55e; }
-.item.pending .badge { color: #f59e0b; }
+header p { color: #666; font-size: 0.9rem; }
+
+/* Metrics Grid */
+.metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+.metric-card { background: #111; border: 1px solid #222; border-radius: 12px; padding: 1.5rem; }
+.metric-label { color: #666; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
+.metric-value { font-size: 2.5rem; font-weight: 600; color: #fff; margin-bottom: 0.5rem; }
+.metric-subtext { color: #555; font-size: 0.85rem; }
+
+/* Sections */
+.section { background: #111; border: 1px solid #222; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.section h2 { font-size: 1.1rem; color: #fff; margin-bottom: 1rem; font-weight: 600; }
+.section-header .count { background: #222; color: #999; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; }
+
+/* Task Routing */
+.routing-table { display: flex; flex-direction: column; gap: 0.75rem; }
+.routing-row { display: flex; align-items: center; gap: 0.5rem; padding: 1rem; background: #0a0a0f; border-radius: 8px; font-size: 0.9rem; overflow-x: auto; }
+.routing-from { color: #8b5cf6; font-weight: 500; min-width: 80px; }
+.routing-to { color: #06b6d4; font-weight: 500; min-width: 80px; }
+.routing-task { color: #ccc; flex: 1; min-width: 120px; }
+.routing-arrow { color: #444; }
+.routing-time { color: #555; font-size: 0.8rem; min-width: 80px; text-align: right; }
+.routing-badge { padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+.routing-badge.completed { background: #1a3a2a; color: #22c55e; }
+.routing-badge.in-progress { background: #3a2a1a; color: #f59e0b; }
+.routing-badge.pending { background: #2a1a3a; color: #a78bfa; }
+
+/* Agent Cards */
+.agent-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+.agent-card { background: #0a0a0f; border: 1px solid #222; border-radius: 10px; padding: 1.25rem; }
+.agent-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.agent-name { font-weight: 600; color: #fff; }
+.agent-health { font-size: 1.5rem; }
+.agent-stats { display: flex; flex-direction: column; gap: 0.75rem; }
+.agent-stat { display: flex; justify-content: space-between; font-size: 0.9rem; }
+.stat-label { color: #666; }
+.stat-value { color: #fff; font-weight: 600; }
+
+/* File Library */
+.file-library { display: flex; flex-direction: column; gap: 0.75rem; }
+.file-row { display: grid; grid-template-columns: 150px 1fr 150px; gap: 2rem; padding: 1rem; background: #0a0a0f; border-radius: 8px; align-items: center; }
+.file-category { color: #8b5cf6; font-weight: 500; }
+.file-count { color: #999; font-size: 0.9rem; }
+.file-size { color: #555; font-size: 0.9rem; text-align: right; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dashboard { padding: 1rem; }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  .routing-row { flex-wrap: wrap; }
+  .routing-arrow { display: none; }
+  .agent-grid { grid-template-columns: 1fr; }
+  .file-row { grid-template-columns: 1fr; gap: 0.5rem; }
+}
 
