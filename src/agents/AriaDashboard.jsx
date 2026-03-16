@@ -101,7 +101,7 @@ export default function AriaDashboard() {
         <div className="aria-hero-content">
           <div className="aria-avatar">
             <img
-              src={`https://t.me/i/userpic/160/${agent.telegram}.jpg`}
+              src="https://cdn1.telesco.pe/file/vYQ6K_dTy3YAVuK__aU9avcE9gQcz3Bta160iRibDW3_nDqBAxljzxung9EicfvZAdr7TyncBc6dOV_GskUm_ngnezSzLsjVO4a9Ba6Z72gHQxJtH_r_19s3S7OChHdMZKu1Hrv_7mHHbmJLzjh7XDlJ2GqXSGjopjFK_TJtxb1-XVS5eNRqhrsR7DuKvGoDZ4m3Tjxard-YN68VBiLsXQ4TZ9UZMJBo0KhpsXdYviSBhrU4erY0WLyVxlKvVNPfoA6ythEx7YEfGuWps6Ae6u0fRpYIsijN17MzOyE7EWAsJhiS77lW8azLYXG_cnlH3BHgyfraOzSu23VPw2t0EQ.jpg"
               alt="Aria"
               onError={e => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }}
             />
@@ -125,6 +125,34 @@ export default function AriaDashboard() {
       </header>
 
       <div className="aria-body">
+
+        {/* ── QUICK PULSE ── */}
+        <section className="aria-card aria-pulse" style={{ gridColumn: '1 / -1' }}>
+          <div className="pulse-grid">
+            <div className="pulse-item">
+              <span className="pulse-label">🏠 Family</span>
+              <span className="pulse-value">{familyData?.family ? Object.keys(familyData.family).length : '—'} tracked</span>
+            </div>
+            <div className="pulse-item">
+              <span className="pulse-label">💜 Sleep</span>
+              <span className="pulse-value" style={{ color: ouraData?.scores?.sleep < 70 ? '#ef4444' : '#22c55e' }}>
+                {ouraData?.scores?.sleep ?? '—'}/100
+              </span>
+            </div>
+            <div className="pulse-item">
+              <span className="pulse-label">⚡ Tasks</span>
+              <span className="pulse-value">{businessData?.metrics?.activeTasks ?? '—'} active</span>
+            </div>
+            <div className="pulse-item">
+              <span className="pulse-label">🤖 Team</span>
+              <span className="pulse-value">{agentStatus.filter(a => a.status === 'active').length} online</span>
+            </div>
+            <div className="pulse-item">
+              <span className="pulse-label">🎵 Model</span>
+              <span className="pulse-value">Opus 4.6</span>
+            </div>
+          </div>
+        </section>
 
         {/* ── HEALTH ── */}
         <section className="aria-card aria-health">
