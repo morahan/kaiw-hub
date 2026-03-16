@@ -43,6 +43,31 @@
   box-shadow: 0 8px 30px rgba(0,0,0,0.3), 0 0 20px var(--agent-color);
 }
 
+.agent-avatar {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--agent-color);
+  background: #2a2a3a;
+}
+
+.agent-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.agent-emoji-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+}
+
 .agent-emoji {
   font-size: 3rem;
   margin-bottom: 1rem;

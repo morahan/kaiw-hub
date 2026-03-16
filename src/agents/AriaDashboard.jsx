@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './css/ariaDashboard.css';
 
-const agent = { name: 'Aria', emoji: '🎵', role: 'Personal Assistant', color: '#a855f7' };
+const agent = { name: 'Aria', emoji: '🎵', role: 'Personal Assistant', color: '#a855f7', telegram: 'AriaPersonal' };
 
 const activityData = [
   { time: '00:00', messages: 0 },
@@ -121,7 +121,14 @@ function App() {
   return (
     <div className="dashboard">
       <header style={{ '--color': agent.color }}>
-        <span className="emoji">{agent.emoji}</span>
+        <div className="header-avatar">
+          <img 
+            src={`https://t.me/i/userpic/120/${agent.telegram}.jpg`} 
+            alt={agent.name}
+            onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+          />
+          <span className="emoji-fallback">{agent.emoji}</span>
+        </div>
         <div>
           <h1>{agent.name}</h1>
           <p>{agent.role}</p>
