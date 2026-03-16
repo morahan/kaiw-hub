@@ -193,35 +193,6 @@ function App() {
         )}
       </div>
 
-      <div className="chart-card full-width">
-        <h3>📊 Message Activity (Today)</h3>
-        {messages.length > 0 ? (
-          <ResponsiveContainer width="100%" height={200}>
-            <LineChart data={messages}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#222" />
-              <XAxis dataKey="time" stroke="#666" />
-              <YAxis stroke="#666" />
-              <Tooltip contentStyle={{ backgroundColor: '#111', border: 'none' }} />
-              <Line type="monotone" dataKey="messages" stroke={agent.color} strokeWidth={2} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
-        ) : (
-          <div style={{ 
-            height: '200px', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            color: '#666',
-            flexDirection: 'column',
-            gap: '8px'
-          }}>
-            <span style={{ fontSize: '32px' }}>📭</span>
-            <p>No message data available yet</p>
-            <p style={{ fontSize: '12px' }}>Connect to OpenClaw API to see real stats</p>
-          </div>
-        )}
-      </div>
-
       <div className="section">
         <h2>📝 Recent Actions</h2>
         <div className="action-list">
