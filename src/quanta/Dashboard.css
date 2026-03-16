@@ -372,3 +372,163 @@
   text-align: center;
   padding: 20px;
 }
+
+/* ── Main Dashboard Enhancements ── */
+
+/* Header row with date range */
+.dashboard-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.dashboard-header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.last-updated {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* Hero stat card — visually larger */
+.stats-grid-hero {
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+}
+
+.stat-card-hero {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, var(--bg-card) 60%);
+  border-color: rgba(0, 212, 255, 0.25);
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.06);
+}
+
+.stat-card-hero::before {
+  opacity: 1 !important;
+  height: 3px;
+}
+
+.stat-card-hero .stat-label {
+  color: var(--accent-cyan);
+  font-size: 13px;
+}
+
+.stat-value-hero {
+  font-size: 44px !important;
+  background: linear-gradient(135deg, #00d4ff, #60e0ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-value-sub {
+  font-size: 20px;
+  color: var(--text-muted);
+  -webkit-text-fill-color: var(--text-muted);
+  font-weight: 400;
+}
+
+.stat-card-cost .stat-value {
+  color: var(--accent-amber);
+}
+
+/* Top Model bar */
+.top-model-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  margin-bottom: 24px;
+}
+
+.top-model-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.top-model-value {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-purple);
+}
+
+.top-model-detail {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-left: auto;
+}
+
+/* Chart header with legend */
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.chart-header h3 {
+  margin-bottom: 0;
+}
+
+.chart-legend-custom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+/* Responsive overrides for hero grid */
+@media (max-width: 1200px) {
+  .stats-grid-hero {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-grid-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-header-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .dashboard-header-right {
+    align-items: flex-start;
+  }
+
+  .top-model-bar {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .top-model-detail {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}

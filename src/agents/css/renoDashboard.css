@@ -1,13 +1,132 @@
+/* Reno Dashboard — Investment & Market Intelligence */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, sans-serif; background: #0a0a0f; color: #fff; min-height: 100vh; }
-.dashboard { max-width: 800px; margin: 0 auto; padding: 2rem; }
-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #222; }
-header .emoji { font-size: 3rem; }
-header h1 { font-size: 2rem; background: linear-gradient(90deg, var(--color), #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-header p { color: #666; }
-.section { background: #111; border: 1px solid #222; border-radius: 12px; padding: 1.5rem; }
-.section h2 { font-size: 1rem; color: #666; margin-bottom: 1rem; }
-.item { display: flex; justify-content: space-between; padding: 0.75rem; border-radius: 8px; margin-bottom: 0.5rem; background: #0a0a0f; }
-.item.done .badge { color: #22c55e; }
-.item.pending .badge { color: #f59e0b; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #0a0a0f; color: #e2e8f0; min-height: 100vh; }
 
+.reno-dash { max-width: 1400px; margin: 0 auto; padding: 1.5rem 2rem 2rem; }
+
+/* Header */
+.reno-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #1e293b; }
+.reno-header-left { display: flex; align-items: center; gap: 0.75rem; }
+.reno-emoji { font-size: 2.5rem; }
+.reno-title { font-size: 1.75rem; font-weight: 700; background: linear-gradient(135deg, #10b981, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.reno-subtitle { color: #64748b; font-size: 0.85rem; margin-top: 0.1rem; }
+.reno-header-right { display: flex; align-items: center; gap: 0.5rem; }
+.reno-live-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; animation: reno-pulse 2s infinite; }
+.reno-live-text { color: #22c55e; font-size: 0.8rem; font-weight: 500; }
+@keyframes reno-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+/* KPI Row */
+.reno-kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.75rem; margin-bottom: 1rem; }
+.reno-kpi-card { background: #111318; border: 1px solid #1e293b; border-radius: 12px; padding: 1rem 1.1rem 0.75rem; }
+.reno-kpi-top { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.4rem; }
+.reno-kpi-icon { color: #64748b; }
+.reno-kpi-label { color: #64748b; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; }
+.reno-kpi-value { font-size: 1.5rem; font-weight: 700; color: #f1f5f9; line-height: 1.2; }
+.reno-kpi-sub { color: #64748b; font-size: 0.75rem; margin-top: 0.3rem; }
+.reno-kpi-spark { margin-top: 0.25rem; }
+
+/* Market Ticker Bar */
+.reno-ticker-bar { display: flex; gap: 0; background: #111318; border: 1px solid #1e293b; border-radius: 10px; padding: 0.55rem 0; margin-bottom: 1rem; overflow-x: auto; }
+.reno-ticker-item { flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0 0.75rem; border-right: 1px solid #1e293b; font-size: 0.78rem; white-space: nowrap; }
+.reno-ticker-item:last-child { border-right: none; }
+.reno-ticker-name { color: #64748b; font-weight: 500; }
+.reno-ticker-val { color: #e2e8f0; font-weight: 600; }
+
+/* Color utilities */
+.reno-green { color: #22c55e !important; }
+.reno-red { color: #ef4444 !important; }
+
+/* Two-column layout */
+.reno-columns { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1rem; }
+.reno-col-left, .reno-col-right { display: flex; flex-direction: column; gap: 1rem; }
+
+/* Cards */
+.reno-card { background: #111318; border: 1px solid #1e293b; border-radius: 12px; padding: 1.1rem 1.25rem; }
+.reno-card-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.9rem; color: #94a3b8; font-size: 0.85rem; }
+.reno-card-header h2 { font-size: 0.85rem; font-weight: 600; color: #94a3b8; }
+.reno-card-header svg { flex-shrink: 0; }
+
+/* Badges */
+.reno-badge { margin-left: auto; font-size: 0.68rem; padding: 0.2rem 0.55rem; border-radius: 6px; background: #1e293b; color: #94a3b8; font-weight: 500; }
+.reno-badge-green { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
+.reno-badge-amber { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+
+/* Charts */
+.reno-chart-container { margin: 0 -0.5rem; }
+
+/* Positions Table */
+.reno-positions-table { font-size: 0.78rem; }
+.reno-pos-header-row { display: grid; grid-template-columns: 1.1fr 1fr 0.8fr 0.8fr 0.8fr 1.2fr; gap: 0.5rem; padding: 0.4rem 0.6rem; color: #475569; font-weight: 600; text-transform: uppercase; font-size: 0.68rem; letter-spacing: 0.05em; border-bottom: 1px solid #1e293b; margin-bottom: 0.25rem; }
+.reno-pos-row { display: grid; grid-template-columns: 1.1fr 1fr 0.8fr 0.8fr 0.8fr 1.2fr; gap: 0.5rem; padding: 0.55rem 0.6rem; border-radius: 6px; align-items: center; }
+.reno-pos-row:hover { background: #1a1f2e; }
+.reno-pos-ticker { color: #f1f5f9; }
+.reno-pos-ticker strong { font-weight: 700; }
+.reno-pos-type { font-size: 0.7rem; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 500; display: inline-block; width: fit-content; }
+.reno-type-long { background: rgba(34, 197, 94, 0.12); color: #22c55e; }
+.reno-type-short { background: rgba(239, 68, 68, 0.12); color: #ef4444; }
+.reno-type-iron-condor { background: rgba(139, 92, 246, 0.12); color: #a78bfa; }
+.reno-pos-num { color: #cbd5e1; font-variant-numeric: tabular-nums; }
+.reno-pos-row .reno-green, .reno-pos-row .reno-red { display: flex; align-items: center; gap: 0.15rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.reno-pos-signal { color: #64748b; font-size: 0.72rem; }
+
+/* Signals */
+.reno-signals-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.reno-signal-item { padding: 0.65rem 0.75rem; border-radius: 8px; background: #0d1117; border: 1px solid #1e293b; }
+.reno-signal-top { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.3rem; flex-wrap: wrap; }
+.reno-signal-badge { display: inline-flex; align-items: center; gap: 0.2rem; font-size: 0.62rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px; letter-spacing: 0.05em; }
+.reno-signal-badge-buy { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
+.reno-signal-badge-sell { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+.reno-signal-badge-alert { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+.reno-signal-ticker { color: #f1f5f9; font-size: 0.8rem; }
+.reno-signal-strength { font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 4px; background: #1e293b; font-weight: 500; }
+.reno-str-strong { color: #22c55e; }
+.reno-str-medium { color: #f59e0b; }
+.reno-str-weak { color: #64748b; }
+.reno-signal-time { margin-left: auto; color: #475569; font-size: 0.68rem; display: flex; align-items: center; gap: 0.25rem; }
+.reno-signal-desc { color: #94a3b8; font-size: 0.75rem; line-height: 1.4; }
+
+/* Activity Feed */
+.reno-activity-list { display: flex; flex-direction: column; gap: 0.4rem; }
+.reno-activity-item { padding: 0.6rem 0.7rem; border-radius: 8px; background: #0d1117; border: 1px solid #1e293b; }
+.reno-act-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.25rem; }
+.reno-act-badge { font-size: 0.65rem; font-weight: 600; padding: 0.12rem 0.4rem; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.03em; }
+.reno-act-badge-success { background: rgba(34, 197, 94, 0.12); color: #22c55e; }
+.reno-act-badge-info { background: rgba(59, 130, 246, 0.12); color: #60a5fa; }
+.reno-act-badge-warning { background: rgba(245, 158, 11, 0.12); color: #f59e0b; }
+.reno-act-time { color: #475569; font-size: 0.68rem; }
+.reno-act-detail { color: #94a3b8; font-size: 0.75rem; line-height: 1.4; }
+
+/* Allocation */
+.reno-alloc-list { display: flex; flex-direction: column; gap: 0.6rem; }
+.reno-alloc-row { display: flex; align-items: center; gap: 0.75rem; }
+.reno-alloc-label { display: flex; align-items: center; gap: 0.4rem; min-width: 130px; font-size: 0.78rem; color: #cbd5e1; }
+.reno-alloc-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.reno-alloc-bar-bg { flex: 1; height: 6px; background: #1e293b; border-radius: 3px; overflow: hidden; }
+.reno-alloc-bar { height: 100%; border-radius: 3px; }
+.reno-alloc-pct { font-size: 0.78rem; font-weight: 600; color: #94a3b8; min-width: 32px; text-align: right; }
+
+/* Risk Grid */
+.reno-risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.reno-risk-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.6rem; background: #0d1117; border-radius: 6px; }
+.reno-risk-label { color: #64748b; font-size: 0.75rem; }
+.reno-risk-value { font-size: 0.85rem; font-weight: 700; }
+
+/* Footer */
+.reno-footer { text-align: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #1e293b; }
+.reno-footer p { color: #334155; font-size: 0.72rem; }
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .reno-kpi-row { grid-template-columns: repeat(3, 1fr); }
+  .reno-columns { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .reno-dash { padding: 1rem; }
+  .reno-kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .reno-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  .reno-ticker-bar { flex-wrap: wrap; }
+  .reno-ticker-item { border-right: none; padding: 0.3rem 0.75rem; }
+  .reno-pos-header-row, .reno-pos-row { grid-template-columns: 1fr 0.8fr 0.7fr 0.7fr 0.7fr; }
+  .reno-pos-signal { display: none; }
+  .reno-pos-header-row span:last-child { display: none; }
+}

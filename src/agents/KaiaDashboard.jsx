@@ -132,7 +132,9 @@ function TrendCard({ trend, index }) {
 }
 
 function App() {
-  const { isSignedIn } = useAuth();
+  const SKIP_AUTH = import.meta.env.VITE_SKIP_AUTH === 'true';
+  const { isSignedIn: clerkSignedIn } = useAuth();
+  const isSignedIn = SKIP_AUTH || clerkSignedIn;
   const [stats, setStats]               = useState(null);
   const [topTrends, setTopTrends]       = useState([]);
   const [pendingTrends, setPendingTrends] = useState([]);

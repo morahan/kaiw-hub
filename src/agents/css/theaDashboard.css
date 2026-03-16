@@ -54,7 +54,7 @@ body {
 
 /* ─── Layout ─────────────────────────────────────────────────────────────── */
 .dashboard {
-  max-width: 1020px;
+  max-width: 1120px;
   margin: 0 auto;
   padding: 24px 20px;
 }
@@ -173,14 +173,14 @@ body {
 .key-metrics {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  margin-bottom: 28px;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
 .metric {
   background: var(--bg-card);
   border-radius: var(--radius-lg);
-  padding: 20px 18px;
+  padding: 28px 22px 24px;
   text-align: center;
   border: 1px solid var(--border-card);
   transition: var(--transition);
@@ -192,14 +192,17 @@ body {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold-border), transparent);
+  height: 3px;
   opacity: 0;
   transition: opacity 0.3s var(--ease-elegant);
 }
 
+.metric--warning::before { background: var(--warning); }
+.metric--success::before { background: var(--success); }
+.metric--gold::before { background: var(--gold); }
+
 .metric:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
   border-color: var(--gold-border-h);
   box-shadow: var(--shadow-hover);
 }
@@ -208,13 +211,20 @@ body {
   opacity: 1;
 }
 
+.metric-icon {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  opacity: 0.5;
+}
+
 .metric-number {
   font-family: 'Playfair Display', serif;
-  font-size: 36px;
+  font-size: 44px;
   font-weight: 700;
   color: var(--cream);
   line-height: 1;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .metric-number.warning {
@@ -225,12 +235,16 @@ body {
   color: var(--success);
 }
 
+.metric-number.gold {
+  color: var(--gold-light);
+}
+
 .metric-label {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 8px;
+  letter-spacing: 1.2px;
+  margin-bottom: 10px;
   font-weight: 500;
 }
 
@@ -238,11 +252,13 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1px;
+  gap: 2px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
 }
 
 .trend-delta {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.3px;
 }
@@ -257,6 +273,69 @@ body {
 .metric-trend.up .trend-delta::before { content: '↑ '; }
 .metric-trend.down .trend-delta { color: var(--danger); }
 .metric-trend.down .trend-delta::before { content: '↓ '; }
+
+/* ─── Pipeline Flow ─────────────────────────────────────────────────────── */
+.pipeline-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 32px;
+  padding: 18px 28px;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-card);
+}
+
+.flow-stage {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.flow-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+
+.flow-count {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.flow-count.warning {
+  color: var(--warning);
+  background: var(--warning-bg);
+  border: 1px solid rgba(192, 130, 58, 0.3);
+}
+
+.flow-count.gold {
+  color: var(--gold-light);
+  background: var(--gold-glow);
+  border: 1px solid var(--gold-border);
+}
+
+.flow-count.success {
+  color: var(--success);
+  background: var(--success-bg);
+  border: 1px solid rgba(94, 142, 114, 0.3);
+}
+
+.flow-arrow {
+  font-size: 18px;
+  color: var(--text-muted);
+  opacity: 0.4;
+}
 
 /* ─── Two-Column Layout ──────────────────────────────────────────────────── */
 .two-col {
@@ -307,19 +386,20 @@ body {
 .card-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .card {
   background: var(--bg-card);
   border-radius: var(--radius-md);
-  padding: 14px 16px;
+  padding: 18px 20px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   border: 1px solid var(--border-card);
   cursor: pointer;
   transition: var(--transition);
+  gap: 16px;
 }
 
 .card:hover {
@@ -330,28 +410,163 @@ body {
 }
 
 .card.pending {
-  border-left: 2px solid var(--warning);
+  border-left: 3px solid var(--warning);
 }
 
 .card.shipped {
-  border-left: 2px solid var(--success);
+  border-left: 3px solid var(--success);
 }
 
 .card.killed {
-  border-left: 2px solid var(--danger);
+  border-left: 3px solid var(--danger);
+}
+
+.card-content {
+  flex: 1;
+  min-width: 0;
 }
 
 .card-content h3 {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
-  margin-bottom: 3px;
+  margin-bottom: 6px;
   color: var(--cream);
+  font-family: 'Playfair Display', serif;
+}
+
+.card-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.card-author {
+  font-size: 11px;
+  color: var(--gold-muted);
+  font-weight: 600;
+}
+
+.card-type {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 2px 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 3px;
+}
+
+.card-words {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.card-preview {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+.card-submitted {
+  font-size: 10px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-top: 2px;
 }
 
 .card-content .meta {
   font-size: 10px;
   color: var(--text-muted);
   letter-spacing: 0.2px;
+}
+
+/* ─── Verdict List (Dashboard) ──────────────────────────────────────────── */
+.verdict-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.verdict-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-card);
+  transition: var(--transition);
+}
+
+.verdict-row:hover {
+  background: var(--bg-hover);
+  border-color: var(--gold-border);
+}
+
+.verdict-badge {
+  font-size: 10px;
+  padding: 5px 12px;
+  border-radius: 5px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  flex-shrink: 0;
+  min-width: 60px;
+  text-align: center;
+}
+
+.verdict-badge.ship {
+  background: var(--success);
+  color: #F8FAFC;
+  box-shadow: 0 2px 8px rgba(94, 142, 114, 0.3);
+}
+
+.verdict-badge.revise {
+  background: var(--warning);
+  color: #F8FAFC;
+  box-shadow: 0 2px 8px rgba(192, 130, 58, 0.3);
+}
+
+.verdict-badge.kill {
+  background: var(--danger);
+  color: #F8FAFC;
+  box-shadow: 0 2px 8px rgba(140, 64, 64, 0.3);
+}
+
+.verdict-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.verdict-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cream-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.verdict-meta {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.verdict-score {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--cream-dim);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
 }
 
 .arrow {
@@ -402,6 +617,41 @@ body {
 
 .brand-item:hover::after {
   opacity: 1;
+}
+
+.brand-grid-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.brand-item-compact {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-card);
+  transition: var(--transition);
+}
+
+.brand-item-compact:hover {
+  border-color: var(--gold-border);
+  background: var(--bg-hover);
+}
+
+.brand-item-compact h4 {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cream);
+  letter-spacing: 0.3px;
+}
+
+.brand-item-compact p {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 1px;
 }
 
 .brand-icon {
@@ -1055,7 +1305,22 @@ blockquote.preview {
   }
 
   .metric-number {
-    font-size: 28px;
+    font-size: 32px;
+  }
+
+  .metric {
+    padding: 22px 16px 18px;
+  }
+
+  .pipeline-flow {
+    gap: 14px;
+    padding: 14px 18px;
+  }
+
+  .flow-count {
+    width: 34px;
+    height: 34px;
+    font-size: 18px;
   }
 
   .review-actions {
@@ -1095,6 +1360,11 @@ blockquote.preview {
 
   .key-metrics {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pipeline-flow {
+    flex-wrap: wrap;
+    gap: 10px;
   }
 
   .voice-card,

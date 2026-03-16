@@ -1795,11 +1795,11 @@ function App() {
       {/* Toast Notifications */}
       <div className="toast-container">
         {toasts.map(toast => (
-          <Toast 
-            key={toast.id} 
-            message={toast.message} 
-            type={toast.type} 
-            onClose={() => removeToast(toast.id)} 
+          <Toast
+            key={toast.id}
+            message={toast.message}
+            type={toast.type}
+            onClose={() => removeToast(toast.id)}
           />
         ))}
       </div>
@@ -1808,23 +1808,23 @@ function App() {
       {showHotTake && <HotTakeGenerator onClose={() => setShowHotTake(false)} />}
       {showFormula && <ContentFormulaRef isOpen={showFormula} onClose={() => setShowFormula(false)} />}
       {showQuickDraft && (
-        <QuickDraftModal 
-          onClose={() => setShowQuickDraft(false)} 
+        <QuickDraftModal
+          onClose={() => setShowQuickDraft(false)}
           onSave={saveDraft}
         />
       )}
       {showShortcuts && <ShortcutsPanel onClose={() => setShowShortcuts(false)} />}
       {showVirality && <ViralityCalculator onClose={() => setShowVirality(false)} />}
       {showQuickWrite && (
-        <QuickWriteMode 
-          onClose={() => setShowQuickWrite(false)} 
+        <QuickWriteMode
+          onClose={() => setShowQuickWrite(false)}
           onSave={saveQuickWrite}
         />
       )}
       {showTopicGenerator && <TopicGenerator onClose={() => setShowTopicGenerator(false)} />}
       <ClipboardHistory isOpen={showClipboard} onClose={() => setShowClipboard(false)} />
-      <DraftsManager 
-        isOpen={showDraftsManager} 
+      <DraftsManager
+        isOpen={showDraftsManager}
         onClose={() => setShowDraftsManager(false)}
         drafts={drafts}
         onLoadDraft={loadDraft}
@@ -1832,13 +1832,13 @@ function App() {
       />
       <KeyboardShortcuts isOpen={showShortcuts} onClose={() => setShowShortcuts(false)} />
       <BrainstormMode isOpen={showBrainstorm} onClose={() => setShowBrainstorm(false)} />
-      <CommandPalette 
-        isOpen={showCommandPalette} 
+      <CommandPalette
+        isOpen={showCommandPalette}
         onClose={() => setShowCommandPalette(false)}
         onAction={handleCommand}
       />
-      
-      <div 
+
+      <div
         className="gradient-orb"
         style={{
           left: mousePos.x * 0.015,
@@ -1851,18 +1851,18 @@ function App() {
           bottom: mousePos.y * 0.01
         }}
       />
-      
+
       <header className="header">
         <div className="logo">
           <span className="logo-icon">✍️</span>
           <span className="logo-text">RENZO</span>
-          <span className="logo-badge">v3.0</span>
+          <span className="logo-badge">v4.0</span>
         </div>
         <div className="header-right">
           <NotionSyncStatus onSync={() => addToast('Notion sync complete!', 'success')} />
-          <button 
-            className="sound-toggle" 
-            onClick={() => { 
+          <button
+            className="sound-toggle"
+            onClick={() => {
               const newVal = !soundEnabled
               setSoundEnabled(newVal)
               localStorage.setItem('renzo-sound', newVal)
@@ -1885,21 +1885,21 @@ function App() {
       </header>
 
       <main className="main">
+        {/* ---- Hero ---- */}
         <section className="hero">
           <div className="hero-content">
             <h1 className="hero-title">
               {getGreeting()}, Michael.
             </h1>
             <p className="hero-subtitle">
-              Content engine firing. Science-backed. Never boring. 
+              Content engine firing. Science-backed. Never boring.
               <span className="accent"> Ship or shut up.</span>
             </p>
-            <TodaysFocus 
-              focus={todaysFocus} 
-              setFocus={setTodaysFocus} 
+            <TodaysFocus
+              focus={todaysFocus}
+              setFocus={setTodaysFocus}
               onSave={(f) => { saveFocus(f); addActivity('focus', `Set focus: ${f.slice(0, 30)}`) }}
             />
-            <WordCountTracker onUpdate={setWordsWritten} />
           </div>
           <div className="hero-status">
             <EnergyMeter level={energyLevel} setLevel={setEnergyLevel} />
@@ -1910,317 +1910,275 @@ function App() {
           </div>
         </section>
 
-        {/* New Feature Cards Row */}
-        <section className="new-features-row">
-          <DailyQuote />
-          <StudySpotlight />
-          <QuickStatGenerator />
-          <WritingTimer onComplete={() => addToast('Session complete! Take a break ☕', 'success')} />
-        </section>
-        
-        <section className="feature-buttons-row">
-          <button className="feature-btn" onClick={() => setShowFormula(true)}>
-            <span>📝</span>
-            <span>Formula</span>
-            <span className="feature-hint">F</span>
-          </button>
-          <button className="feature-btn" onClick={() => setShowTopicGenerator(true)}>
-            <span>💡</span>
-            <span>Topic</span>
-            <span className="feature-hint">G</span>
-          </button>
-          <button className="feature-btn" onClick={() => setShowClipboard(true)}>
-            <span>📋</span>
-            <span>Clips</span>
-            <span className="feature-hint">C</span>
-          </button>
-          <button className="feature-btn" onClick={() => setShowDraftsManager(true)}>
-            <span>📁</span>
-            <span>Drafts</span>
-            <span className="feature-hint">D</span>
-          </button>
-          <button className="feature-btn" onClick={() => setShowBrainstorm(true)}>
-            <span>🧠</span>
-            <span>Brainstorm</span>
-            <span className="feature-hint">B</span>
-          </button>
-        </section>
-
-        {/* Quick Actions Panel */}
-        <section className="quick-actions">
-          <div className="actions-header">
-            <span className="actions-title">Quick Actions</span>
-            <span className="actions-hint">Press N</span>
-          </div>
-          <div className="actions-grid">
-            {quickActions.map((action, i) => (
-              <button 
-                key={i} 
-                className="action-btn"
-                onClick={() => {
-                  if (action.action === 'new') setShowQuickDraft(true)
-                  else if (action.action === 'prompt') setShowPrompt(true)
-                  else if (action.action === 'hottake') setShowHotTake(true)
-                  else if (action.action === 'trends') document.querySelector('.trending-section')?.scrollIntoView({ behavior: 'smooth' })
-                  else if (action.action === 'shortcuts') setShowShortcuts(true)
-                  else if (action.action === 'sync') addToast('Syncing with Notion...', 'info')
-                }}
-              >
-                <span className="action-icon">{action.icon}</span>
-                <span className="action-label">{action.label}</span>
-                <span className="action-shortcut">{action.shortcut}</span>
-              </button>
-            ))}
-          </div>
-        </section>
-
-        {/* Weekly Goals */}
-        <section className="goals-section">
-          <div className="section-header">
-            <h2 className="section-title">
-              <span className="section-icon">🎯</span>
-              This Week's Goals
-            </h2>
-          </div>
-          <WeeklyGoals />
-        </section>
-
-        <section className="metrics-grid">
-          <div 
-            className="metric-card primary"
-            onMouseEnter={() => setHoveredMetric('articles')}
-            onMouseLeave={() => setHoveredMetric(null)}
-          >
-            <div className="metric-icon">📄</div>
-            <div className="metric-value">
+        {/* ---- KPI Strip — huge numbers, clear focal point ---- */}
+        <section className="kpi-strip">
+          <div className="kpi-card primary">
+            <div className="kpi-icon">📄</div>
+            <div className="kpi-value">
               <AnimatedCounter end={metrics.totalArticles} />
             </div>
-            <div className="metric-label">Articles Shipped</div>
-            <div className="metric-trend positive">
-              ↑ {metrics.publishedThisMonth} this month
-            </div>
-            {hoveredMetric === 'articles' && (
-              <div className="metric-tooltip">+3 from last month</div>
-            )}
+            <div className="kpi-label">Articles Shipped</div>
+            <div className="kpi-trend positive">+{metrics.publishedThisMonth} this month</div>
           </div>
-          <div className="metric-card">
-            <div className="metric-icon">🔥</div>
-            <div className="metric-value">
+          <div className="kpi-card">
+            <div className="kpi-icon">🔥</div>
+            <div className="kpi-value">
               <AnimatedCounter end={metrics.currentStreak} />
             </div>
-            <div className="metric-label">Day Streak</div>
-            <div className="metric-trend">Never missed a day</div>
+            <div className="kpi-label">Day Streak</div>
+            <div className="kpi-trend">Never missed a day</div>
           </div>
-          <div className="metric-card">
-            <div className="metric-icon">📝</div>
-            <div className="metric-value">
+          <div className="kpi-card">
+            <div className="kpi-icon">📝</div>
+            <div className="kpi-value">
               <AnimatedCounter end={Math.round(metrics.totalWords / 1000)} suffix="k" />
             </div>
-            <div className="metric-label">Words Written</div>
-            <div className="metric-trend">🎯 {metrics.avgWordsPerArticle} avg</div>
+            <div className="kpi-label">Words Written</div>
+            <div className="kpi-trend">{metrics.avgWordsPerArticle} avg/article</div>
           </div>
-          <div className="metric-card accent-card">
-            <div className="metric-icon">👁️</div>
-            <div className="metric-value">
+          <div className="kpi-card">
+            <div className="kpi-icon">👁️</div>
+            <div className="kpi-value">
               <AnimatedCounter end={Math.round(metrics.totalReads / 1000)} suffix="k" />
             </div>
-            <div className="metric-label">Total Reads</div>
-            <div className="metric-trend">📈 {metrics.avgEngagement}/10 avg</div>
+            <div className="kpi-label">Total Reads</div>
+            <div className="kpi-trend positive">{metrics.avgEngagement}/10 engagement</div>
           </div>
         </section>
 
-        {/* Trending Topics */}
-        <section className="trending-section">
-          <div className="section-header">
-            <h2 className="section-title">
-              <span className="section-icon">🔥</span>
-              Trending Topics
-            </h2>
-            <span className="article-count">AI-ranked</span>
-          </div>
-          <div className="trending-list">
-            {trendingTopics.map((item, i) => (
-              <div key={i} className="trending-item" style={{ animationDelay: `${i * 0.05}s` }}>
-                <div className="trending-rank">#{i + 1}</div>
-                <div className="trending-content">
-                  <span className="trending-topic">{item.topic}</span>
-                  <div className="trending-meta">
-                    <span 
-                      className="trending-status"
-                      style={{ color: getMomentumColor(item.momentum) }}
+        {/* ---- Quick Actions — consolidated into single bar ---- */}
+        <div className="quick-actions-bar">
+          <button className="qa-btn" onClick={() => setShowQuickWrite(true)}>
+            <span className="qa-icon">📝</span> Write
+            <span className="qa-key">W</span>
+          </button>
+          <button className="qa-btn" onClick={() => setShowQuickDraft(true)}>
+            <span className="qa-icon">📄</span> Draft
+            <span className="qa-key">D</span>
+          </button>
+          <button className="qa-btn" onClick={() => setShowTopicGenerator(true)}>
+            <span className="qa-icon">💡</span> Topic
+            <span className="qa-key">G</span>
+          </button>
+          <button className="qa-btn" onClick={() => setShowHotTake(true)}>
+            <span className="qa-icon">🔥</span> Hot Take
+            <span className="qa-key">T</span>
+          </button>
+          <button className="qa-btn" onClick={() => setShowBrainstorm(true)}>
+            <span className="qa-icon">🧠</span> Brainstorm
+            <span className="qa-key">B</span>
+          </button>
+          <button className="qa-btn" onClick={() => setShowFormula(true)}>
+            <span className="qa-icon">📐</span> Formula
+            <span className="qa-key">F</span>
+          </button>
+          <button className="qa-btn" onClick={() => setShowVirality(true)}>
+            <span className="qa-icon">🎯</span> Virality
+            <span className="qa-key">V</span>
+          </button>
+        </div>
+
+        {/* ---- 2-Column Grid ---- */}
+        <div className="dashboard-grid">
+          {/* PRIMARY COLUMN: Writing + Articles */}
+          <div className="primary-col">
+            {/* Word Count Tracker */}
+            <div>
+              <h3 className="section-heading"><span className="icon">📊</span> Today's Progress</h3>
+              <WordCountTracker onUpdate={setWordsWritten} />
+            </div>
+
+            {/* Recent Articles */}
+            <div>
+              <h3 className="section-heading"><span className="icon">📡</span> Recent Articles</h3>
+              <div className="article-filters">
+                <div className="search-box">
+                  <span className="search-icon">🔍</span>
+                  <input
+                    id="article-search"
+                    type="text"
+                    placeholder="Search articles... (press /)"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="search-input"
+                  />
+                  {searchQuery && (
+                    <button className="search-clear" onClick={() => setSearchQuery('')}>×</button>
+                  )}
+                </div>
+                <div className="filter-pills">
+                  <button
+                    className={`filter-pill ${articleFilter === 'all' ? 'active' : ''}`}
+                    onClick={() => setArticleFilter('all')}
+                  >
+                    All
+                  </button>
+                  {Object.keys(categoryColors).map(cat => (
+                    <button
+                      key={cat}
+                      className={`filter-pill ${articleFilter === cat ? 'active' : ''}`}
+                      onClick={() => setArticleFilter(cat)}
+                      style={{ '--pill-color': categoryColors[cat] }}
                     >
-                      {item.status}
-                    </span>
-                    <div className="momentum-bar">
-                      <div 
-                        className="momentum-fill"
-                        style={{ 
-                          width: `${item.momentum}%`,
-                          background: `linear-gradient(90deg, ${getMomentumColor(item.momentum)}, transparent)`
-                        }}
-                      />
-                    </div>
-                    <span className="momentum-value">{item.momentum}</span>
-                  </div>
+                      {cat}
+                    </button>
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Category Breakdown */}
-        <section className="category-section">
-          <div className="section-header">
-            <h2 className="section-title">
-              <span className="section-icon">📊</span>
-              Category Breakdown
-            </h2>
-          </div>
-          <CategoryChart articles={recentArticles} />
-        </section>
-
-        {/* Productivity Insight */}
-        <section className="insight-section">
-          <div className="insight-card">
-            <div className="insight-icon">⏰</div>
-            <div className="insight-content">
-              <span className="insight-label">Peak Productivity Hour</span>
-              <span className="insight-value">{productivityHour}:00 {productivityHour >= 12 ? 'PM' : 'AM'}</span>
-            </div>
-            <div className="insight-sub">You write best in the evening hours</div>
-          </div>
-        </section>
-
-        <section className="feed-section">
-          <div className="section-header">
-            <h2 className="section-title">
-              <span className="section-icon">📡</span>
-              Recent Articles
-            </h2>
-            <span className="article-count">{filteredArticles.length} of {recentArticles.length}</span>
-          </div>
-          
-          {/* Search and Filter Bar */}
-          <div className="article-filters">
-            <div className="search-box">
-              <span className="search-icon">🔍</span>
-              <input
-                id="article-search"
-                type="text"
-                placeholder="Search articles... (press /)"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="search-input"
-              />
-              {searchQuery && (
-                <button className="search-clear" onClick={() => setSearchQuery('')}>×</button>
-              )}
-            </div>
-            <div className="filter-pills">
-              <button 
-                className={`filter-pill ${articleFilter === 'all' ? 'active' : ''}`}
-                onClick={() => setArticleFilter('all')}
-              >
-                All
-              </button>
-              {Object.keys(categoryColors).map(cat => (
-                <button
-                  key={cat}
-                  className={`filter-pill ${articleFilter === cat ? 'active' : ''}`}
-                  onClick={() => setArticleFilter(cat)}
-                  style={{ '--pill-color': categoryColors[cat] }}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          </div>
-          
-          <div className="articles-list">
-            {filteredArticles.map((article, index) => (
-              <div 
-                key={index} 
-                className={`article-card ${expandedArticle === index ? 'expanded' : ''}`}
-                style={{ animationDelay: `${index * 0.05}s` }}
-                onClick={() => toggleArticle(index)}
-              >
-                <div className="article-header">
-                  <div className="article-status">
-                    <span className="status-dot"></span>
-                    {article.status}
-                  </div>
-                  <div className="article-right">
-                    <span 
-                      className="engagement-badge"
-                      style={{ 
-                        background: `${getEngagementColor(article.engagement)}20`,
-                        color: getEngagementColor(article.engagement)
-                      }}
-                    >
-                      {article.engagement}/10
-                    </span>
-                    <span 
-                      className="article-category"
-                      style={{ color: categoryColors[article.category] || '#a1a1aa' }}
-                    >
-                      {article.category}
-                    </span>
-                  </div>
-                </div>
-                <h3 className="article-title">{article.title}</h3>
-                <div className="article-meta">
-                  <span className="article-date">{formatDate(article.date)}</span>
-                  <span className="article-divider">•</span>
-                  <span className="article-words">{article.words.toLocaleString()} words</span>
-                  <span className="article-divider">•</span>
-                  <span className="article-read-time">{Math.ceil(article.words / 200)} min</span>
-                  <span className="article-divider">•</span>
-                  <span className="article-reads">{article.reads.toLocaleString()} reads</span>
-                </div>
-                
-                {/* Expanded Content */}
-                {expandedArticle === index && (
-                  <div className="article-expanded">
-                    <div className="expanded-stats">
-                      <div className="expanded-stat">
-                        <span className="expanded-label">Engagement</span>
-                        <span className="expanded-value" style={{ color: getEngagementColor(article.engagement) }}>
+              <div className="articles-list">
+                {filteredArticles.map((article, index) => (
+                  <div
+                    key={index}
+                    className={`article-card ${expandedArticle === index ? 'expanded' : ''}`}
+                    onClick={() => toggleArticle(index)}
+                  >
+                    <div className="article-header">
+                      <div className="article-status">
+                        <span className="status-dot"></span>
+                        {article.status}
+                      </div>
+                      <div className="article-right">
+                        <span
+                          className="engagement-badge"
+                          style={{
+                            background: `${getEngagementColor(article.engagement)}20`,
+                            color: getEngagementColor(article.engagement)
+                          }}
+                        >
                           {article.engagement}/10
                         </span>
-                      </div>
-                      <div className="expanded-stat">
-                        <span className="expanded-label">Total Reads</span>
-                        <span className="expanded-value">{article.reads.toLocaleString()}</span>
-                      </div>
-                      <div className="expanded-stat">
-                        <span className="expanded-label">Est. Shares</span>
-                        <span className="expanded-value">{Math.round(article.reads * 0.12).toLocaleString()}</span>
+                        <span
+                          className="article-category"
+                          style={{ color: categoryColors[article.category] || '#a1a1aa' }}
+                        >
+                          {article.category}
+                        </span>
                       </div>
                     </div>
-                    <button className="view-btn">View Full Analytics →</button>
+                    <h3 className="article-title">{article.title}</h3>
+                    <div className="article-meta">
+                      <span className="article-date">{formatDate(article.date)}</span>
+                      <span className="article-divider">·</span>
+                      <span className="article-words">{article.words.toLocaleString()} words</span>
+                      <span className="article-divider">·</span>
+                      <span className="article-reads">{article.reads.toLocaleString()} reads</span>
+                    </div>
+                    {expandedArticle === index && (
+                      <div className="article-expanded">
+                        <div className="expanded-stats">
+                          <div className="expanded-stat">
+                            <span className="expanded-label">Engagement</span>
+                            <span className="expanded-value" style={{ color: getEngagementColor(article.engagement) }}>
+                              {article.engagement}/10
+                            </span>
+                          </div>
+                          <div className="expanded-stat">
+                            <span className="expanded-label">Total Reads</span>
+                            <span className="expanded-value">{article.reads.toLocaleString()}</span>
+                          </div>
+                          <div className="expanded-stat">
+                            <span className="expanded-label">Est. Shares</span>
+                            <span className="expanded-value">{Math.round(article.reads * 0.12).toLocaleString()}</span>
+                          </div>
+                        </div>
+                        <button className="view-btn">View Full Analytics →</button>
+                      </div>
+                    )}
                   </div>
-                )}
+                ))}
               </div>
-            ))}
-          </div>
-        </section>
+            </div>
 
-        <section className="quick-stats">
+            {/* Category Breakdown */}
+            <div className="card">
+              <h3 className="section-heading"><span className="icon">📊</span> Category Breakdown</h3>
+              <CategoryChart articles={recentArticles} />
+            </div>
+          </div>
+
+          {/* SECONDARY COLUMN: Goals, Trending, Tools */}
+          <div className="secondary-col">
+            {/* Weekly Goals */}
+            <div className="card">
+              <h3 className="section-heading"><span className="icon">🎯</span> This Week's Goals</h3>
+              <WeeklyGoals />
+            </div>
+
+            {/* Trending Topics */}
+            <div className="card">
+              <h3 className="section-heading"><span className="icon">🔥</span> Trending Topics</h3>
+              <div className="trending-list">
+                {trendingTopics.map((item, i) => (
+                  <div key={i} className="trending-item">
+                    <div className="trending-rank">#{i + 1}</div>
+                    <div className="trending-content">
+                      <span className="trending-topic">{item.topic}</span>
+                      <div className="trending-meta">
+                        <span
+                          className="trending-status"
+                          style={{ color: getMomentumColor(item.momentum) }}
+                        >
+                          {item.status}
+                        </span>
+                        <div className="momentum-bar">
+                          <div
+                            className="momentum-fill"
+                            style={{
+                              width: `${item.momentum}%`,
+                              background: `linear-gradient(90deg, ${getMomentumColor(item.momentum)}, transparent)`
+                            }}
+                          />
+                        </div>
+                        <span className="momentum-value">{item.momentum}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Writing Timer */}
+            <div className="card">
+              <WritingTimer onComplete={() => addToast('Session complete! Take a break', 'success')} />
+            </div>
+
+            {/* Productivity Insight */}
+            <div className="insight-card">
+              <div className="insight-icon">⏰</div>
+              <div className="insight-content">
+                <span className="insight-label">Peak Productivity</span>
+                <span className="insight-value">{productivityHour}:00 {productivityHour >= 12 ? 'PM' : 'AM'}</span>
+              </div>
+              <div className="insight-sub">Best writing hours</div>
+            </div>
+
+            {/* Daily Quote */}
+            <DailyQuote />
+
+            {/* Study Spotlight */}
+            <StudySpotlight />
+
+            {/* Activity Feed */}
+            <div className="card">
+              <h3 className="section-heading"><span className="icon">⚡</span> Activity Feed</h3>
+              <ActivityTimeline activities={activities} />
+            </div>
+          </div>
+        </div>
+
+        {/* ---- Status Bar ---- */}
+        <section className="status-bar">
           <div className="stat-pill">
             <span className="stat-label">Model</span>
             <span className="stat-value">MiniMax M2.5</span>
           </div>
           <div className="stat-pill">
-            <span className="stat-label">Voice</span>
-            <span className="stat-value">Ryan (1.0x)</span>
+            <span className="stat-label">Pipeline</span>
+            <span className="stat-value status-online">Active</span>
           </div>
           <div className="stat-pill">
             <span className="stat-label">Last Write</span>
             <span className="stat-value">{formatDate(metrics.lastArticleDate)}</span>
-          </div>
-          <div className="stat-pill">
-            <span className="stat-label">Pipeline</span>
-            <span className="stat-value status-online">Active</span>
           </div>
           <div className="stat-pill">
             <span className="stat-label">Top Category</span>
@@ -2228,71 +2186,12 @@ function App() {
               {metrics.topCategory}
             </span>
           </div>
-          <div className="stat-pill">
-            <span className="stat-label">Today</span>
-            <span className="stat-value">{wordsWritten.toLocaleString()} words</span>
-          </div>
-        </section>
-
-        {/* Activity Timeline */}
-        <section className="activity-section">
-          <div className="section-header">
-            <h2 className="section-title">
-              <span className="section-icon">⚡</span>
-              Activity Feed
-            </h2>
-          </div>
-          <ActivityTimeline activities={activities} />
-        </section>
-
-        {/* Drafts Section */}
-        {drafts.length > 0 && (
-          <section className="drafts-section">
-            <div className="section-header">
-              <h2 className="section-title">
-                <span className="section-icon">📝</span>
-                Saved Drafts
-              </h2>
-              <span className="article-count">{drafts.length}</span>
-            </div>
-            <div className="drafts-list">
-              {drafts.slice(0, 3).map((draft, i) => (
-                <div key={i} className="draft-card" onClick={() => setShowQuickDraft(true)}>
-                  <div className="draft-category" style={{ color: categoryColors[draft.category] || '#a1a1aa' }}>
-                    {draft.category}
-                  </div>
-                  <div className="draft-title">{draft.title}</div>
-                  {draft.hook && <div className="draft-hook">"{draft.hook.slice(0, 80)}..."</div>}
-                  <div className="draft-date">{formatDate(draft.date)}</div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        <section className="status-bar">
-          <div className="status-item">
-            <span className="status-indicator online"></span>
-            <span>Ready to write</span>
-          </div>
-          <div className="status-item">
-            <span className="status-indicator model"></span>
-            <span>Model: MiniMax M2.5</span>
-          </div>
-          <div className="status-item">
-            <span className="status-indicator time"></span>
-            <span>Last activity: {formatDate(metrics.lastArticleDate)}</span>
-          </div>
-          <div className="status-item">
-            <span className="status-indicator streak"></span>
-            <span>🔥 {metrics.currentStreak} day streak</span>
-          </div>
         </section>
       </main>
 
       <footer className="footer">
-        <p>Built by Renzo • Workout Flow Content Engine</p>
-        <p className="footer-version">v3.0 • March 2026 • Press ⌘K for commands, H for shortcuts</p>
+        <p>Built by Renzo · Workout Flow Content Engine</p>
+        <p className="footer-version">v4.0 · March 2026 · Press ⌘K for commands</p>
       </footer>
     </div>
   )

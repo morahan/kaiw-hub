@@ -32,7 +32,9 @@ const metricTrends = {
 }
 
 function App() {
-  const { isSignedIn } = useAuth();
+  const SKIP_AUTH = import.meta.env.VITE_SKIP_AUTH === 'true';
+  const { isSignedIn: clerkSignedIn } = useAuth();
+  const isSignedIn = SKIP_AUTH || clerkSignedIn;
   const [time, setTime] = useState(new Date())
   const [activeView, setActiveView] = useState('dashboard')
   const [selectedReview, setSelectedReview] = useState(null)
@@ -102,12 +104,13 @@ function App() {
           <>
             <section className="key-metrics">
               {[
-                { key: 'pendingReviews', label: 'In Queue', color: 'warning', click: () => setActiveView('reviews') },
-                { key: 'shippedToday', label: 'Shipped', color: 'success' },
-                { key: 'avgScore', label: 'Quality Score', color: '' },
-                { key: 'approvalRate', label: 'Approval Rate', color: '', suffix: '%' },
+                { key: 'pendingReviews', label: 'In Queue', color: 'warning', icon: '◎', click: () => setActiveView('reviews') },
+                { key: 'shippedToday', label: 'Shipped', color: 'success', icon: '▲' },
+                { key: 'avgScore', label: 'Quality Score', color: 'gold', icon: '✦' },
+                { key: 'approvalRate', label: 'Approval Rate', color: 'gold', icon: '◆', suffix: '%' },
               ].map(stat => (
-                <div key={stat.key} className="metric" onClick={stat.click} style={stat.click ? { cursor: 'pointer' } : {}}>
+                <div key={stat.key} className={`metric metric--${stat.color}`} onClick={stat.click} style={stat.click ? { cursor: 'pointer' } : {}}>
+                  <div className="metric-icon">{stat.icon}</div>
                   <div className={`metric-number ${stat.color}`}>{stat.suffix ? `${keyStats[stat.key]}${stat.suffix}` : keyStats[stat.key]}</div>
                   <div className="metric-label">{stat.label}</div>
                   {metricTrends[stat.key] && (
@@ -118,6 +121,23 @@ function App() {
                   )}
                 </div>
               ))}
+            </section>
+
+            <section className="pipeline-flow">
+              <div className="flow-stage">
+                <div className="flow-label">Pending</div>
+                <div className="flow-count warning">{pendingReviews.length}</div>
+              </div>
+              <div className="flow-arrow">→</div>
+              <div className="flow-stage">
+                <div className="flow-label">In Review</div>
+                <div className="flow-count gold">1</div>
+              </div>
+              <div className="flow-arrow">→</div>
+              <div className="flow-stage">
+                <div className="flow-label">Shipped</div>
+                <div className="flow-count success">{reviewHistory.filter(r => r.verdict === 'ship').length}</div>
+              </div>
             </section>
 
             <div className="two-col">
@@ -131,14 +151,37 @@ function App() {
                     <div key={item.id} className="card pending" onClick={() => { setSelectedReview(item); setActiveView('reviews'); }}>
                       <div className="card-content">
                         <h3>{item.title}</h3>
-                        <span className="meta">{item.author} · {item.type} · {item.wordCount.toLocaleString()} words</span>
+                        <div className="card-meta-row">
+                          <span className="card-author">{item.author}</span>
+                          <span className="card-type">{item.type}</span>
+                          <span className="card-words">{item.wordCount.toLocaleString()} words</span>
+                        </div>
+                        <p className="card-preview">{item.preview.slice(0, 100)}...</p>
                       </div>
-                      <span className="arrow">→</span>
+                      <span className="card-submitted">{item.submitted}</span>
                     </div>
                   ))}
                 </div>
               </section>
 
+              <section className="section">
+                <div className="section-header"><h2>Recent Verdicts</h2></div>
+                <div className="verdict-list">
+                  {reviewHistory.slice(0, 4).map(item => (
+                    <div key={item.id} className="verdict-row">
+                      <div className={`verdict-badge ${item.verdict}`}>{item.verdict}</div>
+                      <div className="verdict-info">
+                        <span className="verdict-title">{item.title}</span>
+                        <span className="verdict-meta">{item.author} · {item.date}</span>
+                      </div>
+                      <span className="verdict-score">{item.score}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </div>
+
+            <div className="two-col">
               <section className="section">
                 <div className="section-header"><h2>Activity Log</h2></div>
                 <div className="activity-list">
@@ -153,32 +196,31 @@ function App() {
                   ))}
                 </div>
               </section>
+
+              <section className="section">
+                <div className="section-header"><h2>Brand Standards</h2></div>
+                <div className="brand-grid-compact">
+                  {[
+                    { icon: '⚗️', title: 'Scientific', desc: '3–5 cited sources per article' },
+                    { icon: '🏛️', title: 'Elegant', desc: '750–1,250 words. No padding.' },
+                    { icon: '🔥', title: 'Warm', desc: 'Evidence-led, never hype.' },
+                    { icon: '✦', title: 'Confident', desc: 'Clear CTA. No hedging.' },
+                  ].map((item, i) => (
+                    <div key={i} className="brand-item-compact">
+                      <span className="brand-icon">{item.icon}</span>
+                      <div><h4>{item.title}</h4><p>{item.desc}</p></div>
+                    </div>
+                  ))}
+                </div>
+              </section>
             </div>
 
             <section className="section">
-              <div className="section-header"><h2>Quick Actions</h2></div>
               <div className="quick-actions">
                 <button className="action-btn" onClick={() => setActiveView('reviews')}>Review Next</button>
                 <button className="action-btn" onClick={() => setActiveView('voice')}>Test Voice</button>
                 <button className="action-btn" onClick={() => setActiveView('history')}>View History</button>
                 <button className="action-btn secondary">Sync Notion</button>
-              </div>
-            </section>
-
-            <section className="section">
-              <div className="section-header"><h2>Brand Standards</h2></div>
-              <div className="brand-grid">
-                {[
-                  { icon: '⚗️', title: 'Scientific', desc: '3–5 cited sources per article' },
-                  { icon: '🏛️', title: 'Elegant', desc: '750–1,250 words. No padding.' },
-                  { icon: '🔥', title: 'Warm', desc: 'Evidence-led, never hype.' },
-                  { icon: '✦', title: 'Confident', desc: 'Clear CTA. No hedging.' },
-                ].map((item, i) => (
-                  <div key={i} className="brand-item">
-                    <span className="brand-icon">{item.icon}</span>
-                    <div><h4>{item.title}</h4><p>{item.desc}</p></div>
-                  </div>
-                ))}
               </div>
             </section>
           </>
