@@ -1401,35 +1401,35 @@ function AnimatedCounter({ end, duration = 1500, suffix = '' }) {
 // Recent articles data
 const recentArticles = [
   {
-    title: "The Exercise Variety Effect: Why Doing Just One Type of Workout Is Cutting Your Lifespan Short",
-    date: "2026-02-19",
-    words: 1069,
+    title: "Creatine's Hidden Superpower: Why Every Brain in the Room Should Be Supplementing",
+    date: "2026-03-15",
+    words: 1124,
     status: "Published",
-    category: "Longevity",
-    engagement: 8.2,
-    reads: 12450
+    category: "Science",
+    engagement: 9.3,
+    reads: 22100
   },
   {
-    title: "Altitude Masks Are a Scam — But Real Hypoxic Training Changes Everything",
-    date: "2026-02-18",
-    words: 1247,
+    title: "The Mitochondrial Age Hack: Why Your Cells Are Older Than Your Birth Certificate",
+    date: "2026-03-13",
+    words: 1312,
     status: "Published",
-    category: "Training",
+    category: "Longevity",
     engagement: 9.1,
-    reads: 18200
+    reads: 19800
   },
   {
     title: "Fascia: The Forgotten Tissue That Explains Why You're Stiff, Sore, and Stuck",
-    date: "2026-02-18",
+    date: "2026-03-11",
     words: 1208,
     status: "Published",
     category: "Science",
     engagement: 7.8,
-    reads: 9800
+    reads: 11200
   },
   {
     title: "Heart Rate Variability: The Hidden Fitness Metric That Predicts Your Health",
-    date: "2026-02-17",
+    date: "2026-03-09",
     words: 1241,
     status: "Published",
     category: "Metrics",
@@ -1438,43 +1438,43 @@ const recentArticles = [
   },
   {
     title: "Forget Lifespan — Your Musclespan Determines How Well You Age",
-    date: "2026-02-17",
+    date: "2026-03-07",
     words: 1381,
     status: "Published",
     category: "Longevity",
     engagement: 9.4,
-    reads: 21500
+    reads: 24500
   },
   {
     title: "Why Zone 2 Training Is Overrated (And What Actually Works)",
-    date: "2026-02-16",
+    date: "2026-03-05",
     words: 1156,
     status: "Published",
     category: "Training",
     engagement: 8.9,
-    reads: 16700
+    reads: 18700
   }
 ]
 
 const metrics = {
-  totalArticles: 24,
-  currentStreak: 18,
-  totalWords: 28450,
-  avgWordsPerArticle: 1185,
+  totalArticles: 31,
+  currentStreak: 23,
+  totalWords: 36840,
+  avgWordsPerArticle: 1188,
   topCategory: "Longevity",
-  lastArticleDate: "2026-02-19",
-  publishedThisMonth: 8,
+  lastArticleDate: "2026-03-15",
+  publishedThisMonth: 11,
   topPerformer: "Musclespan",
-  totalReads: 142000,
-  avgEngagement: 8.6
+  totalReads: 187000,
+  avgEngagement: 8.8
 }
 
 const trendingTopics = [
-  { topic: "Muscle protein synthesis", momentum: 94, status: "hot" },
-  { topic: "Chronobiology & training", momentum: 87, status: "rising" },
-  { topic: "Metabolic flexibility", momentum: 82, status: "rising" },
-  { topic: "Sarcopenia prevention", momentum: 76, status: "steady" },
-  { topic: "Mitochondrial biogenesis", momentum: 71, status: "steady" }
+  { topic: "Creatine & cognitive performance", momentum: 97, status: "hot" },
+  { topic: "Muscle protein synthesis", momentum: 91, status: "hot" },
+  { topic: "Chronobiology & training", momentum: 85, status: "rising" },
+  { topic: "Metabolic flexibility", momentum: 79, status: "rising" },
+  { topic: "Mitochondrial biogenesis", momentum: 73, status: "steady" }
 ]
 
 const categoryColors = {
@@ -1578,7 +1578,7 @@ function App() {
     const newDrafts = [{ ...data, category: 'Quick Write' }, ...drafts]
     setDrafts(newDrafts)
     localStorage.setItem('renzo-drafts', JSON.stringify(newDrafts))
-    setWords(prev => prev + data.words)
+    setWordsWritten(prev => prev + data.words)
     addActivity('draft', `Wrote ${data.words} words: "${data.title.slice(0, 30)}..."`)
     addToast(`Saved ${data.words} words!`, 'success')
   }
@@ -1856,7 +1856,7 @@ function App() {
         <div className="logo">
           <span className="logo-icon">✍️</span>
           <span className="logo-text">RENZO</span>
-          <span className="logo-badge">v2.8</span>
+          <span className="logo-badge">v3.0</span>
         </div>
         <div className="header-right">
           <NotionSyncStatus onSync={() => addToast('Notion sync complete!', 'success')} />
@@ -2292,7 +2292,7 @@ function App() {
 
       <footer className="footer">
         <p>Built by Renzo • Workout Flow Content Engine</p>
-        <p className="footer-version">v2.7 • Press ⌘K for commands, H for shortcuts</p>
+        <p className="footer-version">v3.0 • March 2026 • Press ⌘K for commands, H for shortcuts</p>
       </footer>
     </div>
   )
