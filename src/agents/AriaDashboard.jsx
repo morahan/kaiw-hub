@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './css/ariaDashboard.css';
 
-const agent = { name: 'Aria', emoji: '🎵', role: 'Personal Assistant', color: '#a855f7', telegram: 'AriaPersonal' };
+const agent = { name: 'Aria', emoji: '🎵', role: 'Personal Assistant', color: '#a855f7', telegram: 'AriaFlowBot' };
 
 const activityData = [
   { time: '00:00', messages: 0 },
