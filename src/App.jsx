@@ -1,8 +1,18 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { useAuth, SignIn } from '@clerk/react';
 import Hub from './pages/Hub';
 import AgentDashboard from './pages/AgentDashboard';
 import Layout from './components/Layout';
+import QuantaLayout from './quanta/QuantaLayout';
+import MainDashboard from './quanta/MainDashboard';
+import NowDashboard from './quanta/NowDashboard';
+import TokensDashboard from './quanta/TokensDashboard';
+import CostsDashboard from './quanta/CostsDashboard';
+import ModelsDashboard from './quanta/ModelsDashboard';
+import GPUDashboard from './quanta/GPUDashboard';
+import AnalyticsDashboard from './quanta/AnalyticsDashboard';
+import SystemDashboard from './quanta/SystemDashboard';
+import AlertsDashboard from './quanta/AlertsDashboard';
 import './App.css';
 
 function AuthRoute({ children }) {
@@ -64,6 +74,25 @@ function App() {
           <Route index element={<Hub />} />
           <Route path=":agent" element={<AgentDashboard />} />
         </Route>
+        {/* Quanta Analytics at /quanta/* */}
+        <Route path="/quanta" element={
+          <AuthRoute>
+            <QuantaLayout>
+              <Outlet />
+            </QuantaLayout>
+          </AuthRoute>
+        }>
+          <Route index element={<MainDashboard />} />
+          <Route path="now" element={<NowDashboard />} />
+          <Route path="tokens" element={<TokensDashboard />} />
+          <Route path="costs" element={<CostsDashboard />} />
+          <Route path="models" element={<ModelsDashboard />} />
+          <Route path="gpu" element={<GPUDashboard />} />
+          <Route path="analytics" element={<AnalyticsDashboard />} />
+          <Route path="system" element={<SystemDashboard />} />
+          <Route path="alerts" element={<AlertsDashboard />} />
+        </Route>
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

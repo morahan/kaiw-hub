@@ -257,7 +257,7 @@ function App() {
         <div className="section tasks-section">
           <div className="section-header">
             <h2><MessageSquare size={18} /> Recent Tasks</h2>
-            <span className="task-count}>{tasks.length} tasks</span>
+            <span className="task-count">{tasks.length} tasks</span>
           </div>
           <div className="task-list">
             {tasks.map(task => (
