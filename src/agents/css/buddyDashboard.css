@@ -8,7 +8,7 @@
   background: #0a0a0f;
   color: #e4e4e7;
   min-height: 100vh;
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 2rem 2.5rem;
 }
@@ -94,7 +94,7 @@
 }
 .buddy-stat-label {
   font-size: 0.85rem;
-  color: #71717a;
+  color: #a1a1aa;
   margin-top: 0.25rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -108,7 +108,7 @@
 /* ---- Main Content Grid ---- */
 .buddy-content-grid {
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 1fr 420px;
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -312,6 +312,74 @@
   height: 100%;
   background: linear-gradient(90deg, #f97316, #fbbf24);
   border-radius: 3px;
+}
+
+/* ---- CTA Button ---- */
+.buddy-btn-cta {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.buddy-btn-cta:hover {
+  opacity: 0.9;
+}
+.buddy-btn-cta:active {
+  transform: scale(0.97);
+}
+
+/* ---- Leaderboard ---- */
+.buddy-leaderboard-card {
+  border-color: #f9731630;
+}
+.buddy-leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.buddy-leaderboard-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.6rem 0.75rem;
+  background: #0c0c14;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+.buddy-leaderboard-row:hover {
+  border-color: #f9731633;
+}
+.buddy-leaderboard-rank {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #f97316;
+  min-width: 24px;
+}
+.buddy-leaderboard-avatar {
+  font-size: 1.25rem;
+}
+.buddy-leaderboard-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.buddy-leaderboard-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #e4e4e7;
+}
+.buddy-leaderboard-meta {
+  font-size: 0.78rem;
+  color: #a1a1aa;
 }
 
 /* ---- Footer ---- */

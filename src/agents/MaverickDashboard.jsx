@@ -83,13 +83,20 @@ const PIE_DATA = [
 // ── Sub-components ───────────────────────────────────────────────────────────
 
 function TrafficLight({ status }) {
+  const colors = {
+    active:  '#22c55e',
+    running: '#22c55e',
+    idle:    '#3b82f6',
+    standby: '#3b82f6',
+    stopped: '#ef4444',
+    offline: '#ef4444',
+    error:   '#ef4444',
+    warning: '#f59e0b',
+  };
+  const col = colors[status] || '#6b7280';
   return (
-    <span className={`mv-traffic-light mv-tl-${status}`}>
-      {status === 'active'  && '🟢'}
-      {status === 'idle'    && '🟡'}
-      {status === 'standby' && '🟡'}
-      {status === 'offline' && '🔴'}
-      {status === 'error'   && '🔴'}
+    <span className="mv-traffic-light" style={{ color: col, fontSize: '0.6rem' }}>
+      {'\u25CF'}
     </span>
   );
 }
@@ -97,6 +104,7 @@ function TrafficLight({ status }) {
 function GaugeBar({ label, value, max, unit = '%', color, icon: Icon, warn = 70, crit = 90 }) {
   const pct = Math.min((value / max) * 100, 100);
   const barColor = pct >= crit ? '#ef4444' : pct >= warn ? '#f59e0b' : color || '#22c55e';
+  const pctLabel = `${Math.round(pct)}% ${label}`;
   return (
     <div className="mv-gauge">
       <div className="mv-gauge-header">
@@ -114,6 +122,7 @@ function GaugeBar({ label, value, max, unit = '%', color, icon: Icon, warn = 70,
           animate={{ width: `${pct}%` }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
         />
+        <span className="mv-gauge-pct-label">{pctLabel}</span>
       </div>
     </div>
   );
@@ -280,7 +289,7 @@ export default function MaverickDashboard() {
         <div className="mv-status-pill green">
           <CheckCircle size={12} /> {activeCount} agents active
         </div>
-        <div className="mv-status-pill yellow">
+        <div className="mv-status-pill blue">
           <Clock size={12} /> {idleCount} idle
         </div>
         <div className={`mv-status-pill ${resources.gpu > 90 ? 'red' : resources.gpu > 70 ? 'yellow' : 'green'}`}>
@@ -431,7 +440,7 @@ export default function MaverickDashboard() {
                     <strong>{activeCount}</strong>
                     <span>Active</span>
                   </div>
-                  <div className="mv-fleet-stat yellow">
+                  <div className="mv-fleet-stat blue">
                     <strong>{idleCount}</strong>
                     <span>Idle</span>
                   </div>
@@ -500,12 +509,16 @@ export default function MaverickDashboard() {
                     className="mv-vram-segment orange"
                     style={{ width: `${(81/128)*100}%` }}
                     title="MiniMax M2.5 — 81GB"
-                  />
+                  >
+                    <span className="mv-vram-seg-label">63% VRAM</span>
+                  </div>
                   <div
                     className="mv-vram-segment blue"
                     style={{ width: `${(22/128)*100}%` }}
                     title="Agent pool — 22GB"
-                  />
+                  >
+                    <span className="mv-vram-seg-label">17%</span>
+                  </div>
                   <div
                     className="mv-vram-segment gray"
                     style={{ width: `${(8/128)*100}%` }}

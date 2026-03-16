@@ -404,6 +404,11 @@ body {
   background: rgba(85, 85, 104, 0.15);
 }
 
+.marty-agent-status.error {
+  color: var(--accent-red);
+  background: rgba(239, 68, 68, 0.12);
+}
+
 .marty-agent-task {
   display: flex;
   align-items: center;
@@ -474,21 +479,21 @@ body {
 }
 
 .marty-legend-dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   flex-shrink: 0;
 }
 
 .marty-legend-label {
-  color: var(--text-secondary);
-  font-size: 0.78rem;
+  color: #aaa;
+  font-size: 0.82rem;
   flex: 1;
 }
 
 .marty-legend-value {
   color: var(--text-primary);
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   font-weight: 600;
 }
 
@@ -694,7 +699,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  padding: 1rem 0.5rem;
+  padding: 1.1rem 0.75rem;
   border-radius: 12px;
   border: 1px solid var(--border-color);
   background: var(--bg-secondary);
@@ -702,8 +707,9 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: 0.82rem;
+  font-weight: 600;
+  min-width: 120px;
 }
 
 .marty-action-btn:hover {
@@ -718,12 +724,17 @@ body {
 .marty-action-btn.cyan:hover { border-color: var(--accent-cyan); background: rgba(6, 182, 212, 0.08); }
 .marty-action-btn.red:hover { border-color: var(--accent-red); background: rgba(239, 68, 68, 0.08); }
 
+.marty-action-btn svg { width: 22px; height: 22px; }
 .marty-action-btn.blue svg { color: var(--accent-blue); }
 .marty-action-btn.purple svg { color: var(--accent-purple); }
 .marty-action-btn.green svg { color: var(--accent-green); }
 .marty-action-btn.orange svg { color: var(--accent-orange); }
 .marty-action-btn.cyan svg { color: var(--accent-cyan); }
 .marty-action-btn.red svg { color: var(--accent-red); }
+
+/* Recharts label styling */
+.recharts-label, .recharts-text { fill: #aaa; font-size: 12px; }
+.recharts-legend-item-text { color: #aaa !important; font-size: 12px; }
 
 /* ── Footer ── */
 .marty-footer {

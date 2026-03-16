@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth, UserButton } from '@clerk/react';
-import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, AreaChart, Area } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, AreaChart, Area } from 'recharts';
 import { Zap, CheckCircle, Clock, Users, TrendingUp, Activity, MessageSquare, Bot, Send, Play, ClipboardList, Eye, AlertCircle, ArrowRight, Radio, FileText, Calendar, Target } from 'lucide-react';
 import './css/martyDashboard.css';
 
@@ -109,12 +109,14 @@ function App() {
   const statusLabel = (s) => {
     if (s === 'working') return 'Working';
     if (s === 'online') return 'Online';
+    if (s === 'error') return 'Error';
     return 'Idle';
   };
 
   const statusColor = (s) => {
     if (s === 'working') return '#22c55e';
     if (s === 'online') return '#3b82f6';
+    if (s === 'error') return '#ef4444';
     return '#555568';
   };
 
@@ -258,9 +260,9 @@ function App() {
           <div className="marty-card-header">
             <h3><FileText size={16} /> Content Pipeline</h3>
           </div>
-          <ResponsiveContainer width="100%" height={180}>
+          <ResponsiveContainer width="100%" height={200}>
             <PieChart>
-              <Pie data={pipelineData} cx="50%" cy="50%" innerRadius={50} outerRadius={75} paddingAngle={3} dataKey="value">
+              <Pie data={pipelineData} cx="50%" cy="50%" innerRadius={50} outerRadius={75} paddingAngle={3} dataKey="value" label={({ name, value }) => `${name}: ${value}`} labelLine={{ stroke: '#aaa' }}>
                 {pipelineData.map(entry => (
                   <Cell key={entry.name} fill={entry.color} />
                 ))}
@@ -284,12 +286,13 @@ function App() {
           <div className="marty-card-header">
             <h3><Activity size={16} /> Weekly Coordination</h3>
           </div>
-          <ResponsiveContainer width="100%" height={220}>
+          <ResponsiveContainer width="100%" height={240}>
             <BarChart data={weeklyData} barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#222" vertical={false} />
-              <XAxis dataKey="day" stroke="#666" tick={{ fill: '#888', fontSize: 12 }} axisLine={{ stroke: '#333' }} />
-              <YAxis stroke="#666" tick={{ fill: '#888', fontSize: 12 }} axisLine={{ stroke: '#333' }} />
+              <XAxis dataKey="day" stroke="#666" tick={{ fill: '#aaa', fontSize: 12 }} axisLine={{ stroke: '#333' }} label={{ value: 'Day', position: 'insideBottom', offset: -2, fill: '#aaa', fontSize: 12 }} />
+              <YAxis stroke="#666" tick={{ fill: '#aaa', fontSize: 12 }} axisLine={{ stroke: '#333' }} label={{ value: 'Count', angle: -90, position: 'insideLeft', offset: 10, fill: '#aaa', fontSize: 12 }} />
               <Tooltip contentStyle={{ backgroundColor: '#1a1a2e', border: '1px solid #333', borderRadius: '8px' }} labelStyle={{ color: '#fff' }} />
+              <Legend wrapperStyle={{ fontSize: '12px', color: '#aaa', paddingTop: '8px' }} iconType="circle" />
               <Bar dataKey="messages" fill="#3b82f6" radius={[4, 4, 0, 0]} name="Messages" />
               <Bar dataKey="tasks" fill="#8b5cf6" radius={[4, 4, 0, 0]} name="Tasks" />
             </BarChart>

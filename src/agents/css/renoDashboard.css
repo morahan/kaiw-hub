@@ -69,6 +69,15 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; back
 .reno-pos-row .reno-green, .reno-pos-row .reno-red { display: flex; align-items: center; gap: 0.15rem; font-weight: 600; font-variant-numeric: tabular-nums; }
 .reno-pos-signal { color: #64748b; font-size: 0.72rem; }
 
+/* Signal Filters */
+.reno-signal-filters { display: flex; gap: 0.4rem; margin-bottom: 0.75rem; }
+.reno-filter-pill { background: #1e293b; border: 1px solid #2d3748; color: #94a3b8; font-size: 0.72rem; font-weight: 500; padding: 0.3rem 0.75rem; border-radius: 20px; cursor: pointer; transition: all 0.2s; }
+.reno-filter-pill:hover { background: #2d3748; color: #e2e8f0; }
+.reno-filter-active { background: #10b981; border-color: #10b981; color: #fff; }
+.reno-filter-active.reno-filter-buy { background: rgba(34, 197, 94, 0.25); border-color: #22c55e; color: #22c55e; }
+.reno-filter-active.reno-filter-sell { background: rgba(239, 68, 68, 0.25); border-color: #ef4444; color: #ef4444; }
+.reno-filter-active.reno-filter-alert { background: rgba(245, 158, 11, 0.25); border-color: #f59e0b; color: #f59e0b; }
+
 /* Signals */
 .reno-signals-list { display: flex; flex-direction: column; gap: 0.5rem; }
 .reno-signal-item { padding: 0.65rem 0.75rem; border-radius: 8px; background: #0d1117; border: 1px solid #1e293b; }

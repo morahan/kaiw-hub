@@ -117,39 +117,51 @@ function MainDashboard() {
                   <stop offset="95%" stopColor="#a855f7" stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
               <XAxis
                 dataKey="time"
-                stroke="#64748b"
-                tick={{fontSize: 11, fontFamily: 'JetBrains Mono'}}
+                stroke="#555"
+                tick={{fontSize: 12, fontFamily: 'JetBrains Mono', fill: '#aaa'}}
+                tickLine={{ stroke: '#555' }}
               />
               <YAxis
                 yAxisId="sessions"
-                stroke="#64748b"
-                tick={{fontSize: 11, fontFamily: 'JetBrains Mono'}}
-                label={{ value: 'Sessions', angle: -90, position: 'insideLeft', fill: '#64748b', fontSize: 11 }}
+                stroke="#555"
+                tick={{fontSize: 12, fontFamily: 'JetBrains Mono', fill: '#aaa'}}
+                tickLine={{ stroke: '#555' }}
+                label={{ value: 'Sessions', angle: -90, position: 'insideLeft', fill: '#aaa', fontSize: 12, fontWeight: 600 }}
               />
               <YAxis
                 yAxisId="tokens"
                 orientation="right"
-                stroke="#64748b"
-                tick={{fontSize: 11, fontFamily: 'JetBrains Mono'}}
-                tickFormatter={(v) => v >= 1000 ? `${(v/1000).toFixed(0)}K` : v}
-                label={{ value: 'Tokens', angle: 90, position: 'insideRight', fill: '#64748b', fontSize: 11 }}
+                stroke="#555"
+                tick={{fontSize: 12, fontFamily: 'JetBrains Mono', fill: '#aaa'}}
+                tickLine={{ stroke: '#555' }}
+                tickFormatter={(v) => v >= 1000 ? `${(v/1000).toFixed(0)}k` : v}
+                label={{ value: 'Tokens (k)', angle: 90, position: 'insideRight', fill: '#aaa', fontSize: 12, fontWeight: 600 }}
               />
               <Tooltip
                 contentStyle={{
                   backgroundColor: '#16161f',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  border: '1px solid rgba(255,255,255,0.15)',
                   borderRadius: '10px',
                   fontFamily: 'JetBrains Mono',
-                  fontSize: '12px'
+                  fontSize: '12px',
+                  padding: '10px 14px',
                 }}
-                formatter={(value, name) => [
-                  formatNumber(value),
-                  name === 'sessions' ? 'Sessions' : 'Tokens'
-                ]}
+                formatter={(value, name) => {
+                  if (name === 'sessions') return [value.toLocaleString(), 'Sessions'];
+                  return [formatNumber(value), 'Tokens (k)'];
+                }}
                 labelFormatter={(label) => `Time: ${label}`}
+                itemStyle={{ padding: '2px 0' }}
+              />
+              <Legend
+                verticalAlign="bottom"
+                iconType="square"
+                iconSize={10}
+                formatter={(value) => value === 'sessions' ? 'Sessions' : 'Tokens (k)'}
+                wrapperStyle={{ fontSize: '12px', color: '#aaa', paddingTop: '12px' }}
               />
               <Area
                 yAxisId="sessions"

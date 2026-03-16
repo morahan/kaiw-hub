@@ -35,6 +35,14 @@ const mockTopExercises = [
   { name: 'Overhead Press', count: 87, pct: 57 },
 ];
 
+const mockTopUsers = [
+  { name: 'Alex M.', workouts: 6, streak: 14, avatar: '🔥' },
+  { name: 'Jordan K.', workouts: 5, streak: 21, avatar: '💪' },
+  { name: 'Taylor W.', workouts: 5, streak: 9, avatar: '⚡' },
+  { name: 'Morgan P.', workouts: 4, streak: 12, avatar: '🏆' },
+  { name: 'Casey L.', workouts: 4, streak: 7, avatar: '🎯' },
+];
+
 const fadeIn = {
   hidden: { opacity: 0, y: 16 },
   visible: (i) => ({ opacity: 1, y: 0, transition: { delay: i * 0.06, duration: 0.35 } }),
@@ -136,6 +144,31 @@ function App() {
                   <div className="buddy-convo-user">{c.user}</div>
                   <div className="buddy-convo-msg">{c.message}</div>
                   <div className="buddy-convo-time">{c.time}</div>
+                </motion.div>
+              ))}
+            </div>
+            <button className="buddy-btn buddy-btn-cta">Message User</button>
+          </div>
+
+          {/* Top Users This Week */}
+          <div className="buddy-card buddy-leaderboard-card">
+            <h2>Top Users This Week</h2>
+            <div className="buddy-leaderboard-list">
+              {mockTopUsers.map((u, i) => (
+                <motion.div
+                  key={u.name}
+                  className="buddy-leaderboard-row"
+                  custom={i}
+                  initial="hidden"
+                  animate="visible"
+                  variants={fadeIn}
+                >
+                  <span className="buddy-leaderboard-rank">#{i + 1}</span>
+                  <span className="buddy-leaderboard-avatar">{u.avatar}</span>
+                  <div className="buddy-leaderboard-info">
+                    <span className="buddy-leaderboard-name">{u.name}</span>
+                    <span className="buddy-leaderboard-meta">{u.workouts} workouts &middot; {u.streak}-day streak</span>
+                  </div>
                 </motion.div>
               ))}
             </div>

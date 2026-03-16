@@ -82,6 +82,11 @@ function MiniSparkline({ data, color, height = 40 }) {
             <stop offset="100%" stopColor={color} stopOpacity={0} />
           </linearGradient>
         </defs>
+        <Tooltip
+          contentStyle={{ background: '#1a1a2e', border: '1px solid #333', borderRadius: 8, color: '#fff', fontSize: 11, padding: '4px 8px' }}
+          formatter={(v) => [`$${v.toLocaleString()}`, '']}
+          labelStyle={{ display: 'none' }}
+        />
         <Area type="monotone" dataKey="value" stroke={color} strokeWidth={2} fill={`url(#grad-${color.replace('#','')})`} dot={false} />
       </AreaChart>
     </ResponsiveContainer>
@@ -89,6 +94,10 @@ function MiniSparkline({ data, color, height = 40 }) {
 }
 
 function App() {
+  const [signalFilter, setSignalFilter] = useState('all');
+
+  const filteredSignals = signalFilter === 'all' ? signals : signals.filter(s => s.type === signalFilter);
+
   const kpis = [
     { label: 'Portfolio Value', value: '$4,830', sub: '7-day trend', icon: DollarSign, sparkData: portfolioTrend, sparkColor: '#10b981' },
     { label: "Today's P&L", value: '+$12.40', sub: '+0.4%', icon: TrendingUp, positive: true },
@@ -165,11 +174,11 @@ function App() {
                       <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: '#666', fontSize: 11 }} />
-                  <YAxis hide domain={['dataMin - 20', 'dataMax + 20']} />
+                  <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 11 }} label={{ value: 'Day', position: 'insideBottom', offset: -2, style: { fill: '#888', fontSize: 11 } }} />
+                  <YAxis domain={['dataMin - 20', 'dataMax + 20']} axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 11 }} tickFormatter={(v) => `$${v}`} width={52} label={{ value: 'Value ($)', angle: -90, position: 'insideLeft', offset: 10, style: { fill: '#888', fontSize: 11 } }} />
                   <Tooltip
                     contentStyle={{ background: '#1a1a2e', border: '1px solid #333', borderRadius: 8, color: '#fff', fontSize: 12 }}
-                    formatter={(v) => [`$${v}`, 'Value']}
+                    formatter={(v) => [`$${v.toLocaleString()}`, 'Value']}
                   />
                   <Area type="monotone" dataKey="value" stroke="#10b981" strokeWidth={2.5} fill="url(#portfolioGrad)" dot={{ r: 3, fill: '#10b981', stroke: '#0a0a0f', strokeWidth: 2 }} activeDot={{ r: 5 }} />
                 </AreaChart>
@@ -202,7 +211,7 @@ function App() {
                   <span className="reno-pos-num">${p.entry.toFixed(2)}</span>
                   <span className="reno-pos-num">${p.current.toFixed(2)}</span>
                   <span className={p.change >= 0 ? 'reno-green' : 'reno-red'}>
-                    {p.change >= 0 ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
+                    {p.change >= 0 ? '▲' : '▼'}{' '}
                     {p.change >= 0 ? '+' : ''}{p.change}%
                   </span>
                   <span className="reno-pos-signal">{p.signal}</span>
@@ -218,8 +227,19 @@ function App() {
               <h2>Trading Signals</h2>
               <span className="reno-badge reno-badge-amber">7 active</span>
             </div>
+            <div className="reno-signal-filters">
+              {['all', 'buy', 'sell', 'alert'].map((f) => (
+                <button
+                  key={f}
+                  className={`reno-filter-pill ${signalFilter === f ? 'reno-filter-active' : ''} ${f !== 'all' ? `reno-filter-${f}` : ''}`}
+                  onClick={() => setSignalFilter(f)}
+                >
+                  {f.charAt(0).toUpperCase() + f.slice(1)}
+                </button>
+              ))}
+            </div>
             <div className="reno-signals-list">
-              {signals.map((s) => (
+              {filteredSignals.map((s) => (
                 <motion.div key={s.id} className={`reno-signal-item reno-signal-${s.type}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 + s.id * 0.03 }}>
                   <div className="reno-signal-top">
                     <span className={`reno-signal-badge reno-signal-badge-${s.type}`}>
@@ -274,11 +294,11 @@ function App() {
                       <stop offset="100%" stopColor="#f59e0b" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: '#666', fontSize: 11 }} />
-                  <YAxis hide domain={['dataMin - 20', 'dataMax + 20']} />
+                  <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 11 }} label={{ value: 'Day', position: 'insideBottom', offset: -2, style: { fill: '#888', fontSize: 11 } }} />
+                  <YAxis domain={['dataMin - 20', 'dataMax + 20']} axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 11 }} tickFormatter={(v) => `$${v}`} width={52} label={{ value: 'Price ($)', angle: -90, position: 'insideLeft', offset: 10, style: { fill: '#888', fontSize: 11 } }} />
                   <Tooltip
                     contentStyle={{ background: '#1a1a2e', border: '1px solid #333', borderRadius: 8, color: '#fff', fontSize: 12 }}
-                    formatter={(v) => [`$${v}`, 'BTC']}
+                    formatter={(v) => [`$${v.toLocaleString()}`, 'BTC']}
                   />
                   <Area type="monotone" dataKey="value" stroke="#f59e0b" strokeWidth={2.5} fill="url(#btcGrad)" dot={{ r: 3, fill: '#f59e0b', stroke: '#0a0a0f', strokeWidth: 2 }} activeDot={{ r: 5 }} />
                 </AreaChart>
