@@ -1,7 +1,7 @@
 .hub {
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 3rem 2rem;
 }
 
 .hub-header {
@@ -23,37 +23,52 @@
   font-size: 1.25rem;
 }
 
+/* Dynamic Grid - starts at 2, scales up to 6 columns */
 .agents-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
 }
 
-@media (max-width: 1200px) {
+/* Tablet: 3 columns */
+@media (min-width: 640px) {
   .agents-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (max-width: 900px) {
+/* Small desktop: 4 columns */
+@media (min-width: 1024px) {
   .agents-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
-@media (max-width: 600px) {
+/* Large desktop: 5 columns */
+@media (min-width: 1400px) {
+  .agents-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* Extra large: 6 columns */
+@media (min-width: 1800px) {
+  .agents-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+/* Very small screens: 1 column */
+@media (max-width: 400px) {
   .agents-grid {
     grid-template-columns: 1fr;
-  }
-  .hub-header h1 {
-    font-size: 2.5rem;
   }
 }
 
 .agent-card {
   background: linear-gradient(145deg, #1e1e2e 0%, #16162a 100%);
   border-radius: 1.5rem;
-  padding: 2.5rem 2rem;
+  padding: 2rem 1.5rem;
   text-decoration: none;
   color: inherit;
   text-align: center;
@@ -62,6 +77,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 200px;
+  justify-content: center;
 }
 
 .agent-card:hover {
@@ -71,14 +88,14 @@
 }
 
 .agent-avatar {
-  width: 120px;
-  height: 120px;
-  margin-bottom: 1.5rem;
+  width: 100px;
+  height: 100px;
+  margin-bottom: 1.25rem;
   border-radius: 50%;
   overflow: hidden;
-  border: 4px solid var(--agent-color);
+  border: 3px solid var(--agent-color);
   background: #2a2a3a;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
   flex-shrink: 0;
 }
 
@@ -94,18 +111,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3.5rem;
+  font-size: 2.5rem;
 }
 
 .agent-name {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
   color: #fff;
 }
 
 .agent-role {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: #8888a0;
   font-weight: 500;
 }
