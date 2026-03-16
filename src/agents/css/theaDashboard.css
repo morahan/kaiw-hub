@@ -15,9 +15,9 @@
   --gold-border:    rgba(196, 151, 58, 0.2);
   --gold-border-h:  rgba(196, 151, 58, 0.5);
 
-  --cream:          #EDE4D0;
-  --cream-dim:      #B8AD96;
-  --text-muted:     #7A7368;
+  --cream:          #F0E8D6;
+  --cream-dim:      #D4C9B0;
+  --text-muted:     #AAA093;
 
   --success:        #5E8E72;
   --success-bg:     rgba(94, 142, 114, 0.15);
@@ -222,7 +222,7 @@ body {
   font-family: 'Playfair Display', serif;
   font-size: 44px;
   font-weight: 700;
-  color: var(--cream);
+  color: #fff;
   line-height: 1;
   margin-bottom: 8px;
 }
@@ -240,8 +240,8 @@ body {
 }
 
 .metric-label {
-  font-size: 11px;
-  color: var(--text-muted);
+  font-size: 12px;
+  color: var(--cream-dim);
   text-transform: uppercase;
   letter-spacing: 1.2px;
   margin-bottom: 10px;
@@ -264,7 +264,7 @@ body {
 }
 
 .trend-note {
-  font-size: 9px;
+  font-size: 10px;
   color: var(--text-muted);
   letter-spacing: 0.3px;
 }
@@ -279,34 +279,36 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 24px;
   margin-bottom: 32px;
-  padding: 18px 28px;
+  padding: 24px 36px;
   background: var(--bg-card);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--border-card);
+  border: 1px solid var(--gold-border);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
 }
 
 .flow-stage {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .flow-label {
-  font-size: 11px;
-  color: var(--text-muted);
+  font-size: 12px;
+  color: var(--cream-dim);
   text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 500;
+  letter-spacing: 1.2px;
+  font-weight: 600;
 }
 
 .flow-count {
   font-family: 'Playfair Display', serif;
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 700;
-  width: 40px;
-  height: 40px;
+  width: 52px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -332,9 +334,10 @@ body {
 }
 
 .flow-arrow {
-  font-size: 18px;
-  color: var(--text-muted);
-  opacity: 0.4;
+  font-size: 28px;
+  color: var(--gold);
+  opacity: 0.7;
+  font-weight: bold;
 }
 
 /* ─── Two-Column Layout ──────────────────────────────────────────────────── */
@@ -360,18 +363,18 @@ body {
 
 .section-header h2 {
   font-family: 'Playfair Display', serif;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
-  color: var(--cream);
+  color: #fff;
   letter-spacing: 0.2px;
 }
 
 .badge {
-  font-size: 10px;
-  padding: 3px 10px;
+  font-size: 12px;
+  padding: 4px 12px;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.06);
-  color: var(--text-muted);
+  color: var(--cream-dim);
   letter-spacing: 0.3px;
   font-weight: 500;
 }
@@ -427,10 +430,10 @@ body {
 }
 
 .card-content h3 {
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 600;
   margin-bottom: 6px;
-  color: var(--cream);
+  color: #fff;
   font-family: 'Playfair Display', serif;
 }
 
@@ -443,36 +446,61 @@ body {
 }
 
 .card-author {
-  font-size: 11px;
-  color: var(--gold-muted);
+  font-size: 12px;
+  color: var(--gold-light);
   font-weight: 600;
 }
 
 .card-type {
-  font-size: 9px;
-  color: var(--text-muted);
+  font-size: 10px;
+  color: var(--cream-dim);
   text-transform: uppercase;
   letter-spacing: 0.8px;
   padding: 2px 8px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.06);
   border-radius: 3px;
 }
 
 .card-words {
-  font-size: 10px;
-  color: var(--text-muted);
+  font-size: 11px;
+  color: var(--cream-dim);
   font-variant-numeric: tabular-nums;
 }
 
 .card-preview {
+  font-size: 14px;
+  color: var(--cream-dim);
+  line-height: 1.6;
+}
+
+.card-preview-full {
+  font-size: 14px;
+  color: var(--cream-dim);
+  line-height: 1.6;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.card-expand-btn {
+  background: none;
+  border: none;
+  color: var(--gold);
   font-size: 12px;
-  color: var(--text-muted);
-  line-height: 1.5;
-  opacity: 0.8;
+  cursor: pointer;
+  padding: 4px 0;
+  margin-top: 4px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  transition: color 0.2s;
+}
+
+.card-expand-btn:hover {
+  color: var(--gold-light);
 }
 
 .card-submitted {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-muted);
   white-space: nowrap;
   flex-shrink: 0;
@@ -547,24 +575,24 @@ body {
 }
 
 .verdict-title {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
-  color: var(--cream-dim);
+  color: var(--cream);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .verdict-meta {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
 .verdict-score {
   font-family: 'Playfair Display', serif;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
-  color: var(--cream-dim);
+  color: #fff;
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
 }
@@ -642,16 +670,16 @@ body {
 }
 
 .brand-item-compact h4 {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
-  color: var(--cream);
+  color: #fff;
   letter-spacing: 0.3px;
 }
 
 .brand-item-compact p {
-  font-size: 10px;
-  color: var(--text-muted);
-  margin-top: 1px;
+  font-size: 12px;
+  color: var(--cream-dim);
+  margin-top: 2px;
 }
 
 .brand-icon {
@@ -693,9 +721,9 @@ body {
 }
 
 .activity-time {
-  font-size: 9px;
+  font-size: 11px;
   color: var(--text-muted);
-  min-width: 52px;
+  min-width: 56px;
   padding-top: 1px;
   letter-spacing: 0.3px;
   text-transform: uppercase;
@@ -708,18 +736,24 @@ body {
 }
 
 .activity-action {
-  font-size: 11px;
-  color: var(--text-muted);
+  font-size: 12px;
+  color: var(--cream-dim);
 }
 
 .activity-item-name {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
-  color: var(--cream-dim);
+  color: var(--cream);
 }
 
 /* ─── Quick Actions ──────────────────────────────────────────────────────── */
 .quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.quick-actions-row {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
@@ -728,7 +762,7 @@ body {
 .action-btn {
   padding: 11px 20px;
   border-radius: var(--radius-md);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   border: 1px solid var(--gold-border);
   background: var(--bg-card);
@@ -745,6 +779,26 @@ body {
   color: var(--gold-light);
   box-shadow: var(--shadow-gold);
   transform: translateY(-1px);
+}
+
+.action-btn.hero-cta {
+  width: 100%;
+  padding: 18px 28px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  background: linear-gradient(135deg, var(--gold-muted), var(--gold), var(--gold-light));
+  color: #09080A;
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 24px var(--gold-glow), 0 0 0 1px var(--gold-border-h);
+}
+
+.action-btn.hero-cta:hover {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: #09080A;
+  box-shadow: 0 8px 36px rgba(196, 151, 58, 0.35), 0 0 0 1px var(--gold-light);
+  transform: translateY(-2px);
 }
 
 .action-btn.secondary {
@@ -823,8 +877,8 @@ body {
 }
 
 .review-meta {
-  font-size: 12px;
-  color: var(--text-muted);
+  font-size: 13px;
+  color: var(--cream-dim);
   letter-spacing: 0.3px;
 }
 
@@ -856,10 +910,10 @@ blockquote.preview {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13px;
+  font-size: 14px;
   margin-bottom: 10px;
   cursor: pointer;
-  color: var(--cream-dim);
+  color: var(--cream);
   transition: color 0.2s;
 }
 
@@ -955,19 +1009,19 @@ blockquote.preview {
 }
 
 .review-info h4 {
-  font-size: 14px;
+  font-size: 16px;
   margin-bottom: 4px;
   font-weight: 600;
-  color: var(--cream);
+  color: #fff;
 }
 
 .review-info span {
-  font-size: 11px;
-  color: var(--text-muted);
+  font-size: 12px;
+  color: var(--cream-dim);
 }
 
 .review-time {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-muted);
   white-space: nowrap;
   margin-left: 16px;
@@ -1193,21 +1247,21 @@ blockquote.preview {
 }
 
 .history-info h4 {
-  font-size: 13px;
+  font-size: 15px;
   margin-bottom: 3px;
   font-weight: 600;
-  color: var(--cream-dim);
+  color: var(--cream);
 }
 
 .history-info span {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--text-muted);
 }
 
 .history-score {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
-  color: var(--cream-dim);
+  color: #fff;
   font-variant-numeric: tabular-nums;
   margin-right: 8px;
   font-family: 'Playfair Display', serif;

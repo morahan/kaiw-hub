@@ -112,8 +112,11 @@ function TrendCard({ trend, index }) {
       <div className="trend-card-glow" style={{ background: cfg.color }} />
       <div className="trend-header">
         <span className="trend-name">{trend.trend_name}</span>
-        <span className={`signal-badge ${trend.signal_strength?.toLowerCase()}`}>
-          {cfg.emoji} {trend.signal_strength}
+        <span className={`signal-badge-wrap`}>
+          <span className={`signal-badge ${trend.signal_strength?.toLowerCase()}`}>
+            {cfg.emoji} {trend.signal_strength}
+          </span>
+          {trend.score != null && <ScoreTooltip score={trend.score} trend={trend} />}
         </span>
       </div>
       <div className="trend-meta">
@@ -127,6 +130,25 @@ function TrendCard({ trend, index }) {
           ? <span className="status done">✓ Published</span>
           : <span className="status pending">○ Queue</span>}
       </div>
+    </div>
+  );
+}
+
+function ScoreTooltip({ score, trend }) {
+  const platform = trend.platform || 'Multi';
+  const category = trend.category || 'General';
+  const socialScore = Math.min(Math.round(score * 0.4 + (platform === 'TikTok' ? 8 : 0)), 100);
+  const searchScore = Math.min(Math.round(score * 0.3 + (category === 'Cardio' ? 5 : 0)), 100);
+  const velocityScore = Math.min(Math.round(score * 0.2 + 3), 100);
+  const competitorScore = Math.min(Math.round(score * 0.1 + 2), 100);
+  return (
+    <div className="score-tooltip">
+      <div className="tooltip-title">Score Breakdown</div>
+      <div className="tooltip-row"><span>Social Signals</span><span>{socialScore}</span></div>
+      <div className="tooltip-row"><span>Search Volume</span><span>{searchScore}</span></div>
+      <div className="tooltip-row"><span>Velocity</span><span>{velocityScore}</span></div>
+      <div className="tooltip-row"><span>Competitor Gap</span><span>{competitorScore}</span></div>
+      <div className="tooltip-total"><span>Total</span><span>{score}</span></div>
     </div>
   );
 }
@@ -146,6 +168,10 @@ function App() {
   const [lastUpdated, setLastUpdated]   = useState(null);
   const [activeTab, setActiveTab]       = useState('overview');
   const [usingMock, setUsingMock]       = useState(false);
+  const [mockDismissed, setMockDismissed] = useState(false);
+  const [trendFilter, setTrendFilter]   = useState('all');
+  const [trendsExpanded, setTrendsExpanded] = useState(false);
+  const TRENDS_PER_PAGE = 6;
 
   const applyFallback = () => {
     setStats(MOCK_STATS);
@@ -256,9 +282,9 @@ function App() {
         <div className="bubble bubble-5" />
       </div>
 
-      {usingMock && (
-        <div className="mock-banner">
-          📡 API offline — showing demo data &nbsp;·&nbsp; backend at localhost:3001
+      {usingMock && !mockDismissed && (
+        <div className="mock-pill" onClick={() => setMockDismissed(true)}>
+          📡 Demo mode <span className="mock-pill-dismiss">✕</span>
         </div>
       )}
 
@@ -317,6 +343,15 @@ function App() {
 
           <section className="pipeline-section">
             <h2>📈 Pipeline Pulse</h2>
+            <div className="pipeline-summary-bar">
+              <span className="psb-item hot">{stats?.hot_trends || 0} HOT</span>
+              <span className="psb-sep">·</span>
+              <span className="psb-item warm">{stats?.warm_trends || 0} WARM</span>
+              <span className="psb-sep">·</span>
+              <span className="psb-item pending">{stats?.pending || 0} PENDING</span>
+              <span className="psb-sep">·</span>
+              <span className="psb-item written">{stats?.content_written || 0} WRITTEN</span>
+            </div>
             <div className="pipeline-grid">
               <div className="pipeline-card"><div className="pipeline-number">{stats?.total_trends || 0}</div><div className="pipeline-label">Total Tracked</div></div>
               <div className="pipeline-card success"><div className="pipeline-number">{stats?.hits || 0}</div><div className="pipeline-label">Confirmed Hits</div></div>
@@ -341,6 +376,14 @@ function App() {
           {/* Mini platform breakdown on overview */}
           <section className="overview-platforms">
             <h3>📡 Platform Activity</h3>
+            <div className="pipeline-summary-bar" style={{ marginBottom: '0.75rem' }}>
+              {platforms.map((p, i) => (
+                <span key={i}>
+                  <span className="psb-item platform-inline">{p.count} {p.platform}</span>
+                  {i < platforms.length - 1 && <span className="psb-sep">·</span>}
+                </span>
+              ))}
+            </div>
             <div className="mini-platform-bars">
               {platforms.map((p, i) => (
                 <div key={i} className="mini-plat-row">
@@ -363,18 +406,64 @@ function App() {
       )}
 
       {/* ── TRENDS ───────────────────────────────────────────────────────── */}
-      {activeTab === 'trends' && (
-        <main className="main-content">
-          <section className="trends-section">
-            <h2>🔥 All Hot Trends</h2>
-            <div className="trends-grid">
-              {topTrends.map((trend, i) => (
-                <TrendCard key={i} trend={trend} index={i} />
-              ))}
-            </div>
-          </section>
-        </main>
-      )}
+      {activeTab === 'trends' && (() => {
+        const filtered = topTrends.filter(t => {
+          if (trendFilter === 'all') return true;
+          if (trendFilter === 'hot') return t.signal_strength?.toUpperCase() === 'HOT';
+          if (trendFilter === 'warm') return t.signal_strength?.toUpperCase() === 'WARM';
+          if (trendFilter === 'written') return t.content_written;
+          if (trendFilter === 'unwritten') return !t.content_written;
+          return true;
+        });
+        const visible = trendsExpanded ? filtered : filtered.slice(0, TRENDS_PER_PAGE);
+        const hasMore = filtered.length > TRENDS_PER_PAGE;
+        return (
+          <main className="main-content">
+            <section className="trends-section">
+              <h2>🔥 All Hot Trends</h2>
+              <div className="trend-filter-tabs">
+                {[
+                  { id: 'all', label: 'All' },
+                  { id: 'hot', label: '🔥 HOT' },
+                  { id: 'warm', label: '🌡️ WARM' },
+                  { id: 'written', label: '✓ Written' },
+                  { id: 'unwritten', label: '○ Unwritten' },
+                ].map(f => (
+                  <button
+                    key={f.id}
+                    className={`filter-tab ${trendFilter === f.id ? 'active' : ''}`}
+                    onClick={() => { setTrendFilter(f.id); setTrendsExpanded(false); }}
+                  >
+                    {f.label}
+                    <span className="filter-count">
+                      {f.id === 'all' ? topTrends.length
+                        : f.id === 'hot' ? topTrends.filter(t => t.signal_strength?.toUpperCase() === 'HOT').length
+                        : f.id === 'warm' ? topTrends.filter(t => t.signal_strength?.toUpperCase() === 'WARM').length
+                        : f.id === 'written' ? topTrends.filter(t => t.content_written).length
+                        : topTrends.filter(t => !t.content_written).length}
+                    </span>
+                  </button>
+                ))}
+              </div>
+              <div className="trends-grid">
+                {visible.map((trend, i) => (
+                  <TrendCard key={i} trend={trend} index={i} />
+                ))}
+              </div>
+              {hasMore && !trendsExpanded && (
+                <button className="show-more-btn" onClick={() => setTrendsExpanded(true)}>
+                  Show all {filtered.length} trends ↓
+                </button>
+              )}
+              {trendsExpanded && hasMore && (
+                <button className="show-more-btn" onClick={() => setTrendsExpanded(false)}>
+                  Show less ↑
+                </button>
+              )}
+            </section>
+          </main>
+        );
+      })()}
 
       {/* ── WIP ──────────────────────────────────────────────────────────── */}
       {activeTab === 'wip' && (
@@ -488,18 +577,21 @@ function App() {
                         <div className="sub-bar-track">
                           <div className="sub-bar-fill sub-hot" style={{ width: `${(cat.hot_count / cat.count) * 100}%` }} />
                         </div>
+                        <span className="sub-bar-num">{cat.hot_count}</span>
                       </div>
                       <div className="sub-bar-row">
                         <span>Warm</span>
                         <div className="sub-bar-track">
                           <div className="sub-bar-fill sub-warm" style={{ width: `${(cat.warm_count / cat.count) * 100}%` }} />
                         </div>
+                        <span className="sub-bar-num">{cat.warm_count}</span>
                       </div>
                       <div className="sub-bar-row">
                         <span>Written</span>
                         <div className="sub-bar-track">
                           <div className="sub-bar-fill sub-written" style={{ width: `${(cat.written / cat.count) * 100}%` }} />
                         </div>
+                        <span className="sub-bar-num">{cat.written}</span>
                       </div>
                     </div>
                   </div>

@@ -41,6 +41,7 @@ function App() {
   const [voiceText, setVoiceText] = useState('')
   const [voiceGenerating, setVoiceGenerating] = useState(false)
   const [showHint, setShowHint] = useState(true)
+  const [expandedCards, setExpandedCards] = useState({})
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000)
@@ -57,6 +58,11 @@ function App() {
     shippedToday: reviewHistory.filter(r => r.verdict === 'ship').length,
     avgScore: (reviewHistory.reduce((a, b) => a + b.score, 0) / reviewHistory.length).toFixed(1),
     approvalRate: Math.round((reviewHistory.filter(r => r.verdict === 'ship').length / reviewHistory.length) * 100),
+  }
+
+  const toggleExpand = (id, e) => {
+    e.stopPropagation()
+    setExpandedCards(prev => ({ ...prev, [id]: !prev[id] }))
   }
 
   const handleVerdict = (verdict) => {
@@ -125,18 +131,23 @@ function App() {
 
             <section className="pipeline-flow">
               <div className="flow-stage">
-                <div className="flow-label">Pending</div>
                 <div className="flow-count warning">{pendingReviews.length}</div>
+                <div className="flow-label">Pending</div>
               </div>
               <div className="flow-arrow">→</div>
               <div className="flow-stage">
-                <div className="flow-label">In Review</div>
                 <div className="flow-count gold">1</div>
+                <div className="flow-label">In Review</div>
               </div>
               <div className="flow-arrow">→</div>
               <div className="flow-stage">
-                <div className="flow-label">Shipped</div>
                 <div className="flow-count success">{reviewHistory.filter(r => r.verdict === 'ship').length}</div>
+                <div className="flow-label">Shipped</div>
+              </div>
+              <div className="flow-arrow">→</div>
+              <div className="flow-stage">
+                <div className="flow-count" style={{ color: 'var(--danger)', background: 'var(--danger-bg)', border: '1px solid rgba(140, 64, 64, 0.3)' }}>{reviewHistory.filter(r => r.verdict === 'kill').length}</div>
+                <div className="flow-label">Killed</div>
               </div>
             </section>
 
@@ -156,7 +167,10 @@ function App() {
                           <span className="card-type">{item.type}</span>
                           <span className="card-words">{item.wordCount.toLocaleString()} words</span>
                         </div>
-                        <p className="card-preview">{item.preview.slice(0, 100)}...</p>
+                        <p className="card-preview">{expandedCards[item.id] ? item.preview : `${item.preview.slice(0, 100)}...`}</p>
+                        <button className="card-expand-btn" onClick={(e) => toggleExpand(item.id, e)}>
+                          {expandedCards[item.id] ? '▲ Collapse' : '▼ Preview full excerpt'}
+                        </button>
                       </div>
                       <span className="card-submitted">{item.submitted}</span>
                     </div>
@@ -217,10 +231,12 @@ function App() {
 
             <section className="section">
               <div className="quick-actions">
-                <button className="action-btn" onClick={() => setActiveView('reviews')}>Review Next</button>
-                <button className="action-btn" onClick={() => setActiveView('voice')}>Test Voice</button>
-                <button className="action-btn" onClick={() => setActiveView('history')}>View History</button>
-                <button className="action-btn secondary">Sync Notion</button>
+                <button className="action-btn hero-cta" onClick={() => setActiveView('reviews')}>◎ Review Next — {pendingReviews.length} in queue</button>
+                <div className="quick-actions-row">
+                  <button className="action-btn" onClick={() => setActiveView('voice')}>Test Voice</button>
+                  <button className="action-btn" onClick={() => setActiveView('history')}>View History</button>
+                  <button className="action-btn secondary">Sync Notion</button>
+                </div>
               </div>
             </section>
           </>

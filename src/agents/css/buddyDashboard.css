@@ -1,13 +1,337 @@
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, sans-serif; background: #0a0a0f; color: #fff; min-height: 100vh; }
-.dashboard { max-width: 800px; margin: 0 auto; padding: 2rem; }
-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #222; }
-header .emoji { font-size: 3rem; }
-header h1 { font-size: 2rem; background: linear-gradient(90deg, var(--color), #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-header p { color: #666; }
-.section { background: #111; border: 1px solid #222; border-radius: 12px; padding: 1.5rem; }
-.section h2 { font-size: 1rem; color: #666; margin-bottom: 1rem; }
-.item { display: flex; justify-content: space-between; padding: 0.75rem; border-radius: 8px; margin-bottom: 0.5rem; background: #0a0a0f; }
-.item.done .badge { color: #22c55e; }
-.item.pending .badge { color: #f59e0b; }
+/* Buddy Dashboard — Workout Buddy Agent */
+/* ======================================= */
 
+/* Reset scoped to dashboard */
+.buddy-dash * { margin: 0; padding: 0; box-sizing: border-box; }
+.buddy-dash {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #0a0a0f;
+  color: #e4e4e7;
+  min-height: 100vh;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 2.5rem;
+}
+
+/* ---- Header ---- */
+.buddy-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #1e1e2a;
+}
+.buddy-avatar {
+  font-size: 3rem;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  border-radius: 16px;
+  flex-shrink: 0;
+}
+.buddy-header-text h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #f97316, #fbbf24);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.buddy-header-text p {
+  color: #71717a;
+  font-size: 0.95rem;
+}
+.buddy-header-status {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #a1a1aa;
+  font-size: 0.9rem;
+}
+.buddy-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e88;
+  flex-shrink: 0;
+}
+
+/* ---- KPI Stats ---- */
+.buddy-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.buddy-stat-card {
+  background: #111118;
+  border: 1px solid #1e1e2a;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.buddy-stat-card:hover {
+  border-color: #f9731644;
+  transform: translateY(-2px);
+}
+.buddy-stat-icon {
+  font-size: 1.6rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.buddy-stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+}
+.buddy-stat-label {
+  font-size: 0.85rem;
+  color: #71717a;
+  margin-top: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.buddy-stat-sub {
+  font-size: 0.8rem;
+  color: #22c55e;
+  margin-top: 0.35rem;
+}
+
+/* ---- Main Content Grid ---- */
+.buddy-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* ---- Cards ---- */
+.buddy-card {
+  background: #111118;
+  border: 1px solid #1e1e2a;
+  border-radius: 14px;
+  padding: 1.5rem;
+}
+.buddy-card h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #a1a1aa;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ---- Activity Feed ---- */
+.buddy-activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.buddy-activity-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1rem;
+  background: #0c0c14;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  min-height: 56px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.buddy-activity-row:hover {
+  border-color: #f9731633;
+  background: #14141e;
+}
+.buddy-activity-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  flex: 1;
+}
+
+/* Badges */
+.buddy-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 70px;
+  text-align: center;
+}
+.buddy-badge.done {
+  background: #16a34a22;
+  color: #4ade80;
+  border: 1px solid #16a34a44;
+}
+.buddy-badge.pending {
+  background: #f59e0b22;
+  color: #fbbf24;
+  border: 1px solid #f59e0b44;
+}
+
+.buddy-activity-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+.buddy-activity-text {
+  font-size: 0.95rem;
+  color: #e4e4e7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.buddy-activity-meta {
+  font-size: 0.8rem;
+  color: #52525b;
+}
+
+/* Action buttons */
+.buddy-activity-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.buddy-activity-row:hover .buddy-activity-actions {
+  opacity: 1;
+}
+.buddy-btn {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+.buddy-btn:active {
+  transform: scale(0.96);
+}
+.buddy-btn-view {
+  background: #27272a;
+  color: #d4d4d8;
+}
+.buddy-btn-view:hover {
+  background: #3f3f46;
+}
+.buddy-btn-done {
+  background: #16a34a33;
+  color: #4ade80;
+  border: 1px solid #16a34a55;
+}
+.buddy-btn-done:hover {
+  background: #16a34a55;
+}
+
+/* ---- Sidebar ---- */
+.buddy-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ---- Conversations ---- */
+.buddy-convo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.buddy-convo-row {
+  padding: 0.75rem;
+  background: #0c0c14;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+.buddy-convo-row:hover {
+  border-color: #f9731633;
+}
+.buddy-convo-user {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #f97316;
+  margin-bottom: 0.2rem;
+}
+.buddy-convo-msg {
+  font-size: 0.9rem;
+  color: #d4d4d8;
+  line-height: 1.4;
+}
+.buddy-convo-time {
+  font-size: 0.75rem;
+  color: #52525b;
+  margin-top: 0.3rem;
+}
+
+/* ---- Top Exercises ---- */
+.buddy-exercise-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.buddy-exercise-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.buddy-exercise-name {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #d4d4d8;
+}
+.buddy-exercise-count {
+  font-size: 0.8rem;
+  color: #71717a;
+}
+.buddy-exercise-bar-bg {
+  width: 100%;
+  height: 6px;
+  background: #1e1e2a;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.buddy-exercise-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f97316, #fbbf24);
+  border-radius: 3px;
+}
+
+/* ---- Footer ---- */
+.buddy-footer {
+  text-align: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid #1e1e2a;
+  color: #3f3f46;
+  font-size: 0.8rem;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+  .buddy-dash { padding: 1.25rem; }
+  .buddy-stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .buddy-content-grid { grid-template-columns: 1fr; }
+  .buddy-activity-actions { opacity: 1; }
+}
+@media (max-width: 480px) {
+  .buddy-stats-grid { grid-template-columns: 1fr; }
+  .buddy-header { flex-wrap: wrap; }
+  .buddy-header-status { width: 100%; margin-left: 0; margin-top: 0.5rem; }
+}

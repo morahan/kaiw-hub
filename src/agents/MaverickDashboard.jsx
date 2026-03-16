@@ -188,7 +188,9 @@ const CustomTooltip = ({ active, payload }) => {
 // ── Main dashboard ───────────────────────────────────────────────────────────
 
 export default function MaverickDashboard() {
-  const { isSignedIn } = useAuth();
+  const SKIP_AUTH = import.meta.env.VITE_SKIP_AUTH === 'true';
+  const { isSignedIn: clerkSignedIn } = useAuth();
+  const isSignedIn = SKIP_AUTH || clerkSignedIn;
   const [now, setNow] = useState(new Date());
   const [resources, setResources] = useState(MOCK_RESOURCES);
   const [activeModel, setActiveModel] = useState('minimax');
