@@ -14,28 +14,27 @@ const agent = {
 };
 
 const statusData = [
-  { name: 'Completed', value: 45, color: '#22c55e' },
-  { name: 'In Progress', value: 12, color: '#3b82f6' },
-  { name: 'Blocked', value: 3, color: '#ef4444' },
-  { name: 'Pending', value: 8, color: '#f59e0b' },
+  { name: 'Published', value: 42, color: '#22c55e' },
+  { name: 'In Review', value: 8, color: '#3b82f6' },
+  { name: 'Draft', value: 5, color: '#f59e0b' },
 ];
 
 const weeklyActivity = [
-  { day: 'Mon', tasks: 12, commits: 8 },
-  { day: 'Tue', tasks: 15, commits: 12 },
-  { day: 'Wed', tasks: 8, commits: 5 },
-  { day: 'Thu', tasks: 18, commits: 14 },
-  { day: 'Fri', tasks: 22, commits: 18 },
-  { day: 'Sat', tasks: 5, commits: 3 },
-  { day: 'Sun', tasks: 3, commits: 2 },
+  { day: 'Mon', articles: 2, reviews: 5 },
+  { day: 'Tue', articles: 2, reviews: 4 },
+  { day: 'Wed', articles: 1, reviews: 6 },
+  { day: 'Thu', articles: 3, reviews: 5 },
+  { day: 'Fri', articles: 2, reviews: 7 },
+  { day: 'Sat', articles: 1, reviews: 2 },
+  { day: 'Sun', articles: 0, reviews: 1 },
 ];
 
 const recentTasks = [
-  { id: 1, title: 'Review PR #142 - MediaPipe integration', status: 'done', assignee: 'Badger' },
-  { id: 2, title: 'Agent sync - Q1 planning', status: 'done', assignee: 'All' },
-  { id: 3, title: 'Deploy quanta-dashboard to Vercel', status: 'in-progress', assignee: 'Badger' },
-  { id: 4, title: 'Setup kaiw.io hub', status: 'done', assignee: 'Badger' },
-  { id: 5, title: 'Model switch script fix', status: 'blocked', assignee: 'Badger' },
+  { id: 1, title: 'Publish "Looksmaxxing for Fitness" article', status: 'done', assignee: 'Kaia' },
+  { id: 2, title: 'Review Renzo\'s nutrition guide draft', status: 'done', assignee: 'Thea' },
+  { id: 3, title: 'Coordinate article pipeline with team', status: 'in-progress', assignee: 'Self' },
+  { id: 4, title: 'Review PR #156 - Dashboard improvements', status: 'done', assignee: 'Badger' },
+  { id: 5, title: 'Resolve content scheduling conflict', status: 'in-progress', assignee: 'Aria' },
 ];
 
 const teamMembers = [
@@ -105,33 +104,23 @@ function App() {
       {/* Stats Grid */}
       <div className="stats-grid">
         <div className="stat-card">
+          <div className="stat-icon" style={{ background: 'rgba(22, 163, 74, 0.15)', color: '#16a34a' }}>
+            <TrendingUp size={20} />
+          </div>
+          <div className="stat-content">
+            <span className="stat-label">Published</span>
+            <strong className="stat-value">42</strong>
+            <span className="stat-trend up">↑ 11 this month</span>
+          </div>
+        </div>
+        <div className="stat-card">
           <div className="stat-icon" style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6' }}>
-            <Zap size={20} />
+            <MessageSquare size={20} />
           </div>
           <div className="stat-content">
-            <span className="stat-label">Active Tasks</span>
-            <strong className="stat-value">68</strong>
-            <span className="stat-trend up">↑ 12 this week</span>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: 'rgba(34, 197, 94, 0.15)', color: '#22c55e' }}>
-            <CheckCircle size={20} />
-          </div>
-          <div className="stat-content">
-            <span className="stat-label">Completed</span>
-            <strong className="stat-value">45</strong>
-            <span className="stat-trend up">↑ 8 this week</span>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#ef4444' }}>
-            <Activity size={20} />
-          </div>
-          <div className="stat-content">
-            <span className="stat-label">Blocked</span>
-            <strong className="stat-value">3</strong>
-            <span className="stat-trend">Needs attention</span>
+            <span className="stat-label">In Review</span>
+            <strong className="stat-value">8</strong>
+            <span className="stat-trend">With Thea</span>
           </div>
         </div>
         <div className="stat-card">
@@ -139,9 +128,19 @@ function App() {
             <Users size={20} />
           </div>
           <div className="stat-content">
-            <span className="stat-label">Team Members</span>
-            <strong className="stat-value">8</strong>
-            <span className="stat-trend">Active agents</span>
+            <span className="stat-label">Team Capacity</span>
+            <strong className="stat-value">7/8</strong>
+            <span className="stat-trend">Agents active</span>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon" style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b' }}>
+            <Clock size={20} />
+          </div>
+          <div className="stat-content">
+            <span className="stat-label">Avg Response</span>
+            <strong className="stat-value">2.4h</strong>
+            <span className="stat-trend">Coordination time</span>
           </div>
         </div>
       </div>
@@ -150,8 +149,8 @@ function App() {
       <div className="charts-row">
         <div className="chart-card">
           <div className="chart-header">
-            <h3>Task Distribution</h3>
-            <span className="chart-subtitle">Current sprint status</span>
+            <h3>Content Pipeline</h3>
+            <span className="chart-subtitle">Article status distribution</span>
           </div>
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
@@ -191,8 +190,8 @@ function App() {
         
         <div className="chart-card">
           <div className="chart-header">
-            <h3>Weekly Activity</h3>
-            <span className="chart-subtitle">Tasks & commits per day</span>
+            <h3>Weekly Coordination</h3>
+            <span className="chart-subtitle">Articles processed & reviews conducted</span>
           </div>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={weeklyActivity} barGap={4}>
@@ -217,16 +216,16 @@ function App() {
                 labelStyle={{ color: '#fff' }}
               />
               <Bar 
-                dataKey="tasks" 
-                fill={agent.color} 
+                dataKey="articles" 
+                fill="#16a34a" 
                 radius={[6, 6, 0, 0]} 
-                name="Tasks"
+                name="Articles"
               />
               <Bar 
-                dataKey="commits" 
+                dataKey="reviews" 
                 fill="#8b5cf6" 
                 radius={[6, 6, 0, 0]}
-                name="Commits"
+                name="Reviews"
               />
             </BarChart>
           </ResponsiveContainer>
