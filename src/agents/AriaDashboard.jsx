@@ -87,18 +87,36 @@ function App() {
       .catch(() => setBusinessLoading(false));
   }, []);
 
+  // Fetch real message data from Aria's session stats
   useEffect(() => {
-    const interval = setInterval(() => {
-      setMessages(prev => {
-        const now = new Date();
-        return [...prev.slice(-10), {
-          time: now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-          messages: Math.floor(Math.random() * 10),
-        }];
-      });
-    }, 3000);
-    return () => clearInterval(interval);
+    const fetchMessageStats = async () => {
+      try {
+        // Try to get real message count from OpenClaw API
+        const response = await fetch('http://localhost:3001/api/aria/messages');
+        if (response.ok) {
+          const data = await response.json();
+          // Build hourly distribution from real data
+          const hourlyData = [];
+          const now = new Date();
+          for (let i = 0; i < 12; i++) {
+            const hour = new Date(now.getTime() - (11 - i) * 3600000);
+            hourlyData.push({
+              time: hour.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+              messages: data.hourly?.[i] || 0
+            });
+          }
+          setMessages(hourlyData);
+        }
+      } catch (e) {
+        // No real data available - show empty state
+        console.log('No message data available');
+      }
+    };
+    
+    fetchMessageStats();
   }, []);
+
+  // Remove the fake animation - only show real data or empty state
 
   return (
     <div className="dashboard">
@@ -169,16 +187,32 @@ function App() {
       </div>
 
       <div className="chart-card full-width">
-        <h3>Message Activity (Today)</h3>
-        <ResponsiveContainer width="100%" height={200}>
-          <LineChart data={messages.length ? messages : activityData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#222" />
-            <XAxis dataKey="time" stroke="#666" />
-            <YAxis stroke="#666" />
-            <Tooltip contentStyle={{ backgroundColor: '#111', border: 'none' }} />
-            <Line type="monotone" dataKey="messages" stroke={agent.color} strokeWidth={2} dot={false} />
-          </LineChart>
-        </ResponsiveContainer>
+        <h3>📊 Message Activity (Today)</h3>
+        {messages.length > 0 ? (
+          <ResponsiveContainer width="100%" height={200}>
+            <LineChart data={messages}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#222" />
+              <XAxis dataKey="time" stroke="#666" />
+              <YAxis stroke="#666" />
+              <Tooltip contentStyle={{ backgroundColor: '#111', border: 'none' }} />
+              <Line type="monotone" dataKey="messages" stroke={agent.color} strokeWidth={2} dot={false} />
+            </LineChart>
+          </ResponsiveContainer>
+        ) : (
+          <div style={{ 
+            height: '200px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            color: '#666',
+            flexDirection: 'column',
+            gap: '8px'
+          }}>
+            <span style={{ fontSize: '32px' }}>📭</span>
+            <p>No message data available yet</p>
+            <p style={{ fontSize: '12px' }}>Connect to OpenClaw API to see real stats</p>
+          </div>
+        )}
       </div>
 
       <div className="section">
