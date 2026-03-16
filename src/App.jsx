@@ -15,8 +15,13 @@ import SystemDashboard from './quanta/SystemDashboard';
 import AlertsDashboard from './quanta/AlertsDashboard';
 import './App.css';
 
+const SKIP_AUTH = import.meta.env.VITE_SKIP_AUTH === 'true';
+
 function AuthRoute({ children }) {
   const { isSignedIn, isLoaded } = useAuth();
+  
+  // Dev bypass for screenshots/local testing
+  if (SKIP_AUTH) return children;
   
   if (!isLoaded) {
     return (
