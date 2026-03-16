@@ -293,3 +293,28 @@ app.get('/api/quanta/health', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Quanta API server running on port ${PORT}`);
 });
+
+// Daily GPU metrics for historical trends
+app.get('/api/quanta/system/gpu/daily', (req, res) => {
+  try {
+    const days = parseInt(req.query.days) || 7;
+    const data = db.prepare(`
+      SELECT 
+        substr(timestamp, 1, 10) as date,
+        ROUND(AVG(gpu_util_pct), 1) as avg_util,
+        ROUND(MAX(gpu_util_pct), 1) as max_util,
+        ROUND(AVG(gpu_temp_c), 1) as avg_temp,
+        ROUND(AVG(vram_used_gb), 1) as avg_vram,
+        ROUND(MAX(vram_used_gb), 1) as max_vram,
+        COUNT(*) as snapshots
+      FROM sys_snapshots
+      WHERE timestamp >= datetime('now', '-${days} days')
+      GROUP BY substr(timestamp, 1, 10)
+      ORDER BY date
+    `).all();
+    
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
