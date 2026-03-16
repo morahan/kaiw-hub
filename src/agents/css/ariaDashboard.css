@@ -22,8 +22,8 @@
 .aria-hero-bg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 20% 50%, rgba(168,85,247,0.15) 0%, transparent 60%),
-              radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.08) 0%, transparent 50%);
+  background: radial-gradient(ellipse at 20% 50%, rgba(168,85,247,0.06) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.04) 0%, transparent 50%);
   pointer-events: none;
 }
 
@@ -187,8 +187,8 @@
 }
 
 .card-meta {
-  font-size: 0.72rem;
-  color: #888;
+  font-size: 0.75rem;
+  color: #999;
 }
 
 /* ── SCORE RINGS ── */
@@ -211,8 +211,8 @@
 }
 
 .mini-chart-title {
-  font-size: 0.72rem;
-  color: #888;
+  font-size: 0.75rem;
+  color: #aaa;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.3rem;
@@ -235,8 +235,8 @@
 }
 
 .score-ring-sub {
-  font-size: 0.68rem;
-  color: #888;
+  font-size: 0.75rem;
+  color: #aaa;
 }
 
 .health-row {
@@ -255,8 +255,9 @@
   gap: 0.15rem;
 }
 
-.health-pill span { font-size: 0.72rem; color: #999; }
+.health-pill span { font-size: 0.78rem; color: #bbb; }
 .health-pill strong { font-size: 1.05rem; color: #e2e2f0; }
+.health-unit { font-size: 0.75rem; color: #bbb; font-weight: 500; margin-left: 0.15rem; }
 
 /* ── FAMILY ── */
 .family-grid {
@@ -306,13 +307,13 @@
 }
 
 .family-mood {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 500;
 }
 
 .family-last {
-  font-size: 0.72rem;
-  color: #888;
+  font-size: 0.75rem;
+  color: #999;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -349,8 +350,8 @@
 .biz-stat-done strong { color: #22c55e; }
 
 .biz-stat span {
-  font-size: 0.68rem;
-  color: #999;
+  font-size: 0.75rem;
+  color: #aaa;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -387,8 +388,8 @@
 .task-title { flex: 1; color: #d0d0e8; }
 
 .task-state {
-  font-size: 0.65rem;
-  color: #888;
+  font-size: 0.7rem;
+  color: #999;
   text-transform: uppercase;
   padding: 0.15rem 0.4rem;
   border-radius: 4px;
@@ -436,8 +437,8 @@
 }
 
 .team-name { font-size: 0.82rem; color: #e2e2f0; font-weight: 600; }
-.team-role { flex: 1; font-size: 0.68rem; color: #888; }
-.team-last { font-size: 0.68rem; color: #888; margin-left: auto; }
+.team-role { flex: 1; font-size: 0.75rem; color: #999; }
+.team-last { font-size: 0.75rem; color: #999; margin-left: auto; }
 
 /* ── NO DATA ── */
 .no-data {
@@ -454,8 +455,8 @@
   align-items: center;
   padding: 0.75rem 2rem;
   border-top: 1px solid #1a1a2e;
-  font-size: 0.7rem;
-  color: #555;
+  font-size: 0.75rem;
+  color: #777;
 }
 
 /* ── RESPONSIVE ── */

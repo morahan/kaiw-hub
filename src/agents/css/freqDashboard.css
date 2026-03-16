@@ -45,12 +45,12 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 24px;
+  padding: 24px 28px;
   background: var(--bg-2);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   margin-bottom: 16px;
-  gap: 16px;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
@@ -78,8 +78,8 @@ body {
 
 .header-text p {
   color: var(--t2);
-  font-size: 14px;
-  margin-top: 3px;
+  font-size: 15px;
+  margin-top: 5px;
   font-weight: 500;
 }
 
@@ -101,7 +101,7 @@ body {
   gap: 2px;
 }
 
-.hs-label { font-size: 10px; color: var(--t2); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+.hs-label { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
 .hs-value { font-size: 22px; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums; text-shadow: 0 0 12px rgba(20,184,166,0.4); }
 
 .freq-refresh-btn {
@@ -213,7 +213,7 @@ body {
 .kpi-of  { font-size: 20px; color: var(--t2); font-weight: 600; }
 .kpi-lbl {
   font-size: 12px;
-  color: var(--t2);
+  color: #999;
   text-transform: uppercase;
   letter-spacing: 0.8px;
   font-weight: 600;
@@ -252,7 +252,7 @@ body {
 .service-row:hover { background: var(--bg-hover); }
 
 .service-icon { font-size: 18px; flex-shrink: 0; }
-.service-name { flex: 1; color: var(--t1); font-size: 14px; font-weight: 500; }
+.service-name { flex: 1; color: var(--t1); font-size: 16px; font-weight: 500; }
 
 /* ── Stats column (overview) ── */
 .stats-column { display: flex; flex-direction: column; gap: 10px; }
@@ -270,7 +270,7 @@ body {
 .stat-big { display: flex; align-items: baseline; gap: 4px; }
 .stat-num { font-size: 30px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
 .stat-of  { font-size: 16px; color: var(--t3); }
-.stat-lbl { font-size: 11px; color: var(--t3); text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-lbl { font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; }
 
 /* ── Chart card ── */
 .chart-card { padding: 20px; }
@@ -318,7 +318,7 @@ body {
   font-size: 13px;
 }
 
-.identity-row span:first-child { color: var(--t3); }
+.identity-row span:first-child { color: #999; }
 .identity-row span:last-child  { color: var(--t1); font-weight: 500; font-family: monospace; font-size: 12px; }
 
 /* ── Pipeline ── */
@@ -486,7 +486,7 @@ body {
   margin-bottom: 12px;
 }
 
-.sys-desc { font-size: 12px; color: var(--t3); line-height: 1.5; }
+.sys-desc { font-size: 12px; color: #999; line-height: 1.5; }
 
 .icon-green { color: #10b981; }
 .icon-red   { color: #ef4444; }
@@ -547,13 +547,13 @@ body {
 
 .status-badge {
   display: inline-block;
-  padding: 3px 10px;
+  padding: 5px 14px;
   border-radius: 99px;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 800;
   white-space: nowrap;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.4px;
 }
 
 .badge-green  { background: rgba(16,185,129,0.2);  color: #6ee7b7; border: 1px solid rgba(16,185,129,0.4); }

@@ -118,7 +118,7 @@ function GretaDashboard() {
         </div>
         <div className="kpi-card">
           <div className="kpi-top">
-            <span className="kpi-label">Success Rate</span>
+            <span className="kpi-label">Task Success Rate</span>
             <span className="kpi-trend up">+2.1%</span>
           </div>
           <div className="kpi-number" style={{ color: '#22c55e' }}>{successRate}%</div>

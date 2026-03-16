@@ -1402,59 +1402,65 @@ function AnimatedCounter({ end, duration = 1500, suffix = '' }) {
 const recentArticles = [
   {
     title: "Creatine's Hidden Superpower: Why Every Brain in the Room Should Be Supplementing",
-    date: "2026-03-15",
+    date: "2026-03-16",
     words: 1124,
-    status: "Published",
+    status: "published",
     category: "Science",
     engagement: 9.3,
     reads: 22100
   },
   {
     title: "The Mitochondrial Age Hack: Why Your Cells Are Older Than Your Birth Certificate",
-    date: "2026-03-13",
+    date: "2026-03-15",
     words: 1312,
-    status: "Published",
+    status: "published",
     category: "Longevity",
     engagement: 9.1,
     reads: 19800
   },
   {
     title: "Fascia: The Forgotten Tissue That Explains Why You're Stiff, Sore, and Stuck",
-    date: "2026-03-11",
+    date: "2026-03-13",
     words: 1208,
-    status: "Published",
+    status: "revision",
     category: "Science",
     engagement: 7.8,
     reads: 11200
   },
   {
     title: "Heart Rate Variability: The Hidden Fitness Metric That Predicts Your Health",
-    date: "2026-03-09",
+    date: "2026-03-12",
     words: 1241,
-    status: "Published",
+    status: "published",
     category: "Metrics",
     engagement: 8.5,
     reads: 14300
   },
   {
     title: "Forget Lifespan — Your Musclespan Determines How Well You Age",
-    date: "2026-03-07",
+    date: "2026-03-10",
     words: 1381,
-    status: "Published",
+    status: "draft",
     category: "Longevity",
     engagement: 9.4,
     reads: 24500
   },
   {
     title: "Why Zone 2 Training Is Overrated (And What Actually Works)",
-    date: "2026-03-05",
+    date: "2026-03-08",
     words: 1156,
-    status: "Published",
+    status: "published",
     category: "Training",
     engagement: 8.9,
     reads: 18700
   }
 ]
+
+const statusConfig = {
+  published: { label: "Published", color: "#22c55e", bg: "rgba(34,197,94,0.12)" },
+  draft:     { label: "Draft",     color: "#f97316", bg: "rgba(249,115,22,0.12)" },
+  revision:  { label: "Revision",  color: "#f59e0b", bg: "rgba(245,158,11,0.12)" }
+}
 
 const metrics = {
   totalArticles: 31,
@@ -1515,6 +1521,7 @@ function App() {
   const [showCommandPalette, setShowCommandPalette] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [articleFilter, setArticleFilter] = useState('all')
+  const [timeFilter, setTimeFilter] = useState('all')
   const [showQuickDraft, setShowQuickDraft] = useState(false)
   const [showShortcuts, setShowShortcuts] = useState(false)
   const [showVirality, setShowVirality] = useState(false)
@@ -1727,21 +1734,32 @@ function App() {
   // Filter articles
   const filteredArticles = useMemo(() => {
     let filtered = recentArticles
-    
+
     if (articleFilter !== 'all') {
       filtered = filtered.filter(a => a.category === articleFilter)
     }
-    
+
+    if (timeFilter === 'today') {
+      const today = new Date().toISOString().slice(0, 10)
+      filtered = filtered.filter(a => a.date === today)
+    } else if (timeFilter === 'week') {
+      const now = new Date()
+      const weekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7)
+      filtered = filtered.filter(a => new Date(a.date) >= weekAgo)
+    } else if (timeFilter === 'revision') {
+      filtered = filtered.filter(a => a.status === 'revision')
+    }
+
     if (searchQuery) {
       const q = searchQuery.toLowerCase()
-      filtered = filtered.filter(a => 
+      filtered = filtered.filter(a =>
         a.title.toLowerCase().includes(q) ||
         a.category.toLowerCase().includes(q)
       )
     }
-    
+
     return filtered
-  }, [recentArticles, articleFilter, searchQuery])
+  }, [recentArticles, articleFilter, searchQuery, timeFilter])
 
   // Get productivity hour
   const productivityHour = useMemo(() => {
@@ -1913,7 +1931,7 @@ function App() {
         {/* ---- KPI Strip — huge numbers, clear focal point ---- */}
         <section className="kpi-strip">
           <div className="kpi-card primary">
-            <div className="kpi-icon">📄</div>
+            <div className="kpi-icon" title="Total articles published across all categories">📄</div>
             <div className="kpi-value">
               <AnimatedCounter end={metrics.totalArticles} />
             </div>
@@ -1921,7 +1939,7 @@ function App() {
             <div className="kpi-trend positive">+{metrics.publishedThisMonth} this month</div>
           </div>
           <div className="kpi-card">
-            <div className="kpi-icon">🔥</div>
+            <div className="kpi-icon" title="Consecutive days with at least one article published">🔥</div>
             <div className="kpi-value">
               <AnimatedCounter end={metrics.currentStreak} />
             </div>
@@ -1929,7 +1947,7 @@ function App() {
             <div className="kpi-trend">Never missed a day</div>
           </div>
           <div className="kpi-card">
-            <div className="kpi-icon">📝</div>
+            <div className="kpi-icon" title="Total words written across all articles">📝</div>
             <div className="kpi-value">
               <AnimatedCounter end={Math.round(metrics.totalWords / 1000)} suffix="k" />
             </div>
@@ -1937,7 +1955,7 @@ function App() {
             <div className="kpi-trend">{metrics.avgWordsPerArticle} avg/article</div>
           </div>
           <div className="kpi-card">
-            <div className="kpi-icon">👁️</div>
+            <div className="kpi-icon" title="Total article reads across all platforms">👁️</div>
             <div className="kpi-value">
               <AnimatedCounter end={Math.round(metrics.totalReads / 1000)} suffix="k" />
             </div>
@@ -1991,6 +2009,22 @@ function App() {
             {/* Recent Articles */}
             <div>
               <h3 className="section-heading"><span className="icon">📡</span> Recent Articles</h3>
+              <div className="article-time-tabs">
+                {[
+                  { key: 'all', label: 'All' },
+                  { key: 'today', label: 'Today' },
+                  { key: 'week', label: 'This Week' },
+                  { key: 'revision', label: 'Needs Revision' }
+                ].map(tab => (
+                  <button
+                    key={tab.key}
+                    className={`time-tab ${timeFilter === tab.key ? 'active' : ''}`}
+                    onClick={() => setTimeFilter(tab.key)}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
               <div className="article-filters">
                 <div className="search-box">
                   <span className="search-icon">🔍</span>
@@ -2026,66 +2060,72 @@ function App() {
                 </div>
               </div>
               <div className="articles-list">
-                {filteredArticles.map((article, index) => (
-                  <div
-                    key={index}
-                    className={`article-card ${expandedArticle === index ? 'expanded' : ''}`}
-                    onClick={() => toggleArticle(index)}
-                  >
-                    <div className="article-header">
-                      <div className="article-status">
-                        <span className="status-dot"></span>
-                        {article.status}
-                      </div>
-                      <div className="article-right">
-                        <span
-                          className="engagement-badge"
-                          style={{
-                            background: `${getEngagementColor(article.engagement)}20`,
-                            color: getEngagementColor(article.engagement)
-                          }}
-                        >
-                          {article.engagement}/10
-                        </span>
-                        <span
-                          className="article-category"
-                          style={{ color: categoryColors[article.category] || '#a1a1aa' }}
-                        >
-                          {article.category}
-                        </span>
-                      </div>
-                    </div>
-                    <h3 className="article-title">{article.title}</h3>
-                    <div className="article-meta">
-                      <span className="article-date">{formatDate(article.date)}</span>
-                      <span className="article-divider">·</span>
-                      <span className="article-words">{article.words.toLocaleString()} words</span>
-                      <span className="article-divider">·</span>
-                      <span className="article-reads">{article.reads.toLocaleString()} reads</span>
-                    </div>
-                    {expandedArticle === index && (
-                      <div className="article-expanded">
-                        <div className="expanded-stats">
-                          <div className="expanded-stat">
-                            <span className="expanded-label">Engagement</span>
-                            <span className="expanded-value" style={{ color: getEngagementColor(article.engagement) }}>
-                              {article.engagement}/10
-                            </span>
-                          </div>
-                          <div className="expanded-stat">
-                            <span className="expanded-label">Total Reads</span>
-                            <span className="expanded-value">{article.reads.toLocaleString()}</span>
-                          </div>
-                          <div className="expanded-stat">
-                            <span className="expanded-label">Est. Shares</span>
-                            <span className="expanded-value">{Math.round(article.reads * 0.12).toLocaleString()}</span>
-                          </div>
+                {filteredArticles.map((article, index) => {
+                  const sc = statusConfig[article.status] || statusConfig.published
+                  return (
+                    <div
+                      key={index}
+                      className={`article-card ${expandedArticle === index ? 'expanded' : ''}`}
+                      onClick={() => toggleArticle(index)}
+                    >
+                      <div className="article-header">
+                        <div className="article-status-badge" style={{ background: sc.bg, color: sc.color }}>
+                          <span className="status-dot" style={{ background: sc.color }}></span>
+                          {sc.label}
                         </div>
-                        <button className="view-btn">View Full Analytics →</button>
+                        <div className="article-right">
+                          <span
+                            className="engagement-badge"
+                            style={{
+                              background: `${getEngagementColor(article.engagement)}20`,
+                              color: getEngagementColor(article.engagement)
+                            }}
+                          >
+                            {article.engagement}/10
+                          </span>
+                          <span
+                            className="article-category"
+                            style={{ color: categoryColors[article.category] || '#cccccc' }}
+                          >
+                            {article.category}
+                          </span>
+                        </div>
                       </div>
-                    )}
-                  </div>
-                ))}
+                      <h3 className="article-title">{article.title}</h3>
+                      <div className="article-meta">
+                        <span className="article-date">{formatDate(article.date)}</span>
+                        <span className="article-divider">·</span>
+                        <span className="article-words">{article.words.toLocaleString()} words</span>
+                        <span className="article-divider">·</span>
+                        <span className="article-reads">{article.reads.toLocaleString()} reads</span>
+                      </div>
+                      {expandedArticle === index && (
+                        <div className="article-expanded">
+                          <div className="expanded-stats">
+                            <div className="expanded-stat">
+                              <span className="expanded-label">Engagement</span>
+                              <span className="expanded-value" style={{ color: getEngagementColor(article.engagement) }}>
+                                {article.engagement}/10
+                              </span>
+                            </div>
+                            <div className="expanded-stat">
+                              <span className="expanded-label">Total Reads</span>
+                              <span className="expanded-value">{article.reads.toLocaleString()}</span>
+                            </div>
+                            <div className="expanded-stat">
+                              <span className="expanded-label">Est. Shares</span>
+                              <span className="expanded-value">{Math.round(article.reads * 0.12).toLocaleString()}</span>
+                            </div>
+                          </div>
+                          <button className="view-btn">View Full Analytics →</button>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+                {filteredArticles.length === 0 && (
+                  <div className="articles-empty">No articles match your filters</div>
+                )}
               </div>
             </div>
 

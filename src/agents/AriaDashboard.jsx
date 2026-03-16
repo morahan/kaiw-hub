@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area, Legend } from 'recharts';
 import './css/ariaDashboard.css';
 
 const agent = { name: 'Aria', emoji: '🎵', role: 'Personal Life Assistant', color: '#a855f7', telegram: 'AriaFlowBot' };
@@ -278,9 +278,10 @@ export default function AriaDashboard() {
                       <stop offset="100%" stopColor="#a855f7" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <XAxis dataKey="day" tick={{ fill: '#888', fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <XAxis dataKey="day" tick={{ fill: '#aaa', fontSize: 12 }} axisLine={false} tickLine={false} />
                   <YAxis hide domain={[5, 9]} />
                   <Tooltip {...chartTooltipStyle} formatter={(v) => [`${v}h`, 'Sleep']} />
+                  <Legend wrapperStyle={{ fontSize: 13, color: '#ccc', paddingTop: 4 }} formatter={() => 'Hours Slept'} />
                   <Area type="monotone" dataKey="hours" stroke="#a855f7" fill="url(#sleepGrad)" strokeWidth={2} dot={{ r: 3, fill: '#a855f7' }} />
                 </AreaChart>
               </ResponsiveContainer>
@@ -290,19 +291,19 @@ export default function AriaDashboard() {
           <div className="health-row">
             <div className="health-pill">
               <span>❤️ Resting HR</span>
-              <strong>{oura.details.sleep.restingHR} bpm</strong>
+              <strong>{oura.details.sleep.restingHR}<span className="health-unit">bpm</span></strong>
             </div>
             <div className="health-pill">
               <span>🧠 HRV</span>
-              <strong>{oura.details.sleep.hrv} ms</strong>
+              <strong>{oura.details.sleep.hrv}<span className="health-unit">ms</span></strong>
             </div>
             <div className="health-pill">
               <span>😴 Total Sleep</span>
-              <strong>{oura.details.sleep.total}h</strong>
+              <strong>{oura.details.sleep.total}<span className="health-unit">hrs</span></strong>
             </div>
             <div className="health-pill">
               <span>🔥 Calories</span>
-              <strong>{oura.details.activity.calories.toLocaleString()}</strong>
+              <strong>{oura.details.activity.calories.toLocaleString()}<span className="health-unit">kcal</span></strong>
             </div>
           </div>
         </section>
@@ -351,6 +352,7 @@ export default function AriaDashboard() {
               <XAxis dataKey="day" tick={{ fill: '#aaa', fontSize: 12 }} axisLine={false} tickLine={false} />
               <YAxis hide />
               <Tooltip {...chartTooltipStyle} formatter={(v) => [v.toLocaleString(), 'Steps']} />
+              <Legend wrapperStyle={{ fontSize: 13, color: '#ccc', paddingTop: 4 }} formatter={() => 'Daily Steps'} />
               <Bar dataKey="steps" radius={[4, 4, 0, 0]} fill="#06b6d4" />
             </BarChart>
           </ResponsiveContainer>

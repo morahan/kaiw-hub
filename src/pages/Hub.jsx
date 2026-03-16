@@ -102,18 +102,24 @@ function Hub() {
             <h1>⚡ kaiw.io</h1>
             <span className="hub-tagline">Agent Command Center</span>
           </div>
-          <div className="hub-header-stats">
-            <div className="hub-stat-pill online">
-              <Wifi size={13} />
-              <span>{onlineCount} online</span>
+          <div className="hub-header-right">
+            <div className="hub-system-status">
+              <span className="system-dot" />
+              <span>All Systems Online</span>
             </div>
-            <div className="hub-stat-pill busy">
-              <Zap size={13} />
-              <span>{busyCount} busy</span>
-            </div>
-            <div className="hub-stat-pill offline">
-              <WifiOff size={13} />
-              <span>{offlineCount} offline</span>
+            <div className="hub-header-stats">
+              <div className="hub-stat-pill online">
+                <Wifi size={13} />
+                <span>{onlineCount} online</span>
+              </div>
+              <div className="hub-stat-pill busy">
+                <Zap size={13} />
+                <span>{busyCount} busy</span>
+              </div>
+              <div className="hub-stat-pill offline">
+                <WifiOff size={13} />
+                <span>{offlineCount} offline</span>
+              </div>
             </div>
           </div>
         </div>

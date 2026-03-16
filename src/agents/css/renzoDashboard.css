@@ -10,7 +10,7 @@
   --border-hover:  #2e2e48;
   --text-primary:  #f0f0f8;
   --text-secondary:#b0b0c8;
-  --text-muted:    #7878a0;
+  --text-muted:    #9898b8;
   --accent:        #ef4444;
   --accent-dark:   #b91c1c;
   --accent-glow:   rgba(239, 68, 68, 0.25);
@@ -436,7 +436,7 @@ body {
 }
 .kpi-trend {
   font-size: 11px;
-  color: var(--text-muted);
+  color: #cccccc;
 }
 .kpi-trend.positive { color: var(--accent-green); }
 
@@ -501,7 +501,7 @@ body {
 .qa-btn .qa-icon { font-size: 14px; }
 .qa-btn .qa-key {
   font-size: 10px;
-  color: var(--text-muted);
+  color: #cccccc;
   background: var(--bg-secondary);
   padding: 1px 5px;
   border-radius: 3px;
@@ -654,13 +654,13 @@ body {
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: 20px;
-  color: var(--text-muted);
+  color: #cccccc;
   font-size: 12px;
   cursor: pointer;
   transition: all 0.2s;
   font-family: inherit;
 }
-.filter-pill:hover { color: var(--text-secondary); border-color: var(--border-hover); }
+.filter-pill:hover { color: var(--text-primary); border-color: var(--border-hover); }
 .filter-pill.active {
   background: rgba(239, 68, 68, 0.12);
   color: var(--accent);
@@ -889,14 +889,14 @@ body {
 .stat-generate-btn {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  color: var(--text-muted);
+  color: #cccccc;
   padding: 4px 12px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 11px;
   transition: all 0.2s;
 }
-.stat-generate-btn:hover { border-color: var(--border-hover); color: var(--text-secondary); }
+.stat-generate-btn:hover { border-color: var(--border-hover); color: var(--text-primary); }
 
 /* ---- Writing Timer ---- */
 .writing-timer {
@@ -1488,7 +1488,7 @@ body {
   padding: 4px 12px;
   background: var(--bg-secondary);
   border: 1px solid var(--border);
-  color: var(--text-muted);
+  color: #cccccc;
   border-radius: 6px;
   cursor: pointer;
   font-size: 12px;

@@ -310,8 +310,8 @@ function App() {
                     { label: 'Missing', count: 1, fill: '#ef4444' },
                   ]} barSize={48}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3a" vertical={false} />
-                    <XAxis dataKey="label" stroke="#606070" tick={{ fontSize: 12 }} />
-                    <YAxis stroke="#606070" tick={{ fontSize: 12 }} allowDecimals={false} />
+                    <XAxis dataKey="label" stroke="#aaa" tick={{ fontSize: 13, fill: '#aaa' }} />
+                    <YAxis stroke="#aaa" tick={{ fontSize: 13, fill: '#aaa' }} allowDecimals={false} />
                     <Tooltip
                       contentStyle={{ background: '#1a1a24', border: '1px solid #2a2a3a', borderRadius: 8 }}
                       cursor={{ fill: 'rgba(255,255,255,0.04)' }}
