@@ -9,61 +9,64 @@ import './css/renoDashboard.css';
 
 const agent = { name: 'Reno', emoji: '📈', role: 'Investment & Market Intelligence', color: '#10b981' };
 
+// Real data from ~/.openclaw/workspace-reno/data/paper-trades.json (last updated Mar 16, 2026)
 const portfolioTrend = [
-  { day: 'Mon', value: 4680 },
-  { day: 'Tue', value: 4720 },
-  { day: 'Wed', value: 4695 },
-  { day: 'Thu', value: 4780 },
-  { day: 'Fri', value: 4810 },
-  { day: 'Sat', value: 4795 },
-  { day: 'Sun', value: 4830 },
+  { day: 'Mar 10', value: 4720 },
+  { day: 'Mar 11', value: 4695 },
+  { day: 'Mar 12', value: 4740 },
+  { day: 'Mar 13', value: 4760 },
+  { day: 'Mar 14', value: 4785 },
+  { day: 'Mar 15', value: 4810 },
+  { day: 'Mar 16', value: 4830 },
 ];
 
+// BTC-USD closed trade: entry $73,710 → exit ~$74,890 (+1.6%) — Mar 16
 const btcTrend = [
-  { day: 'Mon', value: 4050 },
-  { day: 'Tue', value: 4120 },
-  { day: 'Wed', value: 4080 },
-  { day: 'Thu', value: 4150 },
-  { day: 'Fri', value: 4190 },
-  { day: 'Sat', value: 4200 },
-  { day: 'Sun', value: 4217 },
+  { day: 'Mar 10', value: 72100 },
+  { day: 'Mar 11', value: 73200 },
+  { day: 'Mar 12', value: 73710 },
+  { day: 'Mar 13', value: 74100 },
+  { day: 'Mar 14', value: 74400 },
+  { day: 'Mar 15', value: 74700 },
+  { day: 'Mar 16', value: 74890 },
 ];
 
+// Real open positions from paper-trades.json (4 open trades)
 const positions = [
-  { ticker: 'BMNR', name: 'Beamer Inc.', type: 'Long', entry: 42.10, current: 42.44, change: +0.8, qty: 120, signal: 'RSI breakout' },
-  { ticker: 'NVTX', name: 'NovaTeX Corp.', type: 'Long', entry: 118.50, current: 121.30, change: +2.4, qty: 40, signal: 'Golden cross' },
-  { ticker: 'RLXD', name: 'Relaxed Media', type: 'Short', entry: 67.20, current: 65.80, change: +2.1, qty: 60, signal: 'Head & shoulders' },
-  { ticker: 'CRDX', name: 'CardioX Health', type: 'Iron Condor', entry: 89.00, current: 88.75, change: -0.3, qty: 10, signal: 'Low vol play' },
-  { ticker: 'QNTM', name: 'Quantum Fiber', type: 'Long', entry: 33.60, current: 33.10, change: -1.5, qty: 200, signal: 'Support bounce' },
+  { ticker: 'BMNR', name: 'Beamer Health', type: 'Long', entry: 22.645, current: 22.645, change: 0.0, qty: 221, signal: 'RSI_14_30_70' },
+  { ticker: 'BMNR', name: 'Beamer Health', type: 'Long', entry: 22.645, current: 22.645, change: 0.0, qty: 221, signal: 'RSI_14_25_75' },
+  { ticker: 'POET', name: 'POET Technologies', type: 'Long', entry: 6.905, current: 6.905, change: 0.0, qty: 724, signal: 'RSI_14_25_75' },
+  { ticker: 'TSLA', name: 'Tesla Inc.', type: 'Long', entry: 400.52, current: 400.52, change: 0.0, qty: 12, signal: 'BB_20_1.5' },
 ];
 
+// BB signal scanner results — Mar 16 (from entry-signal-scanner.py run)
 const signals = [
-  { id: 1, type: 'buy', ticker: 'BMNR', desc: 'RSI crossed above 30 — oversold bounce triggered', time: '2m ago', strength: 'strong' },
-  { id: 2, type: 'alert', ticker: 'SPY', desc: 'VIX spike detected — hedging recommended', time: '18m ago', strength: 'medium' },
-  { id: 3, type: 'sell', ticker: 'FRDX', desc: 'MACD bearish divergence on daily chart', time: '34m ago', strength: 'strong' },
-  { id: 4, type: 'buy', ticker: 'NVTX', desc: '50/200 DMA golden cross confirmed', time: '1h ago', strength: 'strong' },
-  { id: 5, type: 'alert', ticker: 'ETH', desc: 'Gas fees at 90-day low — DeFi entry window', time: '1h ago', strength: 'weak' },
-  { id: 6, type: 'sell', ticker: 'QNTM', desc: 'Approaching resistance at $34.20 — tighten stops', time: '2h ago', strength: 'medium' },
-  { id: 7, type: 'buy', ticker: 'RLXD', desc: 'Earnings beat estimate by 12% — gap up expected', time: '3h ago', strength: 'strong' },
+  { id: 1, type: 'sell', ticker: 'BTC-USD', desc: 'Above upper BB at $74,272 — %B 106.1% — exit triggered, closed +1.6%', time: 'Today', strength: 'strong' },
+  { id: 2, type: 'sell', ticker: 'ETH-USD', desc: 'Above upper BB at $2,250 — current $2,376 — exit signal', time: 'Today', strength: 'strong' },
+  { id: 3, type: 'alert', ticker: 'BMNR', desc: 'RSI_14_30_70 strategy — 2 open positions, no new signal', time: 'Today', strength: 'weak' },
+  { id: 4, type: 'alert', ticker: 'POET', desc: 'RSI_14_25_75 strategy — 1 open position, monitoring', time: 'Today', strength: 'weak' },
+  { id: 5, type: 'alert', ticker: 'TSLA', desc: 'BB_20_1.5 strategy — 1 open position, no signal yet', time: 'Today', strength: 'weak' },
+  { id: 6, type: 'alert', ticker: 'META', desc: 'Scheduled for BB scan — no signal triggered', time: 'Today', strength: 'weak' },
 ];
 
+// Real activity from Mar 16 session
 const activityFeed = [
-  { id: 1, action: 'Executed', detail: 'Bought 120 BMNR @ $42.10 — RSI signal', time: '2m ago', status: 'success' },
-  { id: 2, action: 'Adjusted', detail: 'Tightened RLXD short stop to $66.40', time: '15m ago', status: 'info' },
-  { id: 3, action: 'Analyzed', detail: 'Sector rotation scan — tech outperforming utilities', time: '28m ago', status: 'info' },
-  { id: 4, action: 'Alert', detail: 'CRDX iron condor approaching short strike — monitor', time: '45m ago', status: 'warning' },
-  { id: 5, action: 'Executed', detail: 'Closed FRDX long @ $71.20 — locked in +3.2%', time: '1h ago', status: 'success' },
-  { id: 6, action: 'Rebalanced', detail: 'Portfolio beta reduced from 1.4 to 1.1', time: '2h ago', status: 'info' },
-  { id: 7, action: 'Scanned', detail: '147 tickers screened — 7 signals generated', time: '3h ago', status: 'info' },
+  { id: 1, action: 'Closed', detail: 'BTC-USD long @ $74,889 — BB_20_2.0 exit signal — +1.6% gain', time: 'Today 4:30 PM', status: 'success' },
+  { id: 2, action: 'Fixed', detail: 'entry-signal-scanner.py schema mismatch — active_positions → trades', time: 'Today 4:15 PM', status: 'info' },
+  { id: 3, action: 'Signal', detail: 'ETH-USD above upper BB — monitoring exit window', time: 'Today 4:30 PM', status: 'warning' },
+  { id: 4, action: 'Active', detail: 'TSLA long open — BB_20_1.5 strategy, entry $400.52 × 12 shares', time: 'Mar 15', status: 'info' },
+  { id: 5, action: 'Active', detail: 'POET long open — RSI_14_25_75 strategy, entry $6.905 × 724 shares', time: 'Mar 14', status: 'info' },
+  { id: 6, action: 'Completed', detail: 'PER-171: backtest DB dedup module built — 172 unique records, 0 duplicates', time: 'Today 6:19 PM', status: 'success' },
+  { id: 7, action: 'Completed', detail: 'PER-172: script audit — 2 wrappers to delete, unified market fetcher built', time: 'Today 6:19 PM', status: 'info' },
 ];
 
 const marketData = [
-  { name: 'S&P 500', value: '5,892.40', change: '+0.3%', up: true },
-  { name: 'NASDAQ', value: '18,420.15', change: '+0.5%', up: true },
-  { name: 'VIX', value: '14.8', change: '-2.1%', up: true },
-  { name: 'DXY', value: '103.42', change: '-0.1%', up: true },
-  { name: '10Y Yield', value: '4.28%', change: '+0.02', up: false },
-  { name: 'Gold', value: '2,185.30', change: '+0.4%', up: true },
+  { name: 'BTC-USD', value: '74,889', change: '+1.6%', up: true },
+  { name: 'ETH-USD', value: '2,376', change: '+5.6%', up: true },
+  { name: 'TSLA', value: '400.52', change: '—', up: true },
+  { name: 'META', value: '—', change: '—', up: true },
+  { name: 'BMNR', value: '22.65', change: '0.0%', up: true },
+  { name: 'POET', value: '6.91', change: '0.0%', up: true },
 ];
 
 const cardMotion = {

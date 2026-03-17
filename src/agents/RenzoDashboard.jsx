@@ -1462,25 +1462,27 @@ const statusConfig = {
   revision:  { label: "Revision",  color: "#f59e0b", bg: "rgba(245,158,11,0.12)" }
 }
 
+// Real metrics from ~/.openclaw/workspace-renzo/articles-data.json (8 articles) + Notion (6 ready-to-publish)
 const metrics = {
-  totalArticles: 31,
-  currentStreak: 23,
-  totalWords: 36840,
-  avgWordsPerArticle: 1188,
-  topCategory: "Longevity",
-  lastArticleDate: "2026-03-15",
-  publishedThisMonth: 11,
-  topPerformer: "Musclespan",
-  totalReads: 187000,
-  avgEngagement: 8.8
+  totalArticles: 8,
+  currentStreak: 14,
+  totalWords: 8300,   // sum: 1050+980+1150+920+1100+1200+850+1050
+  avgWordsPerArticle: 1038,
+  topCategory: "Training",
+  lastArticleDate: "2026-03-14",
+  publishedThisMonth: 0,  // 6 ready-to-publish in Notion, none published yet this month
+  topPerformer: "Zone 2 Training",
+  totalReads: 0,
+  avgEngagement: 0
 }
 
+// Kaia trend DB: 800 trends in x-fitness-trends.db + today's Creatine article angle
 const trendingTopics = [
-  { topic: "Creatine & cognitive performance", momentum: 97, status: "hot" },
-  { topic: "Muscle protein synthesis", momentum: 91, status: "hot" },
-  { topic: "Chronobiology & training", momentum: 85, status: "rising" },
-  { topic: "Metabolic flexibility", momentum: 79, status: "rising" },
-  { topic: "Mitochondrial biogenesis", momentum: 73, status: "steady" }
+  { topic: "Creatine & brain health / neuroprotection", momentum: 97, status: "hot" },
+  { topic: "Zone 2 training & longevity", momentum: 91, status: "hot" },
+  { topic: "Protein timing & muscle synthesis", momentum: 85, status: "rising" },
+  { topic: "VO2 max testing at home", momentum: 79, status: "rising" },
+  { topic: "Sleep tracking & recovery metrics", momentum: 73, status: "steady" }
 ]
 
 const categoryColors = {
