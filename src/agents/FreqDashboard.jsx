@@ -78,6 +78,13 @@ const execCommand = async (cmd) => {
   }
 };
 
+const parseTsv = (text) =>
+  text
+    .trim()
+    .split('\n')
+    .filter(Boolean)
+    .map((line) => line.split('\t'));
+
 function App() {
   const [activeTab, setActiveTab] = useState('overview');
   const [lastUpdate, setLastUpdate] = useState(new Date());
@@ -90,6 +97,7 @@ function App() {
   });
   const [agentVoices, setAgentVoices] = useState([]);
   const [mediaCounts, setMediaCounts] = useState({ outbound: 0, inbound: 0 });
+  const [refHealthSummary, setRefHealthSummary] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Check system health
@@ -126,23 +134,69 @@ function App() {
 
   // Load agent voice ref data
   const loadAgentVoices = async () => {
-    const dirsOut = await execCommand('ls -d ~/.openclaw/fish-refs/*/ 2>/dev/null | xargs -n1 basename 2>/dev/null');
-    const dirs = dirsOut.trim().split('\n').filter(d => d && !d.includes('.') && d !== 'test-agent' && d !== 'health.db');
+    const query = [
+      'sqlite3 -separator "\\t" ~/.openclaw/workspace-freq/fish-ref-health.db',
+      '"with latest as (',
+      "select *, row_number() over (partition by agent_name order by test_date desc) as rn",
+      "from ref_health where agent_name != 'test-agent'",
+      ')',
+      "select agent_name, ref_exists, api_responsive, printf('%.1f', snr_db), printf('%.1f', lufs), ref_age_days, needs_refresh, test_date",
+      'from latest where rn=1 order by agent_name;"',
+    ].join(' ');
+    const out = await execCommand(query);
+    const agents = parseTsv(out).map(([name, refExists, apiResponsive, snrDb, lufs, refAgeDays, needsRefresh, testDate]) => {
+      const config = AGENT_VOICES[name] || { voice: 'unknown', engine: 'fish', fallback: 'piper-ryan', speed: 1.0, color: '#6b7280' };
+      const hasRef = refExists === '1';
+      const snr = parseFloat(snrDb) || 0;
+      const refreshNeeded = needsRefresh === '1';
+      const status = !hasRef ? 'missing' : refreshNeeded || snr < 20 ? 'degraded' : 'healthy';
 
-    const agents = await Promise.all(dirs.map(async (agent) => {
-      const config = AGENT_VOICES[agent] || { voice: 'unknown', engine: 'fish', fallback: 'piper-ryan', speed: 1.0, color: '#6b7280' };
+      return {
+        name,
+        ...config,
+        refExists: hasRef,
+        apiResponsive: apiResponsive === '1',
+        snrDb: snr,
+        lufs: parseFloat(lufs) || 0,
+        refAgeDays: parseInt(refAgeDays, 10) || 0,
+        refDuration: null,
+        status,
+        testedAt: testDate,
+      };
+    });
 
-      const result = await execCommand(
-        `ffprobe -v error -show_entries format=duration -of csv=p=0 ~/.openclaw/fish-refs/${agent}/audio.wav 2>/dev/null`
-      );
-      const duration = parseFloat(result) || 0;
-      const refExists = duration > 0;
-      const status = refExists && duration >= 10 ? 'healthy' : duration > 0 ? 'degraded' : 'missing';
+    setAgentVoices(agents);
+  };
 
-      return { name: agent, ...config, refDuration: duration, refExists, status };
-    }));
-
-    setAgentVoices(agents.sort((a, b) => a.name.localeCompare(b.name)));
+  const loadRefHealthSummary = async () => {
+    const query = [
+      'sqlite3 -separator "\\t" ~/.openclaw/workspace-freq/fish-ref-health.db',
+      `"select count(*) as total_rows,
+               sum(ref_exists) as refs_present,
+               sum(api_responsive) as api_ok,
+               printf('%.1f', avg(snr_db)) as avg_snr,
+               printf('%.1f', avg(lufs)) as avg_lufs,
+               printf('%.1f', avg(ref_age_days)) as avg_age,
+               sum(needs_refresh) as needs_refresh,
+               max(test_date) as last_test
+        from ref_health;"`,
+    ].join(' ');
+    const out = await execCommand(query);
+    const [[totalRows, refsPresent, apiOk, avgSnr, avgLufs, avgAge, needsRefresh, lastTest] = []] = parseTsv(out);
+    setRefHealthSummary(
+      totalRows
+        ? {
+            totalRows: parseInt(totalRows, 10) || 0,
+            refsPresent: parseInt(refsPresent, 10) || 0,
+            apiOk: parseInt(apiOk, 10) || 0,
+            avgSnr: avgSnr || '—',
+            avgLufs: avgLufs || '—',
+            avgAge: avgAge || '—',
+            needsRefresh: parseInt(needsRefresh, 10) || 0,
+            lastTest: lastTest || '—',
+          }
+        : null
+    );
   };
 
   // Load media file counts
@@ -159,6 +213,7 @@ function App() {
     checkHealth();
     loadAgentVoices();
     loadMediaCounts();
+    loadRefHealthSummary();
   };
 
   useEffect(() => {
@@ -263,17 +318,17 @@ function App() {
             <div className="kpi-row">
               <div className="freq-card kpi-card">
                 <div className="kpi-big">
-                  <span className="kpi-num" style={{ color: '#fff' }}>{healthyVoices || 14}</span>
-                  <span className="kpi-of">/ {agentVoices.length || 17}</span>
+                  <span className="kpi-num" style={{ color: '#fff' }}>{healthyVoices}</span>
+                  <span className="kpi-of">/ {agentVoices.length}</span>
                 </div>
                 <span className="kpi-lbl">Voices Healthy</span>
               </div>
               <div className="freq-card kpi-card">
-                <span className="kpi-num" style={{ color: '#fff' }}>{mediaCounts.outbound || 238}</span>
+                <span className="kpi-num" style={{ color: '#fff' }}>{mediaCounts.outbound}</span>
                 <span className="kpi-lbl">Audio Files Sent</span>
               </div>
               <div className="freq-card kpi-card">
-                <span className="kpi-num" style={{ color: '#fff' }}>{mediaCounts.inbound || 95}</span>
+                <span className="kpi-num" style={{ color: '#fff' }}>{mediaCounts.inbound}</span>
                 <span className="kpi-lbl">Media Received</span>
               </div>
               <div className="freq-card kpi-card">
@@ -304,11 +359,7 @@ function App() {
               <div className="freq-card chart-card">
                 <div className="card-title"><Mic size={16} />Voice Ref Status</div>
                 <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={agentVoices.length > 0 ? voiceChartData : [
-                    { label: 'Healthy', count: 14, fill: '#10b981' },
-                    { label: 'Degraded', count: 2, fill: '#f59e0b' },
-                    { label: 'Missing', count: 1, fill: '#ef4444' },
-                  ]} barSize={48}>
+                  <BarChart data={voiceChartData} barSize={48}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3a" vertical={false} />
                     <XAxis dataKey="label" stroke="#aaa" tick={{ fontSize: 13, fill: '#aaa' }} />
                     <YAxis stroke="#aaa" tick={{ fontSize: 13, fill: '#aaa' }} allowDecimals={false} />
@@ -317,22 +368,14 @@ function App() {
                       cursor={{ fill: 'rgba(255,255,255,0.04)' }}
                     />
                     <Bar dataKey="count" radius={[6, 6, 0, 0]}>
-                      {(agentVoices.length > 0 ? voiceChartData : [
-                        { label: 'Healthy', count: 14, fill: '#10b981' },
-                        { label: 'Degraded', count: 2, fill: '#f59e0b' },
-                        { label: 'Missing', count: 1, fill: '#ef4444' },
-                      ]).map((entry, i) => (
+                      {voiceChartData.map((entry, i) => (
                         <Cell key={i} fill={entry.fill} />
                       ))}
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
                 <div className="chart-legend">
-                  {(agentVoices.length > 0 ? voiceChartData : [
-                    { label: 'Healthy', count: 14, fill: '#10b981' },
-                    { label: 'Degraded', count: 2, fill: '#f59e0b' },
-                    { label: 'Missing', count: 1, fill: '#ef4444' },
-                  ]).map(d => (
+                  {voiceChartData.map(d => (
                     <span key={d.label} className="legend-item">
                       <span className="legend-dot" style={{ background: d.fill }} />
                       {d.label}: {d.count}
@@ -351,7 +394,7 @@ function App() {
                   <div className="identity-row"><span>STT</span><span>Faster-Whisper</span></div>
                   <div className="identity-row"><span>Voice Style</span><span>ryan @ 0.95x</span></div>
                   <div className="identity-row"><span>Output Format</span><span>OGG Opus → Telegram</span></div>
-                  <div className="identity-row"><span>Agents Served</span><span>{Object.keys(AGENT_VOICES).length} agents</span></div>
+                  <div className="identity-row"><span>Agents Served</span><span>{agentVoices.length || Object.keys(AGENT_VOICES).length} agents</span></div>
                 </div>
               </div>
 
@@ -392,7 +435,7 @@ function App() {
                   </div>
                   <div className="media-row">
                     <span>🎙️ Voice Refs Loaded</span>
-                    <span className="media-count" style={{ color: '#10b981' }}>{agentVoices.length}</span>
+                    <span className="media-count" style={{ color: '#10b981' }}>{refHealthSummary?.refsPresent ?? agentVoices.length}</span>
                   </div>
                   <div className="media-row">
                     <span>⚠️ Refs Degraded/Missing</span>
@@ -406,23 +449,23 @@ function App() {
                 <div className="runtime-notes">
                   <div className="note-item">
                     <span className="note-dot" style={{ background: '#14b8a6' }} />
-                    Fish Speech runs on GPU via Docker or local service on :8090
+                    Latest ref audit: {refHealthSummary?.lastTest ? refHealthSummary.lastTest.slice(0, 16).replace('T', ' ') : '—'}
                   </div>
                   <div className="note-item">
                     <span className="note-dot" style={{ background: '#6366f1' }} />
-                    Piper is always available as CPU fallback — no GPU required
+                    Average reference SNR: {refHealthSummary?.avgSnr ?? '—'} dB
                   </div>
                   <div className="note-item">
                     <span className="note-dot" style={{ background: '#f97316' }} />
-                    Voice refs are stored in ~/.openclaw/fish-refs/&lt;agent&gt;/audio.wav
+                    Average reference loudness: {refHealthSummary?.avgLufs ?? '—'} LUFS
                   </div>
                   <div className="note-item">
                     <span className="note-dot" style={{ background: '#10b981' }} />
-                    narrate.py auto-routes Fish→Piper based on GPU availability
+                    Average reference age: {refHealthSummary?.avgAge ?? '—'} days
                   </div>
                   <div className="note-item">
                     <span className="note-dot" style={{ background: '#ec4899' }} />
-                    Demucs isolate script: ~/clawd/scripts/demucs-isolate.sh
+                    Refreshes needed: {refHealthSummary?.needsRefresh ?? '—'}
                   </div>
                 </div>
               </div>
@@ -461,23 +504,6 @@ function App() {
                     <StatusBadge status={agent.status} />
                   </div>
                 ))}
-                {agentVoices.length === 0 && Object.keys(AGENT_VOICES).map(name => {
-                  const cfg = AGENT_VOICES[name];
-                  return (
-                    <div key={name} className="vt-row">
-                      <span className="vt-agent">
-                        <span className="vt-dot" style={{ background: cfg.color }} />
-                        {name}
-                      </span>
-                      <span className="vt-mono">{cfg.voice}</span>
-                      <StatusBadge status={cfg.engine} />
-                      <span className="vt-muted">{cfg.fallback}</span>
-                      <span className="vt-mono">{cfg.speed}x</span>
-                      <span className="vt-mono">—</span>
-                      <StatusBadge status="checking" />
-                    </div>
-                  );
-                })}
               </div>
             </div>
           </motion.div>
