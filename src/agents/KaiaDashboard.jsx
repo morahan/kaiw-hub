@@ -2,81 +2,83 @@ import { useState, useEffect } from 'react';
 import { useAuth, SignIn, UserButton } from '@clerk/react';
 import './css/kaiaDashboard.css';
 
-const API_BASE = 'http://localhost:3001/api';
+const WORKSPACE_UPDATED_AT = '2026-03-09 19:20:31';
 
-// ── Mock / fallback data ──────────────────────────────────────────────────────
-const MOCK_STATS = {
-  hot_trends: 24,
-  warm_trends: 61,
-  content_written: 38,
-  total_trends: 127,
-  hits: 19,
-  misses: 6,
-  pending: 14,
-  competitors: 42,
-  raw_signals: 389,
+const REAL_STATS = {
+  hot_trends: 162,
+  warm_trends: 440,
+  content_written: 632,
+  total_trends: 800,
+  hits: 59,
+  misses: 0,
+  pending: 168,
+  competitors: 104,
+  raw_signals: 66,
 };
 
-const MOCK_TOP_TRENDS = [
-  { trend_name: 'Zone 2 Cardio Revival', category: 'Cardio', platform: 'YouTube', signal_strength: 'HOT', predicted_angle: 'Science-backed low-intensity training reshaping endurance culture.', content_written: false, score: 94 },
-  { trend_name: 'Pilates Renaissance', category: 'Flexibility', platform: 'TikTok', signal_strength: 'HOT', predicted_angle: 'Studio Pilates going mainstream via short-form content creators.', content_written: true, score: 91 },
-  { trend_name: '12-3-30 Treadmill', category: 'Cardio', platform: 'TikTok', signal_strength: 'HOT', predicted_angle: 'Low-impact incline walking dominating beginner fitness space.', content_written: true, score: 88 },
-  { trend_name: 'Functional Strength', category: 'Strength', platform: 'Instagram', signal_strength: 'HOT', predicted_angle: 'Movement-based training replacing traditional bodybuilding splits.', content_written: false, score: 86 },
-  { trend_name: 'Cold Plunge Recovery', category: 'Recovery', platform: 'YouTube', signal_strength: 'HOT', predicted_angle: 'Ice bath culture crossing from elite athletes to everyday gym-goers.', content_written: false, score: 83 },
-  { trend_name: 'Cozy Cardio', category: 'Cardio', platform: 'TikTok', signal_strength: 'HOT', predicted_angle: 'Low-pressure, low-light home workouts — anti-hustle fitness vibe.', content_written: false, score: 81 },
-  { trend_name: 'VO2 Max Training', category: 'Performance', platform: 'YouTube', signal_strength: 'WARM', predicted_angle: 'Longevity-focused fitness metric gaining mainstream attention.', content_written: false, score: 75 },
-  { trend_name: 'Primal Movement', category: 'Mobility', platform: 'Instagram', signal_strength: 'WARM', predicted_angle: 'Animal-flow and ground-based movement patterns trending upward.', content_written: false, score: 72 },
-  { trend_name: 'Hybrid Athlete Training', category: 'Strength', platform: 'YouTube', signal_strength: 'WARM', predicted_angle: 'Run + lift culture bridging distance runners and lifters.', content_written: true, score: 70 },
-  { trend_name: 'Breathwork for Fitness', category: 'Mindfulness', platform: 'TikTok', signal_strength: 'WARM', predicted_angle: 'Wim Hof methods entering pre/post workout routines.', content_written: false, score: 68 },
-  { trend_name: 'Jump Rope HIIT', category: 'Cardio', platform: 'Instagram', signal_strength: 'WARM', predicted_angle: 'Accessible, portable cardio tool getting a serious glow-up.', content_written: false, score: 65 },
-  { trend_name: 'Sleep Optimization', category: 'Recovery', platform: 'YouTube', signal_strength: 'WARM', predicted_angle: 'Sleep as a performance lever — wearables driving the conversation.', content_written: true, score: 63 },
+const REAL_TOP_TRENDS = [
+  { trend_name: 'Water intake for weight loss actually works, dropped 6 pounds just from cutting diet soda and drinking plain water', category: 'fitness', platform: 'reddit', signal_strength: 'HOT', predicted_angle: 'Content around weight loss and cutting, inspired by a firsthand hydration success story.', content_written: true, score: 82 },
+  { trend_name: 'Water intake for strength during a cut matters more than expected, proper hydration stopped my performance drop', category: 'fitness', platform: 'reddit', signal_strength: 'HOT', predicted_angle: 'Listicle angle on maintaining strength during a cut through hydration discipline.', content_written: true, score: 82 },
+  { trend_name: 'Can you maintain muscle lifting once a week?', category: 'fitness', platform: 'reddit', signal_strength: 'HOT', predicted_angle: 'Muscle retention and minimum-effective-dose framing around once-weekly lifting.', content_written: true, score: 81 },
+  { trend_name: 'A mouse study suggests strength training may beat running for diabetes prevention', category: 'science', platform: 'brave-search', signal_strength: 'HOT', predicted_angle: 'New animal research reframes exercise prescriptions for insulin sensitivity around resistance training.', content_written: true, score: 80 },
+  { trend_name: 'Better than running? Mouse study suggests strength training may be more powerful against diabetes', category: 'science', platform: 'brave-search', signal_strength: 'HOT', predicted_angle: 'Strength training as a stronger-than-expected diabetes intervention and public health hook.', content_written: true, score: 80 },
+  { trend_name: 'Creatine for Endurance: The Secret to Infinite Stamina - Fueling Fitness and Finding Focus', category: 'supplements', platform: 'brave-search', signal_strength: 'WARM', predicted_angle: 'Hydrogen ion buffering and fatigue delay reposition creatine as an endurance tool.', content_written: true, score: 78 },
+  { trend_name: 'Creatine & Alzheimer’s Disease: A Physician Reviews the Data', category: 'fitness', platform: 'youtube', signal_strength: 'WARM', predicted_angle: 'YouTube audiences are engaging with creatine through a brain-health lens.', content_written: true, score: 78 },
+  { trend_name: 'Creatine & Beta-Alanine: The Powerhouse Duo | Myprotein', category: 'nutrition', platform: 'youtube', signal_strength: 'WARM', predicted_angle: 'Supplement stack content is trending on YouTube with a performance-forward framing.', content_written: true, score: 78 },
+  { trend_name: 'Organs & Co. Episode 1 - Creatine', category: 'fitness', platform: 'youtube', signal_strength: 'WARM', predicted_angle: 'Creatine education is pulling strong general-fitness attention on YouTube.', content_written: true, score: 78 },
+  { trend_name: 'Does Creatine Timing Really Matter for Muscle Growth? What the Science', category: 'nutrition', platform: 'brave-search', signal_strength: 'WARM', predicted_angle: 'Consistency over timing gives this creatine explainer a myth-busting SEO angle.', content_written: true, score: 78 },
+  { trend_name: 'Creatine Benefits: The Most Proven Supplement for Strength, Performanc – Chemical Warfare', category: 'supplements', platform: 'brave-search', signal_strength: 'WARM', predicted_angle: 'Recovery, inflammation, and multi-session training benefits keep creatine coverage expanding.', content_written: true, score: 78 },
+  { trend_name: 'Creatine + HMB Explained: Why This Stack Outperforms Creatine Alone', category: 'fitness', platform: 'youtube', signal_strength: 'WARM', predicted_angle: 'Stack-based supplement content is holding attention with clear performance claims.', content_written: true, score: 78 },
 ];
 
-const MOCK_PENDING_TRENDS = [
-  { trend_name: 'Rucking for Beginners', category: 'Cardio', signal_strength: 'HOT' },
-  { trend_name: 'Red Light Therapy', category: 'Recovery', signal_strength: 'HOT' },
-  { trend_name: 'Micro-Workouts (5 min)', category: 'Strength', signal_strength: 'WARM' },
-  { trend_name: 'Grip Strength Hacks', category: 'Strength', signal_strength: 'WARM' },
-  { trend_name: 'Outdoor Yoga Surge', category: 'Flexibility', signal_strength: 'WARM' },
-  { trend_name: 'Creatine for Women', category: 'Nutrition', signal_strength: 'HOT' },
-  { trend_name: 'Deload Week Strategy', category: 'Performance', signal_strength: 'WARM' },
+const REAL_PENDING_TRENDS = [
+  { trend_name: 'Fitness Trends for 2026 - Why ETM Isn\'t the Future | 99 - YouTube', category: 'fitness', signal_strength: 'HOT' },
+  { trend_name: 'Most Popular TikTok Trends Right Now | TikTok', category: 'fitness', signal_strength: 'HOT' },
+  { trend_name: 'Gen Z Fitness | TikTok', category: 'fitness', signal_strength: 'HOT' },
+  { trend_name: 'Ai Fitness Influencer | TikTok', category: 'fitness', signal_strength: 'HOT' },
+  { trend_name: 'Funny Lady Walking Fast While Squatting | TikTok', category: 'fitness', signal_strength: 'HOT' },
+  { trend_name: 'Workout Dance Trend | TikTok', category: 'fitness', signal_strength: 'HOT' },
+  { trend_name: 'Gymtok | TikTok', category: 'fitness', signal_strength: 'HOT' },
 ];
 
-const MOCK_HITS = [
-  { trend_name: 'Walking Pad Workouts', category: 'Cardio', outcome_notes: 'Predicted 3 weeks early — 2.1M TikTok views at peak.', date_outcome: '2024-10-18' },
-  { trend_name: 'Resistance Band Rebirth', category: 'Strength', outcome_notes: 'Picked up before Amazon listing spike. Article ranked #3.', date_outcome: '2024-11-02' },
-  { trend_name: 'Low Rep Heavy Sets', category: 'Strength', outcome_notes: 'Athlete crossover drove mainstream interest.', date_outcome: '2024-12-15' },
-  { trend_name: 'Sauna + Cold Contrast', category: 'Recovery', outcome_notes: 'Longevity angle landed perfectly — newsletter top performer.', date_outcome: '2025-01-08' },
-  { trend_name: 'Intuitive Eating Redux', category: 'Nutrition', outcome_notes: 'Counter-macro wave confirmed. High search intent.', date_outcome: '2025-01-22' },
+const REAL_HITS = [
+  { trend_name: 'Should I train everyday for hypertrophy?', category: 'fitness', outcome_notes: 'ongoing', date_outcome: '—' },
+  { trend_name: 'Im trying to combine hypertrophy and calisthenics.', category: 'fitness', outcome_notes: 'ongoing', date_outcome: '—' },
+  { trend_name: 'Water intake for strength during a cut matters more than expected, proper hydration stopped my performance drop', category: 'fitness', outcome_notes: 'ongoing', date_outcome: '—' },
+  { trend_name: 'Is there any research on taking protein in smaller chunks and its effects on MPS or hypertrophy?', category: 'fitness', outcome_notes: 'ongoing', date_outcome: '—' },
+  { trend_name: 'How effective is creatine for muscle recovery in reducing soreness?', category: 'fitness', outcome_notes: 'ongoing', date_outcome: '—' },
 ];
 
-const MOCK_COMPETITORS = [
-  { competitor_name: 'Healthline Fitness', signal_type: 'hot', title: 'Published 5 Zone 2 articles in 10 days', insight: 'Doubling down — we need to move fast on this angle.' },
-  { competitor_name: 'MyFitnessPal Blog', signal_type: 'gap', title: 'No cold plunge content yet', insight: 'Opportunity window open for next 2–3 weeks.' },
-  { competitor_name: 'Men\'s Health', signal_type: 'hot', title: 'Hybrid athlete cover feature this month', insight: 'Confirms our warm signal — boost to HOT.' },
-  { competitor_name: 'Well+Good', signal_type: 'gap', title: 'Pilates coverage slowed since November', insight: 'Studio audience underserved — quick win available.' },
-  { competitor_name: 'Shape Magazine', signal_type: 'neutral', title: 'Cozy cardio piece doing average engagement', insight: 'They didn\'t nail the angle — room for a better version.' },
-  { competitor_name: 'Nerd Fitness', signal_type: 'hot', title: 'Grip strength series launched', insight: 'Validates our pending signal — time to publish.' },
+const REAL_COMPETITORS = [
+  { competitor_name: 'Strava', signal_type: 'mention', title: 'Tinder ya no es una opción, así fue como Strava se convirtió en una app de citas con grupos para salir a correr - Infobae', insight: 'Strava is showing up in mainstream lifestyle coverage, not just training content.' },
+  { competitor_name: 'JEFIT', signal_type: 'mention', title: 'JEFIT Gym Workout Tracker MOD APK 16.2.8 (Premium Unlocked)', insight: 'JEFIT is generating broad app-search attention outside normal brand channels.' },
+  { competitor_name: 'JEFIT', signal_type: 'mention', title: 'JEFIT for Android Free Download', insight: 'Download-intent traffic around JEFIT is still active.' },
+  { competitor_name: 'JEFIT', signal_type: 'business', title: 'The 12 Top Workout Apps of 2026 for Science-Based Muscle Growth', insight: 'JEFIT keeps getting pulled into roundup-style comparison content.' },
+  { competitor_name: 'Strong', signal_type: 'feature', title: 'Announcing Windows 11 Insider Preview Build 26220.7934 (Beta Channel) | Windows Insider Blog', insight: 'Strong surfaced in a feature-monitoring pass, suggesting broad keyword overlap.' },
+  { competitor_name: 'Strong', signal_type: 'gap', title: 'r/EntrepreneurRideAlong on Reddit: I built a one screen app and people had strong opinions about it…', insight: 'There is still exploitable user pain around Strong-style product expectations.' },
 ];
 
-const MOCK_CATEGORIES = [
-  { category: 'Cardio', count: 32, hot_count: 8, warm_count: 14, written: 12 },
-  { category: 'Strength', count: 28, hot_count: 6, warm_count: 13, written: 9 },
-  { category: 'Recovery', count: 21, hot_count: 5, warm_count: 9, written: 8 },
-  { category: 'Flexibility', count: 15, hot_count: 2, warm_count: 8, written: 4 },
-  { category: 'Nutrition', count: 14, hot_count: 2, warm_count: 7, written: 3 },
-  { category: 'Mindfulness', count: 10, hot_count: 1, warm_count: 6, written: 2 },
-  { category: 'Performance', count: 7, hot_count: 0, warm_count: 4, written: 0 },
+const REAL_CATEGORIES = [
+  { category: 'fitness', count: 308, hot_count: 65, warm_count: 215, written: 271 },
+  { category: 'training', count: 73, hot_count: 0, warm_count: 41, written: 57 },
+  { category: 'nutrition', count: 62, hot_count: 0, warm_count: 45, written: 49 },
+  { category: 'health', count: 41, hot_count: 26, warm_count: 0, written: 35 },
+  { category: 'weight_loss', count: 34, hot_count: 1, warm_count: 6, written: 24 },
+  { category: 'tech', count: 32, hot_count: 0, warm_count: 4, written: 0 },
+  { category: 'sport', count: 31, hot_count: 0, warm_count: 18, written: 25 },
+  { category: 'recovery', count: 26, hot_count: 0, warm_count: 21, written: 22 },
+  { category: 'science', count: 25, hot_count: 25, warm_count: 0, written: 23 },
+  { category: 'supplements', count: 24, hot_count: 1, warm_count: 23, written: 15 },
 ];
 
-const MOCK_PLATFORMS = [
-  { platform: 'TikTok', count: 48 },
-  { platform: 'YouTube', count: 39 },
-  { platform: 'Instagram', count: 24 },
-  { platform: 'Reddit', count: 9 },
-  { platform: 'Twitter/X', count: 7 },
+const REAL_PLATFORMS = [
+  { platform: 'brave-search', count: 315 },
+  { platform: 'reddit', count: 212 },
+  { platform: 'youtube', count: 96 },
+  { platform: 'media', count: 48 },
+  { platform: 'google-search', count: 45 },
+  { platform: 'tiktok', count: 32 },
 ];
-// ─────────────────────────────────────────────────────────────────────────────
 
 const STRENGTH_CONFIG = {
   HOT:  { color: 'var(--wave-hot)',     label: '🔥 HOT',  emoji: '🔥' },
@@ -157,71 +159,22 @@ function App() {
   const SKIP_AUTH = import.meta.env.VITE_SKIP_AUTH === 'true';
   const { isSignedIn: clerkSignedIn } = useAuth();
   const isSignedIn = SKIP_AUTH || clerkSignedIn;
-  const [stats, setStats]               = useState(null);
-  const [topTrends, setTopTrends]       = useState([]);
-  const [pendingTrends, setPendingTrends] = useState([]);
-  const [recentHits, setRecentHits]     = useState([]);
-  const [competitors, setCompetitors]   = useState([]);
-  const [categories, setCategories]     = useState([]);
-  const [platforms, setPlatforms]       = useState([]);
+  const [stats, setStats]               = useState(REAL_STATS);
+  const [topTrends, setTopTrends]       = useState(REAL_TOP_TRENDS);
+  const [pendingTrends, setPendingTrends] = useState(REAL_PENDING_TRENDS);
+  const [recentHits, setRecentHits]     = useState(REAL_HITS);
+  const [competitors, setCompetitors]   = useState(REAL_COMPETITORS);
+  const [categories, setCategories]     = useState(REAL_CATEGORIES);
+  const [platforms, setPlatforms]       = useState(REAL_PLATFORMS);
   const [loading, setLoading]           = useState(true);
-  const [lastUpdated, setLastUpdated]   = useState(null);
+  const [lastUpdated, setLastUpdated]   = useState(WORKSPACE_UPDATED_AT);
   const [activeTab, setActiveTab]       = useState('overview');
-  const [usingMock, setUsingMock]       = useState(false);
-  const [mockDismissed, setMockDismissed] = useState(false);
   const [trendFilter, setTrendFilter]   = useState('all');
   const [trendsExpanded, setTrendsExpanded] = useState(false);
   const TRENDS_PER_PAGE = 6;
 
-  const applyFallback = () => {
-    setStats(MOCK_STATS);
-    setTopTrends(MOCK_TOP_TRENDS);
-    setPendingTrends(MOCK_PENDING_TRENDS);
-    setRecentHits(MOCK_HITS);
-    setCompetitors(MOCK_COMPETITORS);
-    setCategories(MOCK_CATEGORIES);
-    setPlatforms(MOCK_PLATFORMS);
-    setLastUpdated('demo mode');
-    setUsingMock(true);
-    setLoading(false);
-  };
-
-  const fetchData = async () => {
-    try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 4000);
-
-      const [statsRes, trendsRes, pendingRes, hitsRes, compsRes, catsRes, platsRes] = await Promise.all([
-        fetch(`${API_BASE}/stats`,                    { signal: controller.signal }),
-        fetch(`${API_BASE}/trends/top?limit=15`,      { signal: controller.signal }),
-        fetch(`${API_BASE}/trends/pending?limit=15`,  { signal: controller.signal }),
-        fetch(`${API_BASE}/trends/recent-hits?limit=8`, { signal: controller.signal }),
-        fetch(`${API_BASE}/competitors/recent?limit=8`, { signal: controller.signal }),
-        fetch(`${API_BASE}/trends/by-category`,       { signal: controller.signal }),
-        fetch(`${API_BASE}/trends/by-platform`,       { signal: controller.signal }),
-      ]);
-      clearTimeout(timeout);
-
-      setStats(await statsRes.json());
-      setTopTrends(await trendsRes.json());
-      setPendingTrends(await pendingRes.json());
-      setRecentHits(await hitsRes.json());
-      setCompetitors(await compsRes.json());
-      setCategories(await catsRes.json());
-      setPlatforms(await platsRes.json());
-      setLastUpdated(new Date().toLocaleTimeString());
-      setUsingMock(false);
-      setLoading(false);
-    } catch (err) {
-      console.warn('API unavailable — using mock data:', err.message);
-      applyFallback();
-    }
-  };
-
   useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, 30000);
-    return () => clearInterval(interval);
+    setLoading(false);
   }, []);
 
   if (loading) {
@@ -282,12 +235,6 @@ function App() {
         <div className="bubble bubble-5" />
       </div>
 
-      {usingMock && !mockDismissed && (
-        <div className="mock-pill" onClick={() => setMockDismissed(true)}>
-          📡 Demo mode <span className="mock-pill-dismiss">✕</span>
-        </div>
-      )}
-
       <header className="header">
         <div className="header-content">
           <div className="logo">
@@ -301,7 +248,7 @@ function App() {
             <UserButton afterSignOutUrl="/" />
             <div className="live-indicator">
               <span className="pulse" />
-              {usingMock ? 'DEMO' : 'LIVE'}
+              WORKSPACE
             </div>
             <span className="last-updated">Updated: {lastUpdated}</span>
           </div>
