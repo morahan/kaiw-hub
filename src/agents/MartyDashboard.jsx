@@ -17,69 +17,64 @@ const agent = {
 
 // All 12 agents with realistic statuses
 const allAgents = [
-  { name: 'Marty', role: 'Coordinator', emoji: '⚡', status: 'working', color: '#3b82f6', currentTask: 'Reviewing daily pipeline', lastSeen: 'now' },
-  { name: 'Kaia', role: 'Content Creator', emoji: '✨', status: 'working', color: '#ec4899', currentTask: 'Writing "Gut Health 101" article', lastSeen: 'now' },
-  { name: 'Renzo', role: 'Writer', emoji: '✍️', status: 'working', color: '#f97316', currentTask: 'Drafting looksmaxxing guide pt.3', lastSeen: 'now' },
-  { name: 'Thea', role: 'Editor & Reviewer', emoji: '👁️', status: 'working', color: '#a855f7', currentTask: 'Reviewing Renzo\'s nutrition draft', lastSeen: 'now' },
-  { name: 'Aria', role: 'Personal Assistant', emoji: '🎵', status: 'online', color: '#06b6d4', currentTask: 'Awaiting instructions', lastSeen: '2m ago' },
-  { name: 'Badger', role: 'Infrastructure & DevOps', emoji: '🔧', status: 'working', color: '#84cc16', currentTask: 'Deploying dashboard updates', lastSeen: 'now' },
-  { name: 'Freq', role: 'Audio Engineer', emoji: '🎛️', status: 'online', color: '#14b8a6', currentTask: 'Idle — awaiting podcast edit', lastSeen: '5m ago' },
-  { name: 'Greta', role: 'Research Analyst', emoji: '🔬', status: 'idle', color: '#6366f1', currentTask: 'Last: competitor audit', lastSeen: '1h ago' },
-  { name: 'Reno', role: 'Trading Analyst', emoji: '📈', status: 'working', color: '#eab308', currentTask: 'Monitoring BTC/SOL positions', lastSeen: 'now' },
-  { name: 'Quanta', role: 'Data Analyst', emoji: '📊', status: 'working', color: '#22d3ee', currentTask: 'Crunching engagement metrics', lastSeen: 'now' },
-  { name: 'Nova', role: 'Social Media', emoji: '🚀', status: 'online', color: '#f43f5e', currentTask: 'Scheduling IG posts', lastSeen: '3m ago' },
-  { name: 'Pixel', role: 'Design & Visual', emoji: '🎨', status: 'idle', color: '#d946ef', currentTask: 'Last: thumbnail batch', lastSeen: '45m ago' },
+  { name: 'Marty', role: 'Coordinator', emoji: '⚡', status: 'working', color: '#3b82f6', currentTask: 'Heartbeat updated Mar 16 · 4:21 PM', lastSeen: 'Mar 16 4:21 PM' },
+  { name: 'Main', role: 'Primary Session', emoji: '🧠', status: 'working', color: '#2563eb', currentTask: '52 sessions logged on Mar 16', lastSeen: 'Mar 16' },
+  { name: 'Aria', role: 'Personal Assistant', emoji: '🎵', status: 'working', color: '#06b6d4', currentTask: '52 sessions logged on Mar 16', lastSeen: 'Mar 16' },
+  { name: 'Renzo', role: 'Writer', emoji: '✍️', status: 'working', color: '#f97316', currentTask: '14 sessions logged on Mar 16', lastSeen: 'Mar 16' },
+  { name: 'Freq', role: 'Audio Engineer', emoji: '🎛️', status: 'working', color: '#14b8a6', currentTask: '11 sessions logged on Mar 16', lastSeen: 'Mar 16' },
+  { name: 'Reno', role: 'Trading Analyst', emoji: '📈', status: 'working', color: '#eab308', currentTask: '9 sessions logged on Mar 16', lastSeen: 'Mar 16' },
+  { name: 'Maverick', role: 'Resource Guard', emoji: '🛡️', status: 'working', color: '#10b981', currentTask: '7 sessions logged on Mar 16', lastSeen: 'Mar 16' },
+  { name: 'Thea', role: 'Reviewer', emoji: '👁️', status: 'working', color: '#a855f7', currentTask: '7 sessions logged on Mar 16', lastSeen: 'Mar 16' },
+  { name: 'Kaia', role: 'Trend Analyst', emoji: '✨', status: 'working', color: '#ec4899', currentTask: '6 sessions logged on Mar 16', lastSeen: 'Mar 16' },
+  { name: 'Quanta', role: 'Data Analyst', emoji: '📊', status: 'working', color: '#22d3ee', currentTask: '6 sessions logged on Mar 16', lastSeen: 'Mar 16' },
+  { name: 'Badger', role: 'Infrastructure & DevOps', emoji: '🔧', status: 'online', color: '#84cc16', currentTask: '5 sessions logged on Mar 16', lastSeen: 'Mar 16' },
+  { name: 'Greta', role: 'Research Analyst', emoji: '🔬', status: 'online', color: '#6366f1', currentTask: '4 sessions logged on Mar 16', lastSeen: 'Mar 16' },
+  { name: 'Rocio', role: 'Comms', emoji: '📣', status: 'online', color: '#f43f5e', currentTask: '4 sessions logged on Mar 16', lastSeen: 'Mar 16' },
 ];
 
 // KPI data
 const kpiData = {
-  messagesSent: 147,
-  tasksDelegated: 23,
-  tasksCompleted: 19,
+  messagesSent: 586,
+  tasksDelegated: 19,
+  tasksCompleted: 18,
   activeAgents: allAgents.filter(a => a.status === 'working' || a.status === 'online').length,
 };
 
 // Pipeline status
 const pipelineData = [
-  { name: 'Published', value: 42, color: '#22c55e' },
-  { name: 'In Review', value: 8, color: '#3b82f6' },
-  { name: 'Drafting', value: 5, color: '#f59e0b' },
-  { name: 'Blocked', value: 2, color: '#ef4444' },
+  { name: 'Done', value: 18, color: '#22c55e' },
+  { name: 'In Progress', value: 1, color: '#3b82f6' },
 ];
 
 // Weekly coordination volume
 const weeklyData = [
-  { day: 'Mon', messages: 32, tasks: 8 },
-  { day: 'Tue', messages: 28, tasks: 6 },
-  { day: 'Wed', messages: 41, tasks: 9 },
-  { day: 'Thu', messages: 35, tasks: 7 },
-  { day: 'Fri', messages: 38, tasks: 11 },
-  { day: 'Sat', messages: 15, tasks: 3 },
-  { day: 'Sun', messages: 8, tasks: 2 },
+  { day: 'Feb 26', messages: 85, tasks: 0 },
+  { day: 'Feb 27', messages: 82, tasks: 0 },
+  { day: 'Feb 28', messages: 83, tasks: 4 },
+  { day: 'Mar 1', messages: 94, tasks: 4 },
+  { day: 'Mar 2', messages: 75, tasks: 2 },
+  { day: 'Mar 3', messages: 80, tasks: 1 },
+  { day: 'Mar 4', messages: 25, tasks: 0 },
 ];
 
 // Activity feed
 const activityFeed = [
-  { id: 1, agent: 'Kaia', emoji: '✨', action: 'Published "Sleep Optimization for Athletes"', time: '12m ago', type: 'success' },
-  { id: 2, agent: 'Renzo', emoji: '✍️', action: 'Submitted draft: "Looksmaxxing Guide pt.3"', time: '25m ago', type: 'info' },
-  { id: 3, agent: 'Thea', emoji: '👁️', action: 'Approved Kaia\'s gut health outline', time: '38m ago', type: 'success' },
-  { id: 4, agent: 'Badger', emoji: '🔧', action: 'Deployed v2.4.1 — dashboard hotfix', time: '1h ago', type: 'info' },
-  { id: 5, agent: 'Quanta', emoji: '📊', action: 'Weekly engagement report ready', time: '1h ago', type: 'info' },
-  { id: 6, agent: 'Reno', emoji: '📈', action: 'Flagged SOL dip — paused auto-trades', time: '2h ago', type: 'warning' },
-  { id: 7, agent: 'Nova', emoji: '🚀', action: 'Scheduled 5 IG posts for this week', time: '2h ago', type: 'success' },
-  { id: 8, agent: 'Aria', emoji: '🎵', action: 'Sent Michael\'s daily briefing', time: '3h ago', type: 'info' },
-  { id: 9, agent: 'Greta', emoji: '🔬', action: 'Completed competitor content audit', time: '4h ago', type: 'success' },
-  { id: 10, agent: 'Pixel', emoji: '🎨', action: 'Delivered 8 article thumbnails', time: '5h ago', type: 'success' },
+  { id: 1, agent: 'Marty', emoji: '⚡', action: 'Heartbeat note logged: BTC exit signal fired (+1.6%) and 6 unpublished Notion articles flagged', time: 'Mar 16', type: 'info' },
+  { id: 2, agent: 'Quanta', emoji: '📊', action: '18 of 19 task-registry items marked done; 1 remains in progress', time: 'Mar 3', type: 'success' },
+  { id: 3, agent: 'Quanta', emoji: '📊', action: '201 delivered messages sent to Marty in the coordination graph', time: 'Feb 26-Mar 4', type: 'success' },
+  { id: 4, agent: 'Reno', emoji: '📈', action: 'Handled 175 Marty coordination messages round-trip', time: 'Feb 26-Mar 4', type: 'info' },
+  { id: 5, agent: 'Marty', emoji: '⚡', action: '11 heartbeat cycles tracked with 7 successful completions', time: 'Feb 28-Mar 3', type: 'warning' },
+  { id: 6, agent: 'Aria', emoji: '🎵', action: '899 total sessions tracked; 52 sessions on Mar 16', time: 'Mar 16', type: 'info' },
 ];
 
 // Pending deliverables
 const pendingDeliverables = [
-  { id: 1, title: 'Looksmaxxing Guide pt.3', owner: 'Renzo', status: 'review', due: 'Today', priority: 'high' },
-  { id: 2, title: 'Weekly Engagement Report', owner: 'Quanta', status: 'ready', due: 'Today', priority: 'high' },
-  { id: 3, title: 'Gut Health 101 Article', owner: 'Kaia', status: 'drafting', due: 'Mar 17', priority: 'medium' },
-  { id: 4, title: 'Podcast Ep. 14 Edit', owner: 'Freq', status: 'queued', due: 'Mar 18', priority: 'medium' },
-  { id: 5, title: 'Trading Week Summary', owner: 'Reno', status: 'drafting', due: 'Mar 17', priority: 'low' },
-  { id: 6, title: 'Brand Style Guide v2', owner: 'Pixel', status: 'review', due: 'Mar 19', priority: 'low' },
+  { id: 1, title: 'Real-time Cost Attribution by Task', owner: 'Quanta', status: 'in_progress', due: '—', priority: null },
+  { id: 2, title: 'Dashboard v2', owner: 'Quanta', status: 'done', due: '—', priority: null },
+  { id: 3, title: 'Anomaly Detection', owner: 'Quanta', status: 'done', due: '—', priority: null },
+  { id: 4, title: 'Agent Scorecard v2', owner: 'Quanta', status: 'done', due: '—', priority: null },
+  { id: 5, title: 'Performance Profiler', owner: 'Quanta', status: 'done', due: '—', priority: null },
+  { id: 6, title: 'Daily Briefing', owner: 'Quanta', status: 'done', due: '—', priority: null },
 ];
 
 function App() {
@@ -121,12 +116,15 @@ function App() {
   };
 
   const priorityColor = (p) => {
+    if (!p) return '#555568';
     if (p === 'high') return '#ef4444';
     if (p === 'medium') return '#f59e0b';
     return '#555568';
   };
 
   const deliverableStatusLabel = (s) => {
+    if (s === 'done') return 'Done';
+    if (s === 'in_progress') return 'In Progress';
     if (s === 'review') return 'In Review';
     if (s === 'ready') return 'Ready';
     if (s === 'drafting') return 'Drafting';
@@ -189,9 +187,9 @@ function App() {
             <Send size={20} />
           </div>
           <div className="marty-kpi-data">
-            <span className="marty-kpi-label">Messages Today</span>
+            <span className="marty-kpi-label">Messages Routed</span>
             <strong className="marty-kpi-value">{kpiData.messagesSent}</strong>
-            <span className="marty-kpi-trend up">+12% vs avg</span>
+            <span className="marty-kpi-trend up">586 tracked deliveries</span>
           </div>
         </div>
         <div className="marty-kpi">
@@ -199,9 +197,9 @@ function App() {
             <Target size={20} />
           </div>
           <div className="marty-kpi-data">
-            <span className="marty-kpi-label">Tasks Delegated</span>
+            <span className="marty-kpi-label">Tracked Tasks</span>
             <strong className="marty-kpi-value">{kpiData.tasksDelegated}</strong>
-            <span className="marty-kpi-trend">This week</span>
+            <span className="marty-kpi-trend">Task registry total</span>
           </div>
         </div>
         <div className="marty-kpi">
@@ -211,7 +209,7 @@ function App() {
           <div className="marty-kpi-data">
             <span className="marty-kpi-label">Tasks Completed</span>
             <strong className="marty-kpi-value">{kpiData.tasksCompleted}</strong>
-            <span className="marty-kpi-trend up">83% completion</span>
+            <span className="marty-kpi-trend up">18/19 complete</span>
           </div>
         </div>
         <div className="marty-kpi">
@@ -220,8 +218,8 @@ function App() {
           </div>
           <div className="marty-kpi-data">
             <span className="marty-kpi-label">Active Agents</span>
-            <strong className="marty-kpi-value">{kpiData.activeAgents}<span className="marty-kpi-of">/12</span></strong>
-            <span className="marty-kpi-trend">Sub-agents online</span>
+            <strong className="marty-kpi-value">{kpiData.activeAgents}<span className="marty-kpi-of">/{allAgents.length}</span></strong>
+            <span className="marty-kpi-trend">Latest Mar 16 activity</span>
           </div>
         </div>
       </div>
@@ -294,7 +292,7 @@ function App() {
               <Tooltip contentStyle={{ backgroundColor: '#1a1a2e', border: '1px solid #333', borderRadius: '8px' }} labelStyle={{ color: '#fff' }} />
               <Legend wrapperStyle={{ fontSize: '12px', color: '#aaa', paddingTop: '8px' }} iconType="circle" />
               <Bar dataKey="messages" fill="#3b82f6" radius={[4, 4, 0, 0]} name="Messages" />
-              <Bar dataKey="tasks" fill="#8b5cf6" radius={[4, 4, 0, 0]} name="Tasks" />
+              <Bar dataKey="tasks" fill="#8b5cf6" radius={[4, 4, 0, 0]} name="Heartbeats" />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -341,7 +339,7 @@ function App() {
                     <Calendar size={11} /> {d.due}
                   </span>
                   <span className="marty-deliverable-priority" style={{ color: priorityColor(d.priority) }}>
-                    {d.priority === 'high' ? '!!!' : d.priority === 'medium' ? '!!' : '!'}
+                    {d.priority === 'high' ? '!!!' : d.priority === 'medium' ? '!!' : d.priority === 'low' ? '!' : '—'}
                   </span>
                 </div>
               </div>
