@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Activity, Cpu, Zap, Clock, Wifi, WifiOff } from 'lucide-react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Activity, Cpu, Zap, Clock, Wifi, WifiOff, X, Send, MessageCircle } from 'lucide-react';
 import './Hub.css';
 
 const agents = [
@@ -94,6 +95,9 @@ function HealthBar({ value, color }) {
 }
 
 function Hub() {
+  const [selectedAgent, setSelectedAgent] = useState(null);
+  const [chatMessages, setChatMessages] = useState({});
+
   return (
     <div className="hub">
       {/* Compact header */}
@@ -214,6 +218,97 @@ function Hub() {
           </motion.div>
         ))}
       </div>
+
+      {/* Floating Chat Bubbles (FABs) */}
+      <div className="chat-fabs">
+        {agents.map((agent) => (
+          <motion.button
+            key={agent.id}
+            className="chat-fab"
+            style={{ '--agent-color': agent.color }}
+            onClick={() => setSelectedAgent(agent)}
+            whileHover={{ scale: 1.15, x: -8 }}
+            whileTap={{ scale: 0.95 }}
+            title={`Chat with ${agent.name}`}
+          >
+            <span className="fab-emoji">{agent.emoji}</span>
+            <span className="fab-tooltip">{agent.name}</span>
+          </motion.button>
+        ))}
+      </div>
+
+      {/* Chat Modal */}
+      <AnimatePresence>
+        {selectedAgent && (
+          <motion.div
+            className="chat-modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedAgent(null)}
+          >
+            <motion.div
+              className="chat-modal"
+              style={{ '--agent-color': selectedAgent.color }}
+              initial={{ opacity: 0, y: 40, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 40, scale: 0.95 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="chat-modal-header">
+                <div className="chat-agent-info">
+                  <span className="chat-agent-emoji">{selectedAgent.emoji}</span>
+                  <span className="chat-agent-name">{selectedAgent.name}</span>
+                </div>
+                <button className="chat-close-btn" onClick={() => setSelectedAgent(null)}>
+                  <X size={18} />
+                </button>
+              </div>
+              
+              <div className="chat-messages">
+                {chatMessages[selectedAgent.id]?.length === 0 && (
+                  <div className="chat-empty">
+                    <MessageCircle size={32} strokeWidth={1.5} />
+                    <p>Start a conversation with {selectedAgent.name}</p>
+                    <span className="chat-hint">They'll respond when available</span>
+                  </div>
+                )}
+                {chatMessages[selectedAgent.id]?.map((msg, i) => (
+                  <div key={i} className={`chat-message ${msg.from === 'me' ? 'from-me' : 'from-agent'}`}>
+                    <span className="msg-emoji">{msg.from === 'me' ? '👤' : selectedAgent.emoji}</span>
+                    <div className="msg-content">{msg.text}</div>
+                  </div>
+                ))}
+              </div>
+              
+              <form className="chat-input-form" onSubmit={(e) => {
+                e.preventDefault();
+                const input = e.target.elements.message;
+                if (input.value.trim()) {
+                  setChatMessages(prev => ({
+                    ...prev,
+                    [selectedAgent.id]: [
+                      ...(prev[selectedAgent.id] || []),
+                      { from: 'me', text: input.value }
+                    ]
+                  }));
+                  input.value = '';
+                }
+              }}>
+                <input
+                  type="text"
+                  name="message"
+                  placeholder={`Message ${selectedAgent.name}...`}
+                  autoComplete="off"
+                />
+                <button type="submit">
+                  <Send size={16} />
+                </button>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
