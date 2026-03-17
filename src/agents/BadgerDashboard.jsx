@@ -6,63 +6,58 @@ const SKIP_AUTH = import.meta.env.VITE_SKIP_AUTH === 'true';
 
 // ── Data ──
 const systemMetrics = [
-  { label: 'CPU', value: 23, unit: '%', color: '#00ff41' },
-  { label: 'MEM', value: 61, unit: '%', color: '#3b82f6' },
-  { label: 'GPU', value: 34, unit: '%', color: '#8b5cf6' },
-  { label: 'DISK', value: 47, unit: '%', color: '#f59e0b' },
+  { label: 'ACTIVE', value: 34, unit: '', color: '#00ff41' },
+  { label: 'TODO', value: 4, unit: '', color: '#3b82f6' },
+  { label: 'BACKLOG', value: 73, unit: '', color: '#8b5cf6' },
+  { label: 'DONE7D', value: 34, unit: '', color: '#f59e0b' },
 ];
 
 const services = [
-  { name: 'nginx', status: 'running', uptime: '14d 7h', port: 443 },
-  { name: 'postgres', status: 'running', uptime: '14d 7h', port: 5432 },
-  { name: 'redis', status: 'running', uptime: '6d 22h', port: 6379 },
-  { name: 'vite-dev', status: 'running', uptime: '2h 14m', port: 5174 },
-  { name: 'docker', status: 'running', uptime: '14d 7h', port: null },
-  { name: 'clamav', status: 'running', uptime: '14d 7h', port: null },
-  { name: 'waydroid', status: 'stopped', uptime: '—', port: null },
+  { name: 'michael-voice-router', status: 'running', uptime: 'enabled', port: null },
+  { name: 'task-sync.py', status: 'running', uptime: 'synced Mar 6', port: null },
+  { name: 'activity-summary.py', status: 'running', uptime: 'verified', port: null },
+  { name: 'heartbeat-cycle', status: 'running', uptime: 'cycle 40 idle', port: null },
+  { name: 'linear-api', status: 'stopped', uptime: '401 auth', port: null },
+  { name: 'onboarding', status: 'running', uptime: '2026-02-19', port: null },
+  { name: 'dashboard-test', status: 'running', uptime: 'Mar 8 03:42Z', port: null },
 ];
 
 const commandHistory = [
-  { ts: '16:42:18', cmd: 'git push origin master', output: 'Everything up-to-date', status: 'ok' },
-  { ts: '16:41:55', cmd: 'npm run build', output: '✓ built in 3.2s — 847 modules', status: 'ok' },
-  { ts: '16:40:03', cmd: 'docker ps --format "table {{.Names}}\\t{{.Status}}"', output: 'gpu-audio   Up 6 days\npostgres    Up 14 days', status: 'ok' },
-  { ts: '16:38:22', cmd: 'systemctl status nginx', output: '● nginx.service — active (running) since Mar 02', status: 'ok' },
-  { ts: '16:35:10', cmd: 'clamscan -r --infected /home/scribble0563/projects/', output: '----------- SCAN SUMMARY -----------\nInfected files: 0', status: 'ok' },
-  { ts: '16:31:44', cmd: 'df -h / /home', output: '/dev/nvme0n1p2  457G  214G  220G  50%  /\n/dev/nvme0n1p3  1.8T  847G  892G  49%  /home', status: 'ok' },
-  { ts: '16:28:09', cmd: 'nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu --format=csv,noheader', output: 'NVIDIA GH200, 42, 34 %', status: 'ok' },
-  { ts: '16:22:50', cmd: 'uptime', output: ' 16:22:50 up 14 days, 7:03, 3 users, load average: 1.24, 0.98, 0.87', status: 'ok' },
-  { ts: '16:18:33', cmd: 'journalctl -u clamav-freshclam --since "1 hour ago" --no-pager', output: 'Mar 16 16:00:01 spark-5495 freshclam: ClamAV update process started\nMar 16 16:00:03 spark-5495 freshclam: daily.cvd database is up-to-date', status: 'ok' },
+  { ts: '16:56:00', cmd: "sed -n '1,40p' memory/working-state.md", output: 'Heartbeat Cycle 40: IDLE — System Nominal\nLinear API: DOWN (401 auth)\nNo unfinished work from previous cycle', status: 'ok' },
+  { ts: '18:15:00', cmd: "jq '.summary' memory/tasks-sync.json", output: '{\n  "in_progress": 34,\n  "todo": 4,\n  "backlog": 73,\n  "completed_7d": 34\n}', status: 'ok' },
+  { ts: '14:46:00', cmd: "sed -n '1,22p' memory/2026-03-08-ALL-5-TASKS-COMPLETE.md", output: 'ALL 5 PRIORITY TASKS — COMPLETE\nFinal notification sent to Michael\nTotal runtime: 2 hours 11 minutes', status: 'ok' },
+  { ts: '15:46:00', cmd: "rg 'Service:|Status:' EXP-1168-COMPLETION.md", output: 'Status: COMPLETE\nService: michael-voice-router.service (enabled, running)\n12/12 tests passing', status: 'ok' },
+  { ts: '08:51:19', cmd: "cat .openclaw/workspace-state.json", output: '{\n  "version": 1,\n  "onboardingCompletedAt": "2026-02-19T08:51:19.027Z"\n}', status: 'ok' },
+  { ts: '03:42:28', cmd: 'cat activity.log', output: '{\n  "agent_name": "badger",\n  "task_name": "dashboard-test",\n  "status": "started"\n}', status: 'ok' },
 ];
 
 const activeProjects = [
-  { id: 1, name: 'kaiw.io Hub', status: 'building', progress: 88, emoji: '⚡' },
-  { id: 2, name: 'MediaPipe Form AI', status: 'building', progress: 60, emoji: '🧘' },
-  { id: 3, name: 'WF App v2.3', status: 'building', progress: 45, emoji: '📱' },
+  { id: 1, name: 'Voice Router', status: 'complete', progress: 100, emoji: '🎙️' },
+  { id: 2, name: 'Model Health Checker', status: 'complete', progress: 100, emoji: '📡' },
+  { id: 3, name: 'Commit Convention Hook', status: 'complete', progress: 100, emoji: '🪝' },
 ];
 
 const recentDeploys = [
-  { name: 'kaiw-hub auth + merge', time: 'Mar 12 23:14', status: 'success' },
-  { name: 'agent-mode-switch.sh', time: 'Mar 11 19:42', status: 'success' },
-  { name: 'wf-security-sentinel.sh', time: 'Mar 8 03:11', status: 'success' },
-  { name: 'GPU Audio Docker image', time: 'Mar 5 01:33', status: 'success' },
+  { name: 'Auto-Routing Voice System', time: 'Mar 3 15:46', status: 'success' },
+  { name: 'All 5 Priority Tasks', time: 'Mar 8 14:46', status: 'success' },
+  { name: 'Security Headers Fix Package', time: 'Feb 12', status: 'success' },
+  { name: 'dashboard-test', time: 'Mar 8 03:42Z', status: 'success' },
 ];
 
 const systemInfo = {
   host: 'spark-5495',
   os: 'Linux arm64',
-  model: 'claude-sonnet-4-6',
-  kernel: '6.14.0-1013-nvidia',
+  model: '—',
+  kernel: '—',
   arch: 'aarch64',
   cpu: 'NVIDIA Grace',
-  gpu: 'GH200 120GB',
+  gpu: 'Grace Hopper',
 };
 
 const quotes = [
-  "The best code is no code.",
-  "Complexity is the enemy.",
-  "Ship it. Fix it. Ship again.",
-  "Read the source.",
-  "Delete more. Write less.",
+  "Lead with the impact.",
+  "Tools must pass the ls test before claiming completion.",
+  "Security first. Verify on disk.",
 ];
 
 function BadgerDashboard() {
@@ -82,7 +77,6 @@ function BadgerDashboard() {
     }))
   );
 
-  // Animated metric values
   const [metrics, setMetrics] = useState(systemMetrics);
 
   useEffect(() => {
@@ -95,17 +89,6 @@ function BadgerDashboard() {
       setGlitch(true);
       setTimeout(() => setGlitch(false), 150);
     }, 8000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Fluctuate metrics slightly
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setMetrics(prev => prev.map(m => ({
-        ...m,
-        value: Math.max(5, Math.min(95, m.value + Math.floor(Math.random() * 7) - 3)),
-      })));
-    }, 3000);
     return () => clearInterval(interval);
   }, []);
 
@@ -193,7 +176,7 @@ function BadgerDashboard() {
           </div>
           <div className="uptime-badge">
             <span className="status-dot-live">●</span>
-            <span>14d 7h</span>
+            <span>Cycle 40</span>
           </div>
           <UserButton afterSignOutUrl="/login" />
         </div>
@@ -285,12 +268,12 @@ function BadgerDashboard() {
             <div className="terminal-content" ref={terminalRef}>
               {/* Session start */}
               <div className="term-line system">
-                <span className="term-ts">16:15:00</span>
+                <span className="term-ts">16:56:00</span>
                 <span className="term-text">── session started · {systemInfo.host} · {systemInfo.os} ──</span>
               </div>
               <div className="term-line system">
-                <span className="term-ts">16:15:01</span>
-                <span className="term-text">load avg: 1.24, 0.98, 0.87 · 72 processes · 3 users</span>
+                <span className="term-ts">16:56:01</span>
+                <span className="term-text">9,974 tracked workspace files · 2 queued tests · 0 unfinished WIP</span>
               </div>
               <div className="term-spacer" />
 
@@ -351,7 +334,7 @@ function BadgerDashboard() {
           <div className="ops-card builds-card">
             <h3>
               <span className="card-icon">🔥</span>
-              ACTIVE BUILDS
+              TRACKED WORK
             </h3>
             <div className="builds-list">
               {activeProjects.map(p => (
@@ -393,7 +376,7 @@ function BadgerDashboard() {
         <span className="sep">|</span>
         <span>model: {systemInfo.model}</span>
         <span className="sep">|</span>
-        <span>{activeProjects.length} building · {recentDeploys.length} deployed</span>
+        <span>{activeProjects.length} verified deliverables · {recentDeploys.length} logged releases</span>
         <span className="sep">|</span>
         <span className="status-dot-footer">●</span>
         <span>online</span>

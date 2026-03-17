@@ -12,68 +12,66 @@ const FAMILY_COLORS = {
   lola:    { bg: '#f97316', emoji: '🐾' },
 };
 
-/* ── Fallback data ── */
-const FALLBACK_OURA = {
-  date: '2026-03-16',
-  scores: { sleep: 82, readiness: 76, activity: 68 },
+const REAL_OURA = {
+  date: '2026-03-16 sleep live · 2026-03-11 activity sync',
+  scores: { sleep: 89, readiness: 95, activity: 69 },
   details: {
-    sleep: { deep: 54, hrv: 38, restingHR: 58, total: 7.2 },
-    activity: { steps: 8432, calories: 2180 },
+    sleep: { deep: 70, hrv: 34, restingHR: 42, total: 8.3 },
+    activity: { steps: 4302, calories: 2199 },
   },
 };
 
-const FALLBACK_FAMILY = {
+const REAL_FAMILY = {
   family: {
-    michael: { birthday: 'Jun 12', lastActivity: 'Dashboard session — 2m ago', mood: 'focused' },
-    melissa: { birthday: 'Sep 3', lastActivity: 'Yoga class check-in — 1h ago', mood: 'relaxed' },
-    elora:   { birthday: 'Mar 28', lastActivity: 'Piano practice logged — 3h ago', mood: 'creative' },
-    iris:    { birthday: 'Nov 15', lastActivity: 'Nap ended — 45m ago', mood: 'playful' },
-    lola:    { birthday: 'Dec 1', lastActivity: 'Walk completed — 2h ago', mood: 'happy' },
+    michael: { birthday: 'Jun 20', lastActivity: 'Sleep score 89 logged on Mar 16', mood: 'focused' },
+    melissa: { birthday: 'Sep 1', lastActivity: 'No family issues flagged in Mar 8 digest', mood: 'relaxed' },
+    elora:   { birthday: 'Aug 27', lastActivity: 'Bedtime routine went smoothly on Mar 12', mood: 'happy' },
+    iris:    { birthday: 'Jan 30', lastActivity: 'Fell asleep by 8:30 during the Mar 12 bedtime win', mood: 'playful' },
+    lola:    { birthday: 'Jan 1', lastActivity: 'No mentions in the last 14 days of family memory', mood: 'unknown' },
   },
 };
 
-const FALLBACK_BUSINESS = {
-  source: 'Linear',
-  metrics: { activeTasks: 7, todoTasks: 12, backlogTasks: 23, completedToday: 3 },
+const REAL_CONTEXT = {
+  source: 'morning-context.json',
+  metrics: { activeTasks: 0, todoTasks: 0, backlogTasks: 6, completedToday: 1 },
   topTasks: [
-    { title: 'Finalize Q1 investor deck copy', state: 'In Progress' },
-    { title: 'Review mobile onboarding flow', state: 'In Progress' },
-    { title: 'Ship notification preferences API', state: 'Todo' },
-    { title: 'Update brand guidelines PDF', state: 'Done' },
-    { title: 'Prep sprint retro agenda', state: 'Todo' },
+    { title: 'Trash day before 8 AM', state: 'High' },
+    { title: 'Family groceries on Tuesday', state: 'Medium' },
+    { title: 'Late night wind-down nudge', state: 'Medium' },
+    { title: 'Elora school prep on Sunday', state: 'Medium' },
+    { title: 'Midday hydration check', state: 'Low' },
   ],
-  notes: 'Sprint ends Friday — 3 items at risk',
+  notes: '0 priority alerts · 0 upcoming events · latest family win: Elora bedtime routine went smoothly',
 };
 
-const FALLBACK_AGENTS = [
-  { name: 'Aria', status: 'active', lastSeen: 'now', role: 'Personal Assistant' },
-  { name: 'Kaia', status: 'active', lastSeen: '12s ago', role: 'Trend Analyst' },
-  { name: 'Thea', status: 'active', lastSeen: '1m ago', role: 'Content Editor' },
-  { name: 'Renzo', status: 'active', lastSeen: '3m ago', role: 'Home Architect' },
-  { name: 'Maverick', status: 'recent', lastSeen: '18m ago', role: 'Resource Guard' },
-  { name: 'Quanta', status: 'recent', lastSeen: '25m ago', role: 'Data Analyst' },
-  { name: 'Freq', status: 'idle', lastSeen: '2h ago', role: 'Music Curator' },
-  { name: 'Badger', status: 'idle', lastSeen: '4h ago', role: 'QA Enforcer' },
+const REAL_AGENTS = [
+  { name: 'Aria', status: 'active', lastSeen: '52 sessions on Mar 16', role: 'Personal Assistant' },
+  { name: 'Main', status: 'active', lastSeen: '52 sessions on Mar 16', role: 'Primary Session' },
+  { name: 'Renzo', status: 'active', lastSeen: '14 sessions on Mar 16', role: 'Writer' },
+  { name: 'Freq', status: 'active', lastSeen: '11 sessions on Mar 16', role: 'Audio Engineer' },
+  { name: 'Reno', status: 'active', lastSeen: '9 sessions on Mar 16', role: 'Trading Analyst' },
+  { name: 'Maverick', status: 'active', lastSeen: '7 sessions on Mar 16', role: 'Operations Guard' },
+  { name: 'Thea', status: 'active', lastSeen: '7 sessions on Mar 16', role: 'Reviewer' },
+  { name: 'Kaia', status: 'active', lastSeen: '6 sessions on Mar 16', role: 'Trend Analyst' },
+  { name: 'Quanta', status: 'active', lastSeen: '6 sessions on Mar 16', role: 'Analytics' },
+  { name: 'Badger', status: 'recent', lastSeen: '5 sessions on Mar 16', role: 'QA Enforcer' },
+  { name: 'Greta', status: 'recent', lastSeen: '4 sessions on Mar 16', role: 'Research Analyst' },
+  { name: 'Rocio', status: 'recent', lastSeen: '4 sessions on Mar 16', role: 'Comms' },
 ];
 
 const SLEEP_WEEK = [
-  { day: 'Mon', hours: 6.8, score: 71 },
-  { day: 'Tue', hours: 7.5, score: 84 },
-  { day: 'Wed', hours: 6.2, score: 62 },
-  { day: 'Thu', hours: 7.8, score: 88 },
-  { day: 'Fri', hours: 7.0, score: 78 },
-  { day: 'Sat', hours: 8.1, score: 91 },
-  { day: 'Sun', hours: 7.2, score: 82 },
+  { day: 'Feb 11', hours: 5.2, score: 65 },
+  { day: 'Feb 12', hours: 5.6, score: 61 },
+  { day: 'Feb 13', hours: 3.6, score: 45 },
+  { day: 'Feb 14', hours: 10.0, score: 93 },
+  { day: 'Feb 15', hours: 8.7, score: 92 },
+  { day: 'Feb 16', hours: 3.3, score: 44 },
+  { day: 'Feb 17', hours: 10.8, score: 94 },
 ];
 
 const STEPS_WEEK = [
-  { day: 'Mon', steps: 9200 },
-  { day: 'Tue', steps: 6100 },
-  { day: 'Wed', steps: 11400 },
-  { day: 'Thu', steps: 7800 },
-  { day: 'Fri', steps: 5300 },
-  { day: 'Sat', steps: 12600 },
-  { day: 'Sun', steps: 8432 },
+  { day: 'Mar 7', steps: 2261 },
+  { day: 'Mar 11', steps: 4302 },
 ];
 
 const MOOD_MAP = {
@@ -82,6 +80,7 @@ const MOOD_MAP = {
   creative: { color: '#f59e0b', icon: '🎨' },
   playful: { color: '#3b82f6', icon: '😄' },
   happy: { color: '#f97316', icon: '🐕' },
+  unknown: { color: '#888', icon: '—' },
 };
 
 function ScoreRing({ value, max = 100, color, label, sub, size = 80 }) {
@@ -135,42 +134,16 @@ const chartTooltipStyle = {
 };
 
 export default function AriaDashboard() {
-  const [ouraData, setOuraData]       = useState(null);
-  const [familyData, setFamilyData]   = useState(null);
-  const [businessData, setBusinessData] = useState(null);
-  const [agentStatus, setAgentStatus] = useState([]);
   const [now, setNow]                 = useState(new Date());
 
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(t);
   }, []);
-
-  useEffect(() => {
-    fetch('http://localhost:3001/api/oura').then(r => r.json()).then(setOuraData).catch(() => setOuraData(FALLBACK_OURA));
-  }, []);
-
-  useEffect(() => {
-    fetch('http://localhost:3001/api/family').then(r => r.json()).then(setFamilyData).catch(() => setFamilyData(FALLBACK_FAMILY));
-  }, []);
-
-  useEffect(() => {
-    fetch('http://localhost:3001/api/business').then(r => r.json()).then(setBusinessData).catch(() => setBusinessData(FALLBACK_BUSINESS));
-  }, []);
-
-  useEffect(() => {
-    const load = () =>
-      fetch('http://localhost:3001/api/agents').then(r => r.json())
-        .then(d => setAgentStatus(d.agents?.length ? d.agents : FALLBACK_AGENTS)).catch(() => setAgentStatus(FALLBACK_AGENTS));
-    load();
-    const t = setInterval(load, 30000);
-    return () => clearInterval(t);
-  }, []);
-
-  const oura = (ouraData?.scores) ? ouraData : FALLBACK_OURA;
-  const family = (familyData?.family) ? familyData : FALLBACK_FAMILY;
-  const biz = (businessData?.metrics) ? businessData : FALLBACK_BUSINESS;
-  const agents = agentStatus.length ? agentStatus : FALLBACK_AGENTS;
+  const oura = REAL_OURA;
+  const family = REAL_FAMILY;
+  const biz = REAL_CONTEXT;
+  const agents = REAL_AGENTS;
 
   const greeting = () => {
     const h = now.getHours();
@@ -419,8 +392,8 @@ export default function AriaDashboard() {
       </div>
 
       <footer className="aria-footer">
-        <span>🎵 Aria · Personal Life Assistant · Opus 4.6</span>
-        <span>Refreshes every 30s</span>
+        <span>🎵 Aria · Cori voice · Fish Speech @ 1.25x</span>
+        <span>Workspace-backed family + Oura context</span>
       </footer>
     </div>
   );
