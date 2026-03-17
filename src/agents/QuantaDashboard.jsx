@@ -12,83 +12,83 @@ import {
 } from 'lucide-react';
 import './css/quantaDashboard.css';
 
-// ─── Mock data ──────────────────────────────────────────────────────────────
+// ─── Real analytics snapshots ───────────────────────────────────────────────
 
 const AGENT_COLOR = '#10b981'; // emerald / teal
 
 const agentMetrics = [
-  { agent: 'Marty',    emoji: '⚡', msgs: 1842, tasks: 213, avgMs: 1240, status: 'active',  color: '#ef4444' },
-  { agent: 'Aria',     emoji: '🎵', msgs: 1287, tasks: 178, avgMs:  980, status: 'active',  color: '#ec4899' },
-  { agent: 'Renzo',    emoji: '🔥', msgs:  924, tasks: 142, avgMs: 1100, status: 'active',  color: '#0ea5e9' },
-  { agent: 'Badger',   emoji: '🦡', msgs:  763, tasks: 196, avgMs:  820, status: 'active',  color: '#f97316' },
-  { agent: 'Kaia',     emoji: '🌊', msgs:  688, tasks: 134, avgMs:  760, status: 'active',  color: '#06b6d4' },
-  { agent: 'Freq',     emoji: '🎧', msgs:  547, tasks:  89, avgMs:  640, status: 'active',  color: '#14b8a6' },
-  { agent: 'Thea',     emoji: '🏛️', msgs:  421, tasks: 112, avgMs:  920, status: 'active',  color: '#a855f7' },
-  { agent: 'Reno',     emoji: '🔬', msgs:  398, tasks:  97, avgMs: 1380, status: 'active',  color: '#f43f5e' },
-  { agent: 'Maverick', emoji: '🚦', msgs:  312, tasks:  64, avgMs:  540, status: 'idle',    color: '#eab308' },
-  { agent: 'Greta',    emoji: '💜', msgs:  287, tasks:  71, avgMs:  870, status: 'idle',    color: '#8b5cf6' },
-  { agent: 'Quanta',   emoji: '⏱️', msgs:  244, tasks:  58, avgMs:  710, status: 'active',  color: '#10b981' },
+  { agent: 'Marty', emoji: '⚡', msgs: 163, tasks: 2765, avgTps: 21.15, status: 'active', color: '#ef4444' },
+  { agent: 'Aria', emoji: '🎵', msgs: 108, tasks: 1448, avgTps: 24.81, status: 'active', color: '#ec4899' },
+  { agent: 'Renzo', emoji: '🔥', msgs: 26, tasks: 1661, avgTps: 26.07, status: 'active', color: '#0ea5e9' },
+  { agent: 'Reno', emoji: '📈', msgs: 25, tasks: 311, avgTps: 41.86, status: 'active', color: '#f43f5e' },
+  { agent: 'Freq', emoji: '🎧', msgs: 21, tasks: 452, avgTps: 18.87, status: 'active', color: '#14b8a6' },
+  { agent: 'Thea', emoji: '🏛️', msgs: 12, tasks: 197, avgTps: 27.54, status: 'active', color: '#a855f7' },
+  { agent: 'Quanta', emoji: '⏱️', msgs: 10, tasks: 644, avgTps: 28.01, status: 'active', color: '#10b981' },
+  { agent: 'Kaia', emoji: '🌊', msgs: 9, tasks: 254, avgTps: 23.33, status: 'active', color: '#06b6d4' },
+  { agent: 'Maverick', emoji: '🚦', msgs: 8, tasks: 146, avgTps: 32.38, status: 'active', color: '#eab308' },
+  { agent: 'Greta', emoji: '📚', msgs: 5, tasks: 36, avgTps: 25.11, status: 'idle', color: '#8b5cf6' },
+  { agent: 'Badger', emoji: '🦡', msgs: 5, tasks: 62, avgTps: 24.37, status: 'idle', color: '#f97316' },
+  { agent: 'Workout Flow', emoji: '🏃', msgs: 5, tasks: 45, avgTps: 20.5, status: 'idle', color: '#22c55e' },
 ];
 
 const systemHealth = {
-  cpu:    { value: 34, label: 'CPU',    unit: '%', icon: Cpu,      color: '#10b981', warn: 80 },
-  memory: { value: 61, label: 'Memory', unit: '%', icon: HardDrive,color: '#06b6d4', warn: 85 },
-  gpu:    { value: 78, label: 'GPU',    unit: '%', icon: Zap,      color: '#a855f7', warn: 90 },
-  disk:   { value: 42, label: 'Disk',   unit: '%', icon: Database, color: '#f97316', warn: 90 },
-  net:    { value: 12, label: 'Net I/O',unit: 'MB/s',icon: Wifi,   color: '#3b82f6', warn: 100 },
-  uptime: { value: '18d 4h', label: 'Uptime', unit: '', icon: Server, color: '#22c55e', warn: null },
+  cpu: { value: '—', label: 'CPU', unit: '', icon: Cpu, color: '#10b981', warn: null },
+  memory: { value: 47, label: 'Memory', unit: '%', icon: HardDrive, color: '#06b6d4', warn: 85 },
+  gpu: { value: 23, label: 'GPU', unit: '%', icon: Zap, color: '#a855f7', warn: 90 },
+  disk: { value: 57, label: 'Disk', unit: '%', icon: Database, color: '#f97316', warn: 90 },
+  net: { value: '—', label: 'Net I/O', unit: '', icon: Wifi, color: '#3b82f6', warn: null },
+  uptime: { value: '611.6h', label: 'Uptime', unit: '', icon: Server, color: '#22c55e', warn: null },
 };
 
 const services = [
-  { name: 'Fish Speech TTS', status: 'online',  latency: 42,  port: 8090 },
-  { name: 'Faster-Whisper',  status: 'online',  latency: 18,  port: 8095 },
-  { name: 'Piper TTS',       status: 'online',  latency: 11,  port: 8091 },
-  { name: 'OpenClaw Gateway',status: 'online',  latency: 5,   port: 4242 },
-  { name: 'Vite Dev Server', status: 'online',  latency: 3,   port: 5174 },
-  { name: 'ACE-Step Music',  status: 'standby', latency: null,port: 8099 },
-  { name: 'Local MiniMax',   status: 'standby', latency: null,port: 8081 },
-  { name: 'Local Qwen3.5',   status: 'offline', latency: null,port: 8082 },
+  { name: 'Quanta API Server', status: 'online', latency: null, port: '3001' },
+  { name: 'Analytics DB', status: 'online', latency: null, port: 'analytics.db' },
+  { name: 'daily_agent_summary', status: 'online', latency: null, port: '5950 rows' },
+  { name: 'system_snapshots', status: 'online', latency: null, port: 'latest 2026-02-19' },
+  { name: 'qwen3:32b snapshot', status: 'online', latency: null, port: '29.1GB VRAM' },
 ];
 
-// Last 7 days agent activity (messages per day, stacked by top agents)
 const weeklyActivity = [
-  { day: 'Mon', Marty: 280, Aria: 190, Renzo: 140, Badger: 110, Other: 220 },
-  { day: 'Tue', Marty: 310, Aria: 210, Renzo: 165, Badger: 125, Other: 245 },
-  { day: 'Wed', Marty: 260, Aria: 175, Renzo: 120, Badger: 100, Other: 195 },
-  { day: 'Thu', Marty: 340, Aria: 225, Renzo: 180, Badger: 140, Other: 270 },
-  { day: 'Fri', Marty: 295, Aria: 200, Renzo: 150, Badger: 115, Other: 230 },
-  { day: 'Sat', Marty: 180, Aria: 140, Renzo: 90,  Badger:  80, Other: 160 },
-  { day: 'Sun', Marty: 145, Aria: 115, Renzo: 70,  Badger:  60, Other: 130 },
+  { day: '3/11', Marty: 11, Aria: 0, Renzo: 0, Reno: 2, Other: 3 },
+  { day: '3/12', Marty: 15, Aria: 1, Renzo: 1, Reno: 1, Other: 10 },
+  { day: '3/13', Marty: 19, Aria: 2, Renzo: 0, Reno: 1, Other: 4 },
+  { day: '3/14', Marty: 11, Aria: 2, Renzo: 0, Reno: 4, Other: 6 },
+  { day: '3/15', Marty: 55, Aria: 51, Renzo: 11, Reno: 8, Other: 6 },
+  { day: '3/16', Marty: 52, Aria: 52, Renzo: 14, Reno: 9, Other: 52 },
 ];
 
-// Response time trend (last 12 hours)
-const responseTimeline = Array.from({ length: 12 }, (_, i) => ({
-  hour: `${(new Date().getHours() - 11 + i + 24) % 24}:00`,
-  avg:  Math.round(700 + Math.sin(i * 0.8) * 200 + Math.random() * 100),
-  p95:  Math.round(1200 + Math.sin(i * 0.8) * 300 + Math.random() * 150),
-}));
+const responseTimeline = [
+  { day: '3/05', sessions: 192, turns: 1394 },
+  { day: '3/06', sessions: 429, turns: 3655 },
+  { day: '3/07', sessions: 17, turns: 514 },
+  { day: '3/08', sessions: 33, turns: 2189 },
+  { day: '3/09', sessions: 2, turns: 9 },
+  { day: '3/10', sessions: 4, turns: 567 },
+  { day: '3/11', sessions: 16, turns: 153 },
+  { day: '3/12', sessions: 28, turns: 2149 },
+  { day: '3/13', sessions: 26, turns: 907 },
+  { day: '3/14', sessions: 23, turns: 442 },
+  { day: '3/15', sessions: 131, turns: 1808 },
+  { day: '3/16', sessions: 179, turns: 2641 },
+];
 
-// Task distribution by agent type
 const taskDistribution = [
-  { name: 'Business',  value: 38, color: '#ef4444' },
-  { name: 'Personal',  value: 22, color: '#ec4899' },
-  { name: 'Dev/Infra', value: 19, color: '#f97316' },
-  { name: 'Content',   value: 12, color: '#0ea5e9' },
-  { name: 'Analysis',  value:  9, color: '#10b981' },
+  { name: 'Marty', value: 163, color: '#ef4444' },
+  { name: 'Aria', value: 108, color: '#ec4899' },
+  { name: 'Renzo', value: 26, color: '#0ea5e9' },
+  { name: 'Reno', value: 25, color: '#f43f5e' },
+  { name: 'Freq', value: 21, color: '#14b8a6' },
+  { name: 'Other', value: 54, color: '#374151' },
 ];
 
-// Recent team activity timeline
 const recentActivity = [
-  { id: 1,  time: '14:38', agent: 'Marty',    emoji: '⚡', color: '#ef4444', action: 'Sent sprint2 dashboard status to Michael',         type: 'msg' },
-  { id: 2,  time: '14:35', agent: 'Aria',     emoji: '🎵', color: '#ec4899', action: 'Spawned Quanta subagent for dashboard build',       type: 'task' },
-  { id: 3,  time: '14:22', agent: 'Badger',   emoji: '🦡', color: '#f97316', action: 'Committed Freq Dashboard to kaiw-hub (sprint2)',    type: 'code' },
-  { id: 4,  time: '14:15', agent: 'Renzo',    emoji: '🔥', color: '#0ea5e9', action: 'Generated 3 Workout Flow content drafts',           type: 'content' },
-  { id: 5,  time: '14:08', agent: 'Freq',     emoji: '🎧', color: '#14b8a6', action: 'Processed voice batch: 8 agents, 24 clips',          type: 'audio' },
-  { id: 6,  time: '13:55', agent: 'Thea',     emoji: '🏛️', color: '#a855f7', action: 'Completed brand audit for WF App v2.3',             type: 'review' },
-  { id: 7,  time: '13:41', agent: 'Kaia',     emoji: '🌊', color: '#06b6d4', action: 'Scheduled 12 posts across Instagram + X',           type: 'content' },
-  { id: 8,  time: '13:30', agent: 'Maverick', emoji: '🚦', color: '#eab308', action: 'Switched GPU model: MiniMax → Qwen3.5',             type: 'system' },
-  { id: 9,  time: '13:18', agent: 'Reno',     emoji: '🔬', color: '#f43f5e', action: 'Research digest: 6 new insights filed',             type: 'research' },
-  { id: 10, time: '13:05', agent: 'Greta',    emoji: '💜', color: '#8b5cf6', action: 'Weekly team health check complete — all green',      type: 'check' },
+  { id: 1, time: '2026-03-16', agent: 'Aria', emoji: '🎵', color: '#ec4899', action: '52 sessions and 663 turns recorded in daily_agent_summary', type: 'msg' },
+  { id: 2, time: '2026-03-16', agent: 'Marty', emoji: '⚡', color: '#ef4444', action: '52 sessions and 14,034,022 tokens captured', type: 'task' },
+  { id: 3, time: '2026-03-16', agent: 'Renzo', emoji: '🔥', color: '#0ea5e9', action: '14 sessions with 40,093,817 tokens processed', type: 'content' },
+  { id: 4, time: '2026-03-16', agent: 'Reno', emoji: '📈', color: '#f43f5e', action: '9 sessions and 127 turns logged', type: 'research' },
+  { id: 5, time: '2026-03-16', agent: 'Quanta', emoji: '⏱️', color: '#10b981', action: '6 sessions reached 34.8 avg TPS', type: 'check' },
+  { id: 6, time: '2026-03-16', agent: 'Maverick', emoji: '🚦', color: '#eab308', action: '7 sessions and 4,143,208 tokens attributed', type: 'system' },
+  { id: 7, time: '2026-03-16', agent: 'Thea', emoji: '🏛️', color: '#a855f7', action: '7 sessions completed at 31.7 avg TPS', type: 'review' },
 ];
 
 const typeIcons = {
@@ -153,7 +153,7 @@ function ServiceRow({ name, status, latency, port }) {
     <div className="qd-service-row">
       <span className="qd-service-dot" style={{ background: dot }} />
       <span className="qd-service-name">{name}</span>
-      <span className="qd-service-port">:{port}</span>
+      <span className="qd-service-port">{port}</span>
       <span className="qd-service-latency">
         {latency !== null ? `${latency}ms` : status}
       </span>
@@ -161,8 +161,8 @@ function ServiceRow({ name, status, latency, port }) {
   );
 }
 
-function AgentRow({ agent, emoji, msgs, tasks, avgMs, status, color, rank }) {
-  const bar = Math.round((msgs / 1842) * 100);
+function AgentRow({ agent, emoji, msgs, tasks, avgTps, status, color, rank, maxMsgs }) {
+  const bar = Math.round((msgs / maxMsgs) * 100);
   return (
     <motion.div
       className="qd-agent-row"
@@ -184,7 +184,7 @@ function AgentRow({ agent, emoji, msgs, tasks, avgMs, status, color, rank }) {
       </div>
       <span className="qd-agent-msgs">{msgs.toLocaleString()}</span>
       <span className="qd-agent-tasks">{tasks}</span>
-      <span className="qd-agent-ms">{avgMs}ms</span>
+      <span className="qd-agent-ms">{avgTps.toFixed(2)}</span>
       <span className={`qd-agent-badge qd-badge-${status}`}>{status}</span>
     </motion.div>
   );
@@ -244,10 +244,11 @@ function QuantaDashboard() {
     setTimeout(() => { setIsRefreshing(false); setLastUpdate(new Date()); }, 900);
   };
 
-  const totalMsgs  = agentMetrics.reduce((s, a) => s + a.msgs, 0);
+  const totalMsgs  = 4620;
   const totalTasks = agentMetrics.reduce((s, a) => s + a.tasks, 0);
-  const avgResp    = Math.round(agentMetrics.reduce((s, a) => s + a.avgMs, 0) / agentMetrics.length);
+  const avgResp = (agentMetrics.reduce((s, a) => s + a.avgTps, 0) / agentMetrics.length).toFixed(2);
   const activeAgents = agentMetrics.filter(a => a.status === 'active').length;
+  const maxMsgs = Math.max(...agentMetrics.map(a => a.msgs));
 
   if (!isSignedIn) {
     return (
@@ -331,18 +332,18 @@ function QuantaDashboard() {
             <div className="qd-tab-content">
               {/* KPI row */}
               <div className="qd-stat-grid">
-                <StatCard icon={MessageSquare} label="Messages (7d)" value={totalMsgs.toLocaleString()} sub="+12% vs last week" color="#10b981" delay={0.0} />
-                <StatCard icon={CheckCircle2} label="Tasks Complete" value={totalTasks.toLocaleString()} sub="Across all agents" color="#06b6d4" delay={0.05} />
-                <StatCard icon={Clock} label="Avg Response" value={`${avgResp}ms`} sub="Team average" color="#a855f7" delay={0.1} />
-                <StatCard icon={Users} label="Active Agents" value={`${activeAgents}/${agentMetrics.length}`} sub="Online now" color="#f97316" delay={0.15} />
-                <StatCard icon={TrendingUp} label="Peak Load" value="18:30" sub="Yesterday's peak" color="#eab308" delay={0.2} />
-                <StatCard icon={Zap} label="Uptime" value="99.8%" sub="Last 30 days" color="#22c55e" delay={0.25} />
+                <StatCard icon={MessageSquare} label="Total Sessions" value={totalMsgs.toLocaleString()} sub="Across 15 tracked agents" color="#10b981" delay={0.0} />
+                <StatCard icon={CheckCircle2} label="Turns (7d)" value={totalTasks.toLocaleString()} sub="Daily summary aggregate" color="#06b6d4" delay={0.05} />
+                <StatCard icon={Clock} label="Avg TPS" value={avgResp} sub="7-day agent average" color="#a855f7" delay={0.1} />
+                <StatCard icon={Users} label="Active Agents" value={`${activeAgents}/15`} sub="Seen on 2026-03-16" color="#f97316" delay={0.15} />
+                <StatCard icon={TrendingUp} label="Peak Day" value="429 sessions" sub="2026-03-06" color="#eab308" delay={0.2} />
+                <StatCard icon={Zap} label="Snapshot Uptime" value="611.6h" sub="Latest system snapshot" color="#22c55e" delay={0.25} />
               </div>
 
               {/* Two-column: Weekly activity + timeline */}
               <div className="qd-two-col">
                 <div className="qd-panel">
-                  <h3 className="qd-panel-title"><BarChart2 size={14} /> Weekly Activity</h3>
+                  <h3 className="qd-panel-title"><BarChart2 size={14} /> Daily Sessions</h3>
                   <ResponsiveContainer width="100%" height={220}>
                     <BarChart data={weeklyActivity} margin={{ top: 4, right: 8, bottom: 0, left: -20 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#1e2a2a" />
@@ -352,7 +353,7 @@ function QuantaDashboard() {
                       <Bar dataKey="Marty"  stackId="a" fill="#ef4444" radius={[0,0,0,0]} />
                       <Bar dataKey="Aria"   stackId="a" fill="#ec4899" />
                       <Bar dataKey="Renzo"  stackId="a" fill="#0ea5e9" />
-                      <Bar dataKey="Badger" stackId="a" fill="#f97316" />
+                      <Bar dataKey="Reno" stackId="a" fill="#f43f5e" />
                       <Bar dataKey="Other"  stackId="a" fill="#374151" radius={[4,4,0,0]} />
                     </BarChart>
                   </ResponsiveContainer>
@@ -378,20 +379,20 @@ function QuantaDashboard() {
                   <span className="qd-agents-col qd-col-rank">#</span>
                   <span className="qd-agents-col qd-col-name">Agent</span>
                   <span className="qd-agents-col qd-col-bar">Volume</span>
-                  <span className="qd-agents-col qd-col-msgs">Msgs</span>
-                  <span className="qd-agents-col qd-col-tasks">Tasks</span>
-                  <span className="qd-agents-col qd-col-ms">Avg Resp</span>
+                  <span className="qd-agents-col qd-col-msgs">Sessions</span>
+                  <span className="qd-agents-col qd-col-tasks">Turns</span>
+                  <span className="qd-agents-col qd-col-ms">Avg TPS</span>
                   <span className="qd-agents-col qd-col-status">Status</span>
                 </div>
                 {agentMetrics.map((a, i) => (
-                  <AgentRow key={a.agent} {...a} rank={i} />
+                  <AgentRow key={a.agent} {...a} rank={i} maxMsgs={maxMsgs} />
                 ))}
               </div>
 
               {/* Task distribution pie */}
               <div className="qd-two-col qd-mt">
                 <div className="qd-panel">
-                  <h3 className="qd-panel-title"><Target size={14} /> Task Distribution</h3>
+                  <h3 className="qd-panel-title"><Target size={14} /> Session Distribution</h3>
                   <ResponsiveContainer width="100%" height={220}>
                     <PieChart>
                       <Pie data={taskDistribution} cx="50%" cy="50%" outerRadius={80} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false}>
@@ -399,7 +400,7 @@ function QuantaDashboard() {
                           <Cell key={idx} fill={entry.color} />
                         ))}
                       </Pie>
-                      <Tooltip formatter={(v) => [`${v} tasks`, '']} />
+                      <Tooltip formatter={(v) => [`${v} sessions`, '']} />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
@@ -430,7 +431,7 @@ function QuantaDashboard() {
                   <div className="qd-health-meta">
                     <span>Host: spark-5495</span>
                     <span>OS: Linux arm64</span>
-                    <span>DGX Spark</span>
+                    <span>Snapshot: 2026-02-19 10:17 UTC</span>
                   </div>
                 </div>
 
@@ -450,7 +451,7 @@ function QuantaDashboard() {
 
               {/* Response time area chart */}
               <div className="qd-panel qd-mt">
-                <h3 className="qd-panel-title"><TrendingUp size={14} /> Response Times (last 12h)</h3>
+                <h3 className="qd-panel-title"><TrendingUp size={14} /> Sessions and Turns (last 12d)</h3>
                 <ResponsiveContainer width="100%" height={200}>
                   <AreaChart data={responseTimeline} margin={{ top: 4, right: 8, bottom: 0, left: -20 }}>
                     <defs>
@@ -464,12 +465,12 @@ function QuantaDashboard() {
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#1e2a2a" />
-                    <XAxis dataKey="hour" tick={{ fill: '#6b7280', fontSize: 11 }} />
-                    <YAxis tick={{ fill: '#6b7280', fontSize: 11 }} unit="ms" />
+                    <XAxis dataKey="day" tick={{ fill: '#6b7280', fontSize: 11 }} />
+                    <YAxis tick={{ fill: '#6b7280', fontSize: 11 }} />
                     <Tooltip content={<CustomTooltip />} />
                     <Legend wrapperStyle={{ fontSize: 12, color: '#9ca3af' }} />
-                    <Area type="monotone" dataKey="avg" name="avg (ms)" stroke="#10b981" fill="url(#gradAvg)" strokeWidth={2} dot={false} />
-                    <Area type="monotone" dataKey="p95" name="p95 (ms)" stroke="#a855f7" fill="url(#gradP95)" strokeWidth={2} dot={false} />
+                    <Area type="monotone" dataKey="sessions" name="sessions" stroke="#10b981" fill="url(#gradAvg)" strokeWidth={2} dot={false} />
+                    <Area type="monotone" dataKey="turns" name="turns" stroke="#a855f7" fill="url(#gradP95)" strokeWidth={2} dot={false} />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -481,7 +482,7 @@ function QuantaDashboard() {
             <div className="qd-tab-content">
               <div className="qd-two-col">
                 <div className="qd-panel">
-                  <h3 className="qd-panel-title"><BarChart2 size={14} /> Messages by Agent (7d)</h3>
+                  <h3 className="qd-panel-title"><BarChart2 size={14} /> Sessions by Agent (7d)</h3>
                   <ResponsiveContainer width="100%" height={280}>
                     <BarChart
                       data={agentMetrics.slice(0, 8).map(a => ({ agent: a.agent, msgs: a.msgs, color: a.color }))}
@@ -502,7 +503,7 @@ function QuantaDashboard() {
                 </div>
 
                 <div className="qd-panel">
-                  <h3 className="qd-panel-title"><Target size={14} /> Task Distribution</h3>
+                  <h3 className="qd-panel-title"><Target size={14} /> Session Distribution</h3>
                   <ResponsiveContainer width="100%" height={280}>
                     <PieChart>
                       <Pie
@@ -516,7 +517,7 @@ function QuantaDashboard() {
                           <Cell key={idx} fill={entry.color} />
                         ))}
                       </Pie>
-                      <Tooltip formatter={(v, name) => [`${v} tasks`, name]} />
+                      <Tooltip formatter={(v, name) => [`${v} sessions`, name]} />
                       <Legend wrapperStyle={{ fontSize: 12, color: '#9ca3af' }} />
                     </PieChart>
                   </ResponsiveContainer>
@@ -524,11 +525,11 @@ function QuantaDashboard() {
               </div>
 
               <div className="qd-panel qd-mt">
-                <h3 className="qd-panel-title"><TrendingUp size={14} /> Daily Message Volume (stacked)</h3>
+                <h3 className="qd-panel-title"><TrendingUp size={14} /> Daily Session Volume (stacked)</h3>
                 <ResponsiveContainer width="100%" height={240}>
                   <AreaChart data={weeklyActivity} margin={{ top: 4, right: 8, bottom: 0, left: -20 }}>
                     <defs>
-                      {[['Marty','#ef4444'],['Aria','#ec4899'],['Renzo','#0ea5e9'],['Badger','#f97316'],['Other','#374151']].map(([name, color]) => (
+                      {[['Marty','#ef4444'],['Aria','#ec4899'],['Renzo','#0ea5e9'],['Reno','#f43f5e'],['Other','#374151']].map(([name, color]) => (
                         <linearGradient key={name} id={`grad-${name}`} x1="0" y1="0" x2="0" y2="1">
                           <stop offset="5%"  stopColor={color} stopOpacity={0.4} />
                           <stop offset="95%" stopColor={color} stopOpacity={0.05} />
@@ -540,7 +541,7 @@ function QuantaDashboard() {
                     <YAxis tick={{ fill: '#6b7280', fontSize: 11 }} />
                     <Tooltip content={<CustomTooltip />} />
                     <Legend wrapperStyle={{ fontSize: 12, color: '#9ca3af' }} />
-                    {[['Marty','#ef4444'],['Aria','#ec4899'],['Renzo','#0ea5e9'],['Badger','#f97316'],['Other','#374151']].map(([name, color]) => (
+                    {[['Marty','#ef4444'],['Aria','#ec4899'],['Renzo','#0ea5e9'],['Reno','#f43f5e'],['Other','#374151']].map(([name, color]) => (
                       <Area key={name} type="monotone" dataKey={name} stackId="1" stroke={color} fill={`url(#grad-${name})`} strokeWidth={1.5} />
                     ))}
                   </AreaChart>
