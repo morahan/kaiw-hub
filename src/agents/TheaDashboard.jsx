@@ -1,73 +1,105 @@
-import { useState, useEffect } from 'react'
-import { useAuth, UserButton } from '@clerk/react'
-import './css/theaDashboard.css'
+import { useState, useEffect } from 'react';
+import { useAuth, UserButton } from '@clerk/react';
+import './css/theaDashboard.css';
 
 const reviewHistory = [
-  { id: 'REV-009', title: 'Shoulder Mobility Blueprint', author: 'Renzo', verdict: 'ship', score: 9.1, date: '2026-03-16', type: 'article' },
-  { id: 'REV-008', title: 'The Forgotten Pull Muscles', author: 'Kaia', verdict: 'revise', score: 7.8, date: '2026-03-15', type: 'article' },
-  { id: 'REV-007', title: 'Rest Day Protocols', author: 'Renzo', verdict: 'ship', score: 8.7, date: '2026-03-14', type: 'article' },
-  { id: 'REV-006', title: 'Creatine: The Evidence', author: 'Kaia', verdict: 'ship', score: 9.4, date: '2026-03-13', type: 'article' },
-  { id: 'REV-005', title: 'Bro Splits Are Back', author: 'Renzo', verdict: 'kill', score: 3.9, date: '2026-03-12', type: 'article' },
-  { id: 'REV-004', title: 'Zone 2 Cardio Guide', author: 'Kaia', verdict: 'revise', score: 7.2, date: '2026-03-11', type: 'article' },
-]
+  { id: 'review-4', title: 'good-article.md', author: 'system', verdict: 'revise', score: 6.6, date: '2026-03-03', type: 'article' },
+  { id: 'review-5', title: 'short-article.md', author: 'system', verdict: 'revise', score: 6.6, date: '2026-03-03', type: 'article' },
+  { id: 'review-6', title: 'empty-article.md', author: 'system', verdict: 'kill', score: 4.4, date: '2026-03-03', type: 'article' },
+  { id: 'review-7', title: 'fake-experience-article.md', author: 'system', verdict: 'revise', score: 6.6, date: '2026-03-03', type: 'article' },
+  { id: 'review-8', title: 'tmp.XTfepZ6yi4.md', author: 'system', verdict: 'revise', score: 7.0, date: '2026-03-03', type: 'article' },
+  { id: 'review-3', title: 'Test Article (REV-20260301082906-4790)', author: 'system', verdict: 'revise', score: 6.0, date: '2026-03-01', type: 'article' },
+  { id: 'review-2', title: 'Dead Hangs', author: 'system', verdict: 'revise', score: 8.5, date: '2026-02-18', type: 'article' },
+  { id: 'review-1', title: 'Loaded Carries', author: 'system', verdict: 'revise', score: 7.5, date: '2026-02-17', type: 'article' },
+];
 
 const pendingReviews = [
-  { id: 1, title: 'Anterior Pelvic Tilt Fix', author: 'Renzo', submitted: '23m ago', type: 'article', preview: 'Most gym-goers spend years unknowingly fighting their posture. This evidence-backed guide targets the root cause — not the symptoms — of anterior pelvic tilt, with corrective exercises drawn from current physiotherapy research.', wordCount: 1180 },
-  { id: 2, title: 'VO2 Max for Beginners', author: 'Kaia', submitted: '3h ago', type: 'article', preview: 'Aerobic capacity is the foundation every other fitness quality is built upon. Here is how to develop yours systematically, starting from zero, with protocols validated in peer-reviewed sport science.', wordCount: 1320 },
-  { id: 3, title: 'Pre-Workout Timing', author: 'Renzo', submitted: '6h ago', type: 'social', preview: 'Timing your pre-workout nutrition can make a meaningful difference in performance output. Here is the science — distilled to 60 seconds.', wordCount: 210 },
-]
+  {
+    id: 'REV-20260307182824-8460',
+    title: 'sample-post-1.txt',
+    author: 'kaia',
+    submitted: '2026-03-07 18:28',
+    type: 'post',
+    preview: 'Feedback for revision:\n1. Hook is weak - start with a specific benefit\n2. Third paragraph needs 2-3 more sources\n3. CTA is missing at the end\nPlease revise and resubmit.',
+    wordCount: null,
+  },
+  {
+    id: 'REV-20260307183003-3158',
+    title: 'sample-post.txt',
+    author: 'kaia',
+    submitted: '2026-03-07 18:30',
+    type: 'post',
+    preview: 'Hook weak. Add sources. Missing CTA.',
+    wordCount: null,
+  },
+];
 
 const activityLog = [
-  { time: '23m ago', action: 'Submitted for review', item: 'Anterior Pelvic Tilt Fix', user: 'Renzo' },
-  { time: '2h ago', action: 'Shipped to production', item: 'Shoulder Mobility Blueprint', user: 'Thea' },
-  { time: '4h ago', action: 'Revision requested', item: 'The Forgotten Pull Muscles', user: 'Thea' },
-  { time: '1d ago', action: 'Standard violated — killed', item: 'Bro Splits Are Back', user: 'Thea' },
-]
+  { time: '2026-03-07 18:30', action: 'Kill verdict issued', item: 'REV-20260307183003-6787', user: 'badger' },
+  { time: '2026-03-07 18:30', action: 'Revision requested', item: 'REV-20260307183003-3158', user: 'kaia' },
+  { time: '2026-03-07 18:30', action: 'Shipped to production', item: 'REV-20260307183003-3329', user: 'renzo' },
+  { time: '2026-03-07 18:30', action: 'Submitted for review', item: 'REV-20260307183003-6787', user: 'badger' },
+  { time: '2026-03-07 18:30', action: 'Submitted for review', item: 'REV-20260307183003-3158', user: 'kaia' },
+  { time: '2026-03-07 18:30', action: 'Submitted for review', item: 'REV-20260307183003-3329', user: 'renzo' },
+];
 
 const metricTrends = {
-  pendingReviews: { delta: '+1', dir: 'up', note: 'since yesterday' },
-  shippedToday: { delta: '+1', dir: 'up', note: 'vs weekly avg' },
-  avgScore: { delta: '+0.4', dir: 'up', note: 'vs last month' },
-  approvalRate: { delta: '−5%', dir: 'down', note: 'vs last month' },
-}
+  pendingReviews: { delta: '2 queue', dir: 'up', note: 'revise-pending now' },
+  shippedToday: { delta: '1 ship', dir: 'up', note: 'logged on 2026-03-15' },
+  avgScore: { delta: '8 reviews', dir: 'up', note: 'scored in review history' },
+  approvalRate: { delta: '2 of 6', dir: 'up', note: 'current workflow shipped' },
+};
+
+const historyStats = {
+  ship: 2,
+  revise: 2,
+  kill: 2,
+};
+
+const voiceParams = [
+  { k: 'temperature', v: '0.2' },
+  { k: 'top_p', v: '0.7' },
+  { k: 'rep_penalty', v: '1.2' },
+  { k: 'seed', v: '42' },
+];
 
 function App() {
   const SKIP_AUTH = import.meta.env.VITE_SKIP_AUTH === 'true';
   const { isSignedIn: clerkSignedIn } = useAuth();
   const isSignedIn = SKIP_AUTH || clerkSignedIn;
-  const [time, setTime] = useState(new Date())
-  const [activeView, setActiveView] = useState('dashboard')
-  const [selectedReview, setSelectedReview] = useState(null)
-  const [voiceText, setVoiceText] = useState('')
-  const [voiceGenerating, setVoiceGenerating] = useState(false)
-  const [showHint, setShowHint] = useState(true)
-  const [expandedCards, setExpandedCards] = useState({})
+  const [time, setTime] = useState(new Date());
+  const [activeView, setActiveView] = useState('dashboard');
+  const [selectedReview, setSelectedReview] = useState(null);
+  const [voiceText, setVoiceText] = useState('Elegance is economy, and every choice serves the message.');
+  const [voiceGenerating, setVoiceGenerating] = useState(false);
+  const [showHint, setShowHint] = useState(true);
+  const [expandedCards, setExpandedCards] = useState({});
 
   useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000)
-    return () => clearInterval(timer)
-  }, [])
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
-    const t = setTimeout(() => setShowHint(false), 5000)
-    return () => clearTimeout(t)
-  }, [])
+    const timer = setTimeout(() => setShowHint(false), 5000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const keyStats = {
     pendingReviews: pendingReviews.length,
-    shippedToday: reviewHistory.filter(r => r.verdict === 'ship').length,
-    avgScore: (reviewHistory.reduce((a, b) => a + b.score, 0) / reviewHistory.length).toFixed(1),
-    approvalRate: Math.round((reviewHistory.filter(r => r.verdict === 'ship').length / reviewHistory.length) * 100),
-  }
+    shippedToday: 1,
+    avgScore: 6.7,
+    approvalRate: 33,
+  };
 
-  const toggleExpand = (id, e) => {
-    e.stopPropagation()
-    setExpandedCards(prev => ({ ...prev, [id]: !prev[id] }))
-  }
+  const toggleExpand = (id, event) => {
+    event.stopPropagation();
+    setExpandedCards((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
 
   const handleVerdict = (verdict) => {
-    alert(`${verdict.toUpperCase()} — This would trigger the editorial review workflow.`)
-  }
+    alert(`${verdict.toUpperCase()} — This would trigger the editorial review workflow.`);
+  };
 
   if (!isSignedIn) {
     return (
@@ -92,7 +124,7 @@ function App() {
           </div>
         </div>
         <nav className="top-nav">
-          {['dashboard', 'reviews', 'voice', 'history'].map(view => (
+          {['dashboard', 'reviews', 'voice', 'history'].map((view) => (
             <button key={view} className={`nav-btn ${activeView === view ? 'active' : ''}`} onClick={() => setActiveView(view)}>
               {view.charAt(0).toUpperCase() + view.slice(1)}
             </button>
@@ -114,17 +146,15 @@ function App() {
                 { key: 'shippedToday', label: 'Shipped', color: 'success', icon: '▲' },
                 { key: 'avgScore', label: 'Quality Score', color: 'gold', icon: '✦' },
                 { key: 'approvalRate', label: 'Approval Rate', color: 'gold', icon: '◆', suffix: '%' },
-              ].map(stat => (
+              ].map((stat) => (
                 <div key={stat.key} className={`metric metric--${stat.color}`} onClick={stat.click} style={stat.click ? { cursor: 'pointer' } : {}}>
                   <div className="metric-icon">{stat.icon}</div>
                   <div className={`metric-number ${stat.color}`}>{stat.suffix ? `${keyStats[stat.key]}${stat.suffix}` : keyStats[stat.key]}</div>
                   <div className="metric-label">{stat.label}</div>
-                  {metricTrends[stat.key] && (
-                    <div className={`metric-trend ${metricTrends[stat.key].dir}`}>
-                      <span className="trend-delta">{metricTrends[stat.key].delta}</span>
-                      <span className="trend-note">{metricTrends[stat.key].note}</span>
-                    </div>
-                  )}
+                  <div className={`metric-trend ${metricTrends[stat.key].dir}`}>
+                    <span className="trend-delta">{metricTrends[stat.key].delta}</span>
+                    <span className="trend-note">{metricTrends[stat.key].note}</span>
+                  </div>
                 </div>
               ))}
             </section>
@@ -141,12 +171,12 @@ function App() {
               </div>
               <div className="flow-arrow">→</div>
               <div className="flow-stage">
-                <div className="flow-count success">{reviewHistory.filter(r => r.verdict === 'ship').length}</div>
+                <div className="flow-count success">{historyStats.ship}</div>
                 <div className="flow-label">Shipped</div>
               </div>
               <div className="flow-arrow">→</div>
               <div className="flow-stage">
-                <div className="flow-count" style={{ color: 'var(--danger)', background: 'var(--danger-bg)', border: '1px solid rgba(140, 64, 64, 0.3)' }}>{reviewHistory.filter(r => r.verdict === 'kill').length}</div>
+                <div className="flow-count" style={{ color: 'var(--danger)', background: 'var(--danger-bg)', border: '1px solid rgba(140, 64, 64, 0.3)' }}>{historyStats.kill}</div>
                 <div className="flow-label">Killed</div>
               </div>
             </section>
@@ -155,20 +185,20 @@ function App() {
               <section className="section">
                 <div className="section-header">
                   <h2>Editorial Queue</h2>
-                  <span className="badge warning">{pendingReviews.length} pending</span>
+                  <span className="badge warning">{pendingReviews.length} revise-pending</span>
                 </div>
                 <div className="card-list">
-                  {pendingReviews.slice(0, 3).map(item => (
+                  {pendingReviews.map((item) => (
                     <div key={item.id} className="card pending" onClick={() => { setSelectedReview(item); setActiveView('reviews'); }}>
                       <div className="card-content">
                         <h3>{item.title}</h3>
                         <div className="card-meta-row">
                           <span className="card-author">{item.author}</span>
                           <span className="card-type">{item.type}</span>
-                          <span className="card-words">{item.wordCount.toLocaleString()} words</span>
+                          <span className="card-words">{item.wordCount ? `${item.wordCount.toLocaleString()} words` : '— words'}</span>
                         </div>
                         <p className="card-preview">{expandedCards[item.id] ? item.preview : `${item.preview.slice(0, 100)}...`}</p>
-                        <button className="card-expand-btn" onClick={(e) => toggleExpand(item.id, e)}>
+                        <button className="card-expand-btn" onClick={(event) => toggleExpand(item.id, event)}>
                           {expandedCards[item.id] ? '▲ Collapse' : '▼ Preview full excerpt'}
                         </button>
                       </div>
@@ -181,7 +211,7 @@ function App() {
               <section className="section">
                 <div className="section-header"><h2>Recent Verdicts</h2></div>
                 <div className="verdict-list">
-                  {reviewHistory.slice(0, 4).map(item => (
+                  {reviewHistory.slice(0, 4).map((item) => (
                     <div key={item.id} className="verdict-row">
                       <div className={`verdict-badge ${item.verdict}`}>{item.verdict}</div>
                       <div className="verdict-info">
@@ -199,8 +229,8 @@ function App() {
               <section className="section">
                 <div className="section-header"><h2>Activity Log</h2></div>
                 <div className="activity-list">
-                  {activityLog.map((item, i) => (
-                    <div key={i} className="activity-item">
+                  {activityLog.map((item, index) => (
+                    <div key={index} className="activity-item">
                       <span className="activity-time">{item.time}</span>
                       <div className="activity-content">
                         <span className="activity-action">{item.action}</span>
@@ -215,12 +245,12 @@ function App() {
                 <div className="section-header"><h2>Brand Standards</h2></div>
                 <div className="brand-grid-compact">
                   {[
-                    { icon: '⚗️', title: 'Scientific', desc: '3–5 cited sources per article' },
-                    { icon: '🏛️', title: 'Elegant', desc: '750–1,250 words. No padding.' },
+                    { icon: '⚗️', title: 'Scientific', desc: '3-5 cited sources per article' },
+                    { icon: '🏛️', title: 'Elegant', desc: '750-1,250 words. No padding.' },
                     { icon: '🔥', title: 'Warm', desc: 'Evidence-led, never hype.' },
                     { icon: '✦', title: 'Confident', desc: 'Clear CTA. No hedging.' },
-                  ].map((item, i) => (
-                    <div key={i} className="brand-item-compact">
+                  ].map((item, index) => (
+                    <div key={index} className="brand-item-compact">
                       <span className="brand-icon">{item.icon}</span>
                       <div><h4>{item.title}</h4><p>{item.desc}</p></div>
                     </div>
@@ -248,18 +278,18 @@ function App() {
               {selectedReview && <button className="back-btn" onClick={() => setSelectedReview(null)}>← Back to Queue</button>}
               <h2>{selectedReview ? selectedReview.title : 'Editorial Queue'}</h2>
             </div>
-            
+
             {selectedReview ? (
               <div className="review-detail">
                 <div className="review-header">
-                  <span className="review-meta">{selectedReview.author} · {selectedReview.type} · {selectedReview.wordCount.toLocaleString()} words · Submitted {selectedReview.submitted}</span>
+                  <span className="review-meta">{selectedReview.author} · {selectedReview.type} · {selectedReview.wordCount ? `${selectedReview.wordCount.toLocaleString()} words` : '— words'} · Submitted {selectedReview.submitted}</span>
                 </div>
                 <blockquote className="preview">{selectedReview.preview}</blockquote>
-                
+
                 <div className="checklist">
                   <h4>Editorial Checklist</h4>
-                  {['Headline is ≤10 words and specific', '3–5 credible sources cited', 'Clear call-to-action', 'No first-person false experience', 'Tone: warm, evidence-led, confident'].map((item, i) => (
-                    <label key={i} className="check-item"><input type="checkbox" /> {item}</label>
+                  {['Headline is ≤10 words and specific', '3-5 credible sources cited', 'Clear call-to-action', 'No first-person false experience', 'Tone: warm, evidence-led, confident'].map((item, index) => (
+                    <label key={index} className="check-item"><input type="checkbox" /> {item}</label>
                   ))}
                 </div>
 
@@ -271,11 +301,11 @@ function App() {
               </div>
             ) : (
               <div className="review-list">
-                {pendingReviews.map(item => (
+                {pendingReviews.map((item) => (
                   <div key={item.id} className="review-item" onClick={() => setSelectedReview(item)}>
                     <div className="review-info">
                       <h4>{item.title}</h4>
-                      <span>{item.author} · {item.wordCount.toLocaleString()} words · {item.type}</span>
+                      <span>{item.author} · {item.wordCount ? `${item.wordCount.toLocaleString()} words` : '— words'} · {item.type}</span>
                     </div>
                     <span className="review-time">{item.submitted}</span>
                   </div>
@@ -288,25 +318,25 @@ function App() {
         {activeView === 'voice' && (
           <section className="voice-view">
             <div className="section-header"><h2>Voice Engine</h2></div>
-            
+
             <div className="voice-card">
               <div className="voice-status">
                 <span className="status-indicator online"></span>
-                <div><h3>Fish Speech</h3><p>thea-cori-v3 · 1.2× speed</p></div>
+                <div><h3>Fish Speech</h3><p>reference-cori-v3-energetic · 1.2× speed</p></div>
               </div>
-              
+
               <div className="voice-params">
                 <h4>Parameters — Locked by Brand Standard</h4>
                 <div className="params-grid">
-                  {[{ k: 'temperature', v: '0.2' }, { k: 'top_p', v: '0.7' }, { k: 'rep_penalty', v: '1.0' }, { k: 'seed', v: '42' }].map(p => (
-                    <div key={p.k} className="param"><span>{p.k}</span><span>{p.v}</span></div>
+                  {voiceParams.map((param) => (
+                    <div key={param.k} className="param"><span>{param.k}</span><span>{param.v}</span></div>
                   ))}
                 </div>
               </div>
 
               <div className="voice-test">
                 <h4>Test Voice</h4>
-                <textarea placeholder="Quality is the only message worth sending." value={voiceText} onChange={(e) => setVoiceText(e.target.value)} />
+                <textarea value={voiceText} onChange={(event) => setVoiceText(event.target.value)} />
                 <button className="btn btn-voice" disabled={voiceGenerating || !voiceText.trim()}>{voiceGenerating ? 'Generating…' : 'Generate Sample'}</button>
               </div>
             </div>
@@ -316,7 +346,7 @@ function App() {
         {activeView === 'history' && (
           <section className="history-view">
             <div className="section-header"><h2>Review History</h2></div>
-            
+
             <div className="history-stats">
               {[
                 { v: 'ship', label: 'Shipped', color: 'success' },
@@ -324,14 +354,14 @@ function App() {
                 { v: 'kill', label: 'Killed', color: 'danger' },
               ].map(({ v, label, color }) => (
                 <div key={v} className={`hist-stat ${color}`}>
-                  <span className="hist-num">{reviewHistory.filter(r => r.verdict === v).length}</span>
+                  <span className="hist-num">{historyStats[v]}</span>
                   <span>{label}</span>
                 </div>
               ))}
             </div>
 
             <div className="history-list">
-              {reviewHistory.map(item => (
+              {reviewHistory.map((item) => (
                 <div key={item.id} className="history-item">
                   <div className={`verdict-dot ${item.verdict}`}></div>
                   <div className="history-info">
@@ -353,10 +383,10 @@ function App() {
 
       <footer className="footer">
         <span>Thea 🏛️ · Brand Strategist</span>
-        <span>Claude Sonnet 4.6</span>
+        <span>Review data from memory/reviews.json, reviews-data.json, and sla-tracker.json</span>
       </footer>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
