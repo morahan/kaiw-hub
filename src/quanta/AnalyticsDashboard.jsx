@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import './Dashboard.css';
 
-const API_BASE = window.location.hostname !== 'localhost' ? 'https://terry-asset-specific-archives.trycloudflare.com/api/quanta' : '/api/quanta';
+const API_BASE = '/api/quanta';
 
 const COLORS = ['#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6', '#ef4444', '#06b6d4', '#ec4899', '#84cc16'];
 
@@ -11,27 +11,55 @@ function AnalyticsDashboard() {
   const [agents, setAgents] = useState([]);
   const [models, setModels] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [days, setDays] = useState(14);
+
+  // Set loading to true within 1 second of mount
+  useEffect(() => {
+    const loadingTimer = setTimeout(() => {
+      if (loading) setLoading(true);
+    }, 100);
+    return () => clearTimeout(loadingTimer);
+  }, []);
 
   useEffect(() => {
     setLoading(true);
+    setError(null);
+    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    
     Promise.all([
-      fetch(`${API_BASE}/analytics/daily?days=${days}`).then(r => r.json()),
-      fetch(`${API_BASE}/analytics/agents?days=${days}`).then(r => r.json()),
-      fetch(`${API_BASE}/analytics/models?days=${days}`).then(r => r.json())
+      fetch(`${API_BASE}/analytics/daily?days=${days}`, { signal: controller.signal }).then(r => r.json()),
+      fetch(`${API_BASE}/analytics/agents?days=${days}`, { signal: controller.signal }).then(r => r.json()),
+      fetch(`${API_BASE}/analytics/models?days=${days}`, { signal: controller.signal }).then(r => r.json())
     ]).then(([dailyData, agentsData, modelsData]) => {
-      setDaily(dailyData);
-      setAgents(agentsData);
-      setModels(modelsData);
+      clearTimeout(timeoutId);
+      setDaily(dailyData || []);
+      setAgents(agentsData || []);
+      setModels(modelsData || []);
       setLoading(false);
     }).catch(err => {
+      clearTimeout(timeoutId);
       console.error('Failed to fetch:', err);
+      setError(err.name === 'AbortError' ? 'Request timed out after 5 seconds' : 'Failed to load data');
       setLoading(false);
     });
+    
+    return () => clearTimeout(timeoutId);
   }, [days]);
 
   if (loading) {
     return <div className="dashboard"><p className="loading">Loading analytics...</p></div>;
+  }
+
+  if (error && !daily.length) {
+    return (
+      <div className="dashboard">
+        <p className="error">Error: {error}</p>
+        <p>Please try refreshing the page.</p>
+      </div>
+    );
   }
 
   const formatNumber = (num) => {

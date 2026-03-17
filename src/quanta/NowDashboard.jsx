@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './Dashboard.css';
 
-const API_BASE = window.location.hostname !== 'localhost' ? 'https://terry-asset-specific-archives.trycloudflare.com/api/quanta' : '/api/quanta';
+const API_BASE = window.location.hostname !== 'localhost' ? 'https://fine-encourages-hunter-enrollment.trycloudflare.com/api/quanta' : '/api/quanta';
 
 // Agent config - in production this would come from the API
 const AGENT_CONFIG = {
