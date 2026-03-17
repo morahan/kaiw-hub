@@ -317,6 +317,8 @@ app.get('/api/quanta/system/gpu/daily', (req, res) => {
         ROUND(AVG(gpu_temp_c), 1) as avg_temp,
         ROUND(AVG(vram_used_gb), 1) as avg_vram,
         ROUND(MAX(vram_used_gb), 1) as max_vram,
+        ROUND(AVG(cpu_load_1m), 2) as avg_cpu,
+        ROUND(MAX(cpu_load_1m), 2) as max_cpu,
         COUNT(*) as snapshots
       FROM sys_snapshots
       WHERE timestamp >= datetime('now', '-' || ? || ' days')

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts';
 import './Dashboard.css';
 
-const API_BASE = window.location.hostname !== 'localhost' ? 'https://fine-encourages-hunter-enrollment.trycloudflare.com/api/quanta' : '/api/quanta';
+const API_BASE = window.location.hostname !== 'localhost' ? 'https://respond-formerly-drawing-voip.trycloudflare.com/api/quanta' : '/api/quanta';
 
 function GPUDashboard() {
   const [dailyData, setDailyData] = useState([]);
@@ -70,8 +70,14 @@ function GPUDashboard() {
     max_util: d.max_util,
     avg_temp: d.avg_temp,
     avg_vram: d.avg_vram,
+    avg_cpu: d.avg_cpu || 0,
+    max_cpu: d.max_cpu || 0,
     snapshots: d.snapshots
   }));
+
+  // Calculate CPU stats
+  const avgCpuDaily = dailyData.length ? (dailyData.reduce((sum, d) => sum + (d.avg_cpu || 0), 0) / dailyData.length).toFixed(1) : 0;
+  const maxCpuDaily = dailyData.length ? Math.max(...dailyData.map(d => d.max_cpu || 0)).toFixed(1) : 0;
 
   return (
     <div className="dashboard">
@@ -107,6 +113,16 @@ function GPUDashboard() {
           <span className="stat-label">Avg Temp ({days}D)</span>
           <span className="stat-value">{avgTempDaily}°C</span>
           <span className="stat-change positive">Thermal</span>
+        </div>
+        <div className="stat-card">
+          <span className="stat-label">Avg CPU Load ({days}D)</span>
+          <span className="stat-value">{avgCpuDaily}</span>
+          <span className="stat-change positive">Load</span>
+        </div>
+        <div className="stat-card">
+          <span className="stat-label">Peak CPU Load ({days}D)</span>
+          <span className="stat-value">{maxCpuDaily}</span>
+          <span className="stat-change">Max</span>
         </div>
       </div>
 
@@ -229,6 +245,53 @@ function GPUDashboard() {
                 fillOpacity={1} 
                 fill="url(#colorDailyVRAM)" 
                 strokeWidth={2}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Daily CPU load chart */}
+        <div className="chart-card">
+          <h3>Average CPU Load / Day ({days} days)</h3>
+          <ResponsiveContainer width="100%" height={250}>
+            <AreaChart data={dailyChart}>
+              <defs>
+                <linearGradient id="colorDailyCPU" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#22c55e" stopOpacity={0.4}/>
+                  <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+              <XAxis dataKey="date" stroke="#64748b" tick={{fontSize: 11}} />
+              <YAxis stroke="#64748b" />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: '#16161f', 
+                  border: '1px solid rgba(255,255,255,0.1)', 
+                  borderRadius: '10px',
+                  fontFamily: 'JetBrains Mono',
+                  fontSize: '12px'
+                }}
+                formatter={(value, name) => [value, name === 'avg_cpu' ? 'Avg Load' : 'Peak Load']}
+              />
+              <Area 
+                type="monotone" 
+                dataKey="avg_cpu" 
+                stroke="#22c55e" 
+                fillOpacity={1} 
+                fill="url(#colorDailyCPU)" 
+                strokeWidth={2}
+                name="Avg Load"
+              />
+              <Area 
+                type="monotone" 
+                dataKey="max_cpu" 
+                stroke="#ef4444" 
+                fillOpacity={0.1} 
+                fill="#ef4444"
+                strokeWidth={1}
+                strokeDasharray="5 5"
+                name="Peak Load"
               />
             </AreaChart>
           </ResponsiveContainer>

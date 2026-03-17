@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './Dashboard.css';
 
-const API_BASE = window.location.hostname !== 'localhost' ? 'https://fine-encourages-hunter-enrollment.trycloudflare.com/api/quanta' : '/api/quanta';
+const API_BASE = window.location.hostname !== 'localhost' ? 'https://respond-formerly-drawing-voip.trycloudflare.com/api/quanta' : '/api/quanta';
 
 function SystemDashboard() {
   const [system, setSystem] = useState(null);
