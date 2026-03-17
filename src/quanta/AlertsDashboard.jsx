@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import './Dashboard.css';
 
-const API_BASE = '/api/quanta';
+const API_BASE = window.location.hostname !== 'localhost' ? 'https://terry-asset-specific-archives.trycloudflare.com/api/quanta' : '/api/quanta';
 
 const SEVERITY_COLORS = {
   critical: '#ef4444',

@@ -230,13 +230,8 @@ app.get('/api/quanta/system/current', (req, res) => {
 app.get('/api/quanta/system/gpu', (req, res) => {
   try {
     const hours = parseInt(req.query.hours) || 24;
-    
-    const data = db.prepare(`
-      SELECT timestamp, gpu_name, gpu_util_pct, gpu_temp_c, vram_used_gb, cpu_load_1m, mem_used_mb, mem_total_mb
-      FROM sys_snapshots
-      WHERE timestamp >= datetime('now', '-${hours} hours')
-      ORDER BY timestamp
-    `).all();
+    const gpuSql = `SELECT timestamp, gpu_name, gpu_util_pct, gpu_temp_c, vram_used_gb, cpu_load_1m, mem_used_mb, mem_total_mb FROM sys_snapshots WHERE timestamp >= datetime('now', '-${hours} hours') ORDER BY timestamp`;
+    const data = db.prepare(gpuSql).all();
     
     res.json(data);
   } catch (err) {
@@ -248,7 +243,7 @@ app.get('/api/quanta/system/gpu', (req, res) => {
 
 app.get('/api/quanta/alerts/recent', (req, res) => {
   try {
-    const data = db.prepare(`SELECT * FROM anomalies_log ORDER BY timestamp DESC LIMIT 50`).all();
+    const data = db.prepare(`SELECT id, anomaly_id, detected_at, anomaly_type, agent, level, confidence_score FROM anomalies_log ORDER BY detected_at DESC LIMIT 50`).all();
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -258,10 +253,10 @@ app.get('/api/quanta/alerts/recent', (req, res) => {
 app.get('/api/quanta/alerts/summary', (req, res) => {
   try {
     const total = db.prepare(`SELECT COUNT(*) as count FROM anomalies_log`).get();
-    const critical = db.prepare(`SELECT COUNT(*) as count FROM anomalies_log WHERE severity = 'critical'`).get();
-    const high = db.prepare(`SELECT COUNT(*) as count FROM anomalies_log WHERE severity = 'high'`).get();
-    const medium = db.prepare(`SELECT COUNT(*) as count FROM anomalies_log WHERE severity = 'medium'`).get();
-    const low = db.prepare(`SELECT COUNT(*) as count FROM anomalies_log WHERE severity = 'low'`).get();
+    const critical = db.prepare(`SELECT COUNT(*) as count FROM anomalies_log WHERE level = 'critical'`).get();
+    const high = db.prepare(`SELECT COUNT(*) as count FROM anomalies_log WHERE level = 'high'`).get();
+    const medium = db.prepare(`SELECT COUNT(*) as count FROM anomalies_log WHERE level = 'medium'`).get();
+    const low = db.prepare(`SELECT COUNT(*) as count FROM anomalies_log WHERE level = 'low'`).get();
     
     res.json({
       total: total.count,
@@ -290,6 +285,22 @@ app.get('/api/quanta/health', (req, res) => {
   });
 });
 
+// Tokens daily breakdown
+app.get('/api/quanta/tokens/daily', (req, res) => {
+  try {
+    const days = parseInt(req.query.days) || 7;
+    const { startDate, endDate } = getDateRange(days);
+    const data = db.prepare(`
+      SELECT date, COALESCE(SUM(total_tokens), 0) as tokens,
+             COALESCE(SUM(cost_usd), 0) as cost, COUNT(*) as sessions,
+             COUNT(DISTINCT agent) as agents
+      FROM session_metrics WHERE date >= ? AND date <= ?
+      GROUP BY date ORDER BY date
+    `).all(startDate, endDate);
+    res.json(data);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
 app.listen(PORT, () => {
   console.log(`Quanta API server running on port ${PORT}`);
 });
@@ -308,10 +319,10 @@ app.get('/api/quanta/system/gpu/daily', (req, res) => {
         ROUND(MAX(vram_used_gb), 1) as max_vram,
         COUNT(*) as snapshots
       FROM sys_snapshots
-      WHERE timestamp >= datetime('now', '-${days} days')
+      WHERE timestamp >= datetime('now', '-' || ? || ' days')
       GROUP BY substr(timestamp, 1, 10)
       ORDER BY date
-    `).all();
+    `).all(days);
     
     res.json(data);
   } catch (err) {

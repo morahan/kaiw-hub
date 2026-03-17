@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, Legend } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import './Dashboard.css';
 
 const API_BASE = '/api/quanta';
@@ -12,32 +12,60 @@ function CostsDashboard() {
   const [modelCosts, setModelCosts] = useState([]);
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [days, setDays] = useState(7);
+
+  // Set loading to true within 1 second of mount
+  useEffect(() => {
+    const loadingTimer = setTimeout(() => {
+      if (loading) setLoading(true);
+    }, 100);
+    return () => clearTimeout(loadingTimer);
+  }, []);
 
   useEffect(() => {
     setLoading(true);
+    setError(null);
+    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    
     Promise.all([
-      fetch(`${API_BASE}/analytics/daily?days=${days}`).then(r => r.json()),
-      fetch(`${API_BASE}/analytics/agents?days=${days}`).then(r => r.json()),
-      fetch(`${API_BASE}/analytics/models?days=${days}`).then(r => r.json())
+      fetch(`${API_BASE}/costs/daily?days=${days}`, { signal: controller.signal }).then(r => r.json()),
+      fetch(`${API_BASE}/costs/agents?days=${days}`, { signal: controller.signal }).then(r => r.json()),
+      fetch(`${API_BASE}/costs/models?days=${days}`, { signal: controller.signal }).then(r => r.json())
     ]).then(([daily, agents, models]) => {
-      setDailyCosts(daily);
-      setAgentCosts(agents);
-      setModelCosts(models);
+      clearTimeout(timeoutId);
+      setDailyCosts(daily || []);
+      setAgentCosts(agents || []);
+      setModelCosts(models || []);
       
-      const totalCost = daily.reduce((sum, d) => sum + (d.cost || 0), 0);
-      const avgCost = daily.length ? totalCost / daily.length : 0;
-      const maxCost = Math.max(...daily.map(d => d.cost || 0));
-      setSummary({ totalCost, avgCost, maxCost, days: daily.length });
+      const totalCost = daily?.reduce((sum, d) => sum + (d.cost || 0), 0) || 0;
+      const avgCost = daily?.length ? totalCost / daily.length : 0;
+      const maxCost = Math.max(...(daily?.map(d => d.cost || 0) || [0]));
+      setSummary({ totalCost, avgCost, maxCost, days: daily?.length || 0 });
       setLoading(false);
     }).catch(err => {
+      clearTimeout(timeoutId);
       console.error('Failed to fetch:', err);
+      setError(err.name === 'AbortError' ? 'Request timed out after 5 seconds' : 'Failed to load data');
       setLoading(false);
     });
+    
+    return () => clearTimeout(timeoutId);
   }, [days]);
 
   if (loading) {
     return <div className="dashboard"><p className="loading">Loading cost metrics...</p></div>;
+  }
+
+  if (error && !dailyCosts.length) {
+    return (
+      <div className="dashboard">
+        <p className="error">Error: {error}</p>
+        <p>Please try refreshing the page.</p>
+      </div>
+    );
   }
 
   return (
