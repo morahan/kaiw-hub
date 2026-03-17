@@ -14,9 +14,6 @@ const agents = [
   { id: 'renzo', name: 'Renzo', emoji: '🔥', role: 'Content Engine', color: '#ef4444', status: 'busy',
     task: '8 articles in workspace — Zone 2, Protein Timing, VO2 Max, Sleep Tracking…', lastActive: 'Today', health: 87,
     photo: 'https://cdn1.telesco.pe/file/mYc0oUC2IAkKZUmsvuMzEJ6FRXxTMYEPa93ia71jsYHPQK4rlDz-9fLOwFVeJfTs0UiywxOOoOShBtDkr4LsZcXGJ1GNxhjtV8Una3BYwXc9RChHJsWfW5xUyDgn1vXEpasPyYKAOISl49MlnOzhZfJxnJl0yRoN93pQLG4gWTlocZCpaxoPMlAouwyul9d5lbKvJwgN2WN-XjQGw_I-EldN7YVxMW4bHQrPetXUKpl38r1yk-ytOoSBJHPXri0r6n--Rva4ThLm3EdDpwk9l4LVNk_3P6gECINh7WTj7OGVas9Q6H-UkrPYOv5ywOpybRicov7jP777Q7__w7SSfA.jpg' },
-  { id: 'rocio', name: 'Rocío', emoji: '🎨', role: 'Visual Expert', color: '#f43f5e', status: 'online',
-    task: 'Video editing, color grading, UI feedback — thumbnail optimization active', lastActive: 'Today', health: 94,
-    photo: '' },
   { id: 'kaia', name: 'Kaia', emoji: '🌊', role: 'Trend Hunter', color: '#06b6d4', status: 'online',
     task: '800 fitness trends tracked — Creatine brain health trending 97%', lastActive: 'Today', health: 100,
     photo: 'https://cdn1.telesco.pe/file/MxPx-UmLLv0ikVGR3diaQOYfSXlhG32VwHGHS5DHPP9jebqN5nHQBIwArjuLg-JnI-HYisDShEzTYR5nqY98z43svWRJZMl_dsPs94_kJq8n8QAy9LTqzM8zekiLNtzrYTSjHv_8JnGoEyp4bNwLuR2f7erd8WFbIJe3wV2A_hjG8i_QRzOGIy9V6S3J8-630sHyDNQApW04Izw43eSVS4QhfHpOntYQsbnAeogloyvZ2K-H2vSvmUtuj_C6Q7sBc9lUmcRKTnKmLjrPHhP2B_1C8vTvm6mzhvf-eNhOmHFVjGSlKgCfKJCqnvsULz_alD0OvT2qL_DNxdClgpL3tA.jpg' },
@@ -41,9 +38,9 @@ const agents = [
   { id: 'aria', name: 'Aria', emoji: '🎵', role: 'Personal Assistant', color: '#a855f7', status: 'online',
     task: "52 sessions on Mar 16 — Oura: sleep 8.3h, HRV 34, 4,302 steps", lastActive: 'Today', health: 99,
     photo: 'https://cdn1.telesco.pe/file/vYQ6K_dTy3YAVuK__aU9avcE9gQcz3Bta160iRibDW3_nDqBAxljzxung9EicfvZAdr7TyncBc6dOV_GskUm_ngnezSzLsjVO4a9Ba6Z72gHQxJtH_r_19s3S7OChHdMZKu1Hrv_7mHHbmJLzjh7XDlJ2GqXSGjopjFK_TJtxb1-XVS5eNRqhrsR7DuKvGoDZ4m3Tjxard-YN68VBiLsXQ4TZ9UZMJBo0KhpsXdYviSBhrU4erY0WLyVxlKvVNPfoA6ythEx7YEfGuWps6Ae6u0fRpYIsijN17MzOyE7EWAsJhiS77lW8azLYXG_cnlH3BHgyfraOzSu23VPw2t0EQ.jpg' },
-  { id: 'buddy', name: 'Buddy', emoji: '🐕', role: 'Beta Agent', color: '#6366f1', status: 'online',
-    task: 'Workout Flow companion — beta mode, voice + form feedback ready', lastActive: 'Today', health: 100,
-    photo: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=200&h=200&fit=crop' },
+  { id: 'buddy', name: 'Buddy', emoji: '🐕', role: 'Beta Agent', color: '#6366f1', status: 'offline',
+    task: 'Workout Flow companion — beta mode, voice + form feedback ready', lastActive: 'Mar 14', health: 100,
+    photo: 'https://cdn1.telesco.pe/file/JRuf7fKwL4NQOZj0_FESui7sxz0WVCygbYRZW6AxFy63tc5rEa2jJSptpBhE9eSIuL3ZDQkdxHH5Fu55fgp6yMiyJwf0hPDNbrftBbjK0396SlM9L_hxulpW294KWEmFLC-ICtb30pR-4TAkjTWAN6uMmLsFKnSXR1njz2wp4k6QJS5G4naZEb7I2R702_oMzCCbMbFN7tyFXeGrrFXve1jpP-rl9XDpaHfT_H81RjfbosPIjr22HCffPQ1iFVxb0Sh7gojQIH9S5HyjnEaguC_tJ5NkgJs_oXspWaah4PFcw8Jw7Cvx5rPf6LblF3wFPj2PJyQoxYNjsxzyJuChzw.jpg' },
 ];
 
 const onlineCount = agents.filter(a => a.status === 'online').length;
