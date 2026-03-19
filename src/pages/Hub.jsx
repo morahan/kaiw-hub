@@ -7,7 +7,7 @@ import './Hub.css';
 const agents = [
   { id: 'marty', name: 'Marty', emoji: '⚡', role: 'Team Lead', color: '#3b82f6', status: 'online',
     task: 'Heartbeat updated 4:21 PM — BTC exit signal, 6 Notion articles flagged', lastActive: 'Today 4:21 PM', health: 98,
-    photo: 'https://ui-avatars.com/api/?name=Marty&background=3b82f6&color=fff&size=200' },
+    photo: '/marty.jpg' },
   { id: 'thea', name: 'Thea', emoji: '🏛️', role: 'Brand Strategist', color: '#8b5cf6', status: 'online',
     task: 'Quality reviewer — 18 articles reviewed, shipped 13', lastActive: 'Today', health: 95,
     photo: 'https://cdn1.telesco.pe/file/Cp9hckgULYTLp8T7dIUC5ZPDc1THtQ-33C4CJOkxzkph3u5vYIWB6VBvbZeKKYMT_-XIVxsSGV8CJ1nuPbnOo_PwrynYs7ThbXE3izi2OhXF5F6ZGr6Pn1AAgHEaS5J8Qdyc2BTk8u2v6GpbmHsfnov0I_Ij_QyxAaYDGZONnyaGDAakoTtzQr5p7UdFIiGXc0YlFMUZ-V4refcBvfm4LL69rticry4bMiQ8yRQVEqRgNpmiUr5-Hc5kjcYTyQfMwgFoyIhhnMD2VayVeciLkAtotdbu5EgUOhJqLjOIoKQ7lv_RW_Tk3TuyCksaYzbgLKiNJYXHIBgXZgiG5eWoqg.jpg' },
