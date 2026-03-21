@@ -1,0 +1,30 @@
+[Unit]
+Description=Quanta Dashboard API Server
+After=network-online.target
+Wants=network-online.target
+Documentation=file:///home/scribble0563/projects/kaiw-hub/server/README.md
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/node /home/scribble0563/projects/kaiw-hub/server/quanta.js
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=on-failure
+RestartSec=5
+
+User=scribble0563
+WorkingDirectory=/home/scribble0563/projects/kaiw-hub/server
+Environment="NODE_ENV=production"
+Environment="PORT=3001"
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=quanta-api
+
+# Resource limits
+MemoryLimit=512M
+CPUQuota=50%
+
+[Install]
+WantedBy=multi-user.target

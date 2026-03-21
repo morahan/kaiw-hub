@@ -1,0 +1,278 @@
+.aria-dashboard {
+  min-height: 100vh;
+  background: #0a0a0f;
+  padding: 32px;
+  position: relative;
+}
+
+/* Atmospheric background */
+.aria-dashboard::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(ellipse at 20% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.aria-header {
+  text-align: center;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.aria-header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 8px 0;
+  background: linear-gradient(135deg, #ec4899 0%, #6366f1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.aria-subtitle {
+  color: #71717a;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.aria-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.aria-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.aria-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.card-icon {
+  font-size: 1.5rem;
+}
+
+.card-header h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+/* Health Card */
+.health-card {
+  border-color: rgba(236, 72, 153, 0.2);
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.stat {
+  text-align: center;
+  flex: 1;
+}
+
+.stat-value {
+  display: block;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #71717a;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Family Card */
+.family-card {
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.family-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.family-member {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 8px 16px;
+  border-radius: 20px;
+}
+
+.member-emoji {
+  font-size: 1.25rem;
+}
+
+.member-name {
+  color: #e5e7eb;
+  font-size: 0.9rem;
+}
+
+/* Weather Card */
+.weather-card {
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.weather-info {
+  text-align: center;
+}
+
+.temp {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.condition {
+  color: #71717a;
+  font-size: 0.9rem;
+}
+
+/* Business Card */
+.business-card {
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+.business-info {
+  text-align: center;
+}
+
+.task-count {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f59e0b;
+}
+
+.project-name {
+  color: #71717a;
+  font-size: 0.9rem;
+}
+
+/* Agents Card */
+.agents-card {
+  border-color: rgba(139, 92, 246, 0.2);
+}
+
+.agents-info {
+  text-align: center;
+}
+
+.agent-count {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #8b5cf6;
+}
+
+.active-agents {
+  color: #22c55e;
+  font-size: 0.9rem;
+}
+
+/* Actions Card */
+.actions-card {
+  border-color: rgba(236, 72, 153, 0.2);
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-btn {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.2) 0%, rgba(99, 102, 241, 0.2) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 14px 20px;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.3) 0%, rgba(99, 102, 241, 0.3) 100%);
+  transform: translateY(-2px);
+}
+
+.no-data {
+  color: #71717a;
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+}
+
+.aria-footer {
+  text-align: center;
+  margin-top: 40px;
+  padding: 20px;
+  color: #52525b;
+  font-size: 0.85rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Loading */
+.aria-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  color: #71717a;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #ec4899;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

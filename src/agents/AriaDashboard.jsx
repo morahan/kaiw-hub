@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area, Legend } from 'recharts';
+import { getSleepData, getWeeklySleep, getWeeklySteps } from '../services/ouraApi';
 import './css/ariaDashboard.css';
 
 const agent = { name: 'Aria', emoji: '🎵', role: 'Personal Life Assistant', color: '#a855f7', telegram: 'AriaFlowBot' };
@@ -135,12 +136,35 @@ const chartTooltipStyle = {
 
 export default function AriaDashboard() {
   const [now, setNow]                 = useState(new Date());
+  const [ouraData, setOuraData]       = useState(REAL_OURA);
+  const [sleepWeek, setSleepWeek]     = useState(SLEEP_WEEK);
+  const [stepsWeek, setStepsWeek]     = useState(STEPS_WEEK);
 
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(t);
   }, []);
-  const oura = REAL_OURA;
+
+  // Fetch real Oura data on mount
+  useEffect(() => {
+    async function loadOuraData() {
+      try {
+        const sleep = await getSleepData();
+        if (sleep) setOuraData(sleep);
+        
+        const weekly = await getWeeklySleep();
+        if (weekly?.length) setSleepWeek(weekly);
+        
+        const steps = await getWeeklySteps();
+        if (steps?.length) setStepsWeek(steps);
+      } catch (err) {
+        console.error('Failed to load Oura data:', err);
+      }
+    }
+    loadOuraData();
+  }, []);
+
+  const oura = ouraData;
   const family = REAL_FAMILY;
   const biz = REAL_CONTEXT;
   const agents = REAL_AGENTS;

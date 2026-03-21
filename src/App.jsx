@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom
 import { useAuth, SignIn } from '@clerk/react';
 import Hub from './pages/Hub';
 import AgentDashboard from './pages/AgentDashboard';
+import AriaDashboard from './pages/aria/AriaDashboard';
 import Layout from './components/Layout';
 import QuantaLayout from './quanta/QuantaLayout';
 import MainDashboard from './quanta/MainDashboard';
@@ -77,6 +78,7 @@ function App() {
           </AuthRoute>
         }>
           <Route index element={<Hub />} />
+          <Route path="aria" element={<AriaDashboard />} />
           <Route path=":agent" element={<AgentDashboard />} />
         </Route>
         {/* Quanta Analytics at /quanta/* */}
