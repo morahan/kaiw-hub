@@ -311,7 +311,81 @@
 
 /* Clerk form placeholder */
 .cl-formFieldInput::placeholder {
-  color: rgba(255, 255, 255, 0.4) !important;
+  color: rgba(255, 255, 255, 0.45) !important;
+  opacity: 1 !important;
+}
+
+.cl-input::placeholder {
+  color: rgba(255, 255, 255, 0.45) !important;
+  opacity: 1 !important;
+}
+
+/* Clerk header in the card */
+.cl-header {
+  text-align: center !important;
+}
+
+.cl-headerTitle {
+  color: #ffffff !important;
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+}
+
+.cl-headerSubtitle {
+  color: rgba(255, 255, 255, 0.72) !important;
+  font-size: 0.875rem !important;
+}
+
+/* Social button text */
+.cl-socialButtonsBlockButtonText {
+  color: #ffffff !important;
+  font-size: 0.9rem !important;
+}
+
+/* Form field label */
+.cl-formFieldLabel {
+  color: rgba(255, 255, 255, 0.82) !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+}
+
+/* Input — stronger border */
+.cl-input,
+.cl-formFieldInput {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  color: #ffffff !important;
+  border-radius: 9px !important;
+}
+
+.cl-input:focus,
+.cl-formFieldInput:focus {
+  border-color: rgba(99, 102, 241, 0.65) !important;
+  background: rgba(255, 255, 255, 0.09) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18) !important;
+}
+
+/* Primary button — stronger gradient */
+.cl-formButtonPrimary {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border: none !important;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35) !important;
+}
+
+/* Social button — cleaner dark */
+.cl-socialButtonsBlockButton {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: #ffffff !important;
+  border-radius: 9px !important;
+}
+
+.cl-socialButtonsBlockButton:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
 }
 
 @media (max-width: 768px) {
