@@ -242,10 +242,56 @@
   color: rgba(255, 255, 255, 0.5) !important;
 }
 
-/* Clerk footer "Secured by" — make it blend */
+/* Clerk footer "Secured by" — make it blend, not overlap */
 .cl-footer,
 .cl-footerPages {
   background: transparent !important;
+}
+
+.cl-footer {
+  margin-top: 12px !important;
+  padding-bottom: 8px !important;
+}
+
+/* Clerk powered-by badge — readable but subtle */
+.cl-internal-b3fm6y,
+.cl-footer a[href*="clerk"],
+div[class*="cl-internal"] {
+  color: rgba(255, 255, 255, 0.4) !important;
+  font-size: 0.75rem !important;
+}
+
+/* Clerk divider line */
+.cl-dividerLine {
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
+.cl-dividerText {
+  color: rgba(255, 255, 255, 0.45) !important;
+  font-size: 0.8rem !important;
+}
+
+/* Clerk form label contrast boost */
+.cl-formFieldLabel {
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-size: 0.85rem !important;
+}
+
+/* Clerk form input — stronger border */
+.cl-formFieldInput {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: #fff !important;
+}
+
+.cl-formFieldInput:focus {
+  border-color: rgba(99, 102, 241, 0.6) !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
+}
+
+/* Clerk form placeholder */
+.cl-formFieldInput::placeholder {
+  color: rgba(255, 255, 255, 0.4) !important;
 }
 
 @media (max-width: 768px) {
@@ -275,7 +321,7 @@
 
   .login-subtitle {
     font-size: 0.85rem;
-    margin-bottom: 20px;
+    margin-bottom: 28px;
     letter-spacing: 0.06em;
     color: rgba(255, 255, 255, 0.7);
   }
