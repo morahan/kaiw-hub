@@ -205,3 +205,130 @@
 .signin-link:hover {
   color: #fff !important;
 }
+
+/* ===== MOBILE LOGIN FIX (Mar 23, 2026) ===== */
+@media (max-width: 768px) {
+  .login-content {
+    padding: 20px 16px;
+    width: 100%;
+    max-width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+    justify-content: flex-start;
+    padding-top: 15vh;
+  }
+
+  .login-title {
+    font-size: 2.2rem;
+    margin-bottom: 6px;
+  }
+
+  .login-subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+    letter-spacing: 0.08em;
+  }
+
+  .signin-box {
+    width: 100% !important;
+    max-width: 360px !important;
+    padding: 20px 16px !important;
+    border-radius: 14px;
+    box-sizing: border-box;
+  }
+
+  .social-button {
+    padding: 14px 16px !important;
+    font-size: 0.95rem !important;
+    min-height: 48px !important;
+  }
+
+  .signin-input {
+    padding: 14px 12px !important;
+    font-size: 1rem !important;
+    min-height: 48px !important;
+  }
+
+  .signin-button {
+    padding: 14px 24px !important;
+    font-size: 1rem !important;
+    min-height: 48px !important;
+  }
+
+  /* Clerk internal overrides for mobile */
+  .cl-rootBox {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .cl-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  .cl-headerTitle {
+    font-size: 1.3rem !important;
+  }
+
+  .cl-headerSubtitle {
+    font-size: 0.85rem !important;
+  }
+
+  .cl-socialButtonsBlockButton {
+    min-height: 48px !important;
+  }
+
+  .cl-formFieldInput {
+    min-height: 48px !important;
+    font-size: 1rem !important;
+  }
+
+  .cl-formButtonPrimary {
+    min-height: 48px !important;
+    font-size: 1rem !important;
+  }
+
+  .cl-footer {
+    padding: 12px 0 !important;
+  }
+
+  .cl-footerActionLink {
+    font-size: 0.9rem !important;
+    min-height: 44px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+
+  /* Prevent horizontal overflow */
+  .login-container {
+    overflow-x: hidden;
+  }
+}
+
+@media (max-width: 380px) {
+  .login-content {
+    padding: 16px 12px;
+    padding-top: 10vh;
+  }
+
+  .login-title {
+    font-size: 1.8rem;
+  }
+
+  .login-subtitle {
+    font-size: 0.8rem;
+    margin-bottom: 20px;
+  }
+
+  .signin-box {
+    padding: 16px 12px !important;
+    border-radius: 12px;
+  }
+}
