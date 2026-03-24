@@ -231,7 +231,8 @@
 }
 
 .cl-footerActionText {
-  color: rgba(255, 255, 255, 0.6) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 0.875rem !important;
 }
 
 .cl-footerActionLink {
@@ -253,12 +254,31 @@
   padding-bottom: 8px !important;
 }
 
-/* Clerk powered-by badge — readable but subtle */
-.cl-internal-b3fm6y,
-.cl-footer a[href*="clerk"],
-div[class*="cl-internal"] {
-  color: rgba(255, 255, 255, 0.4) !important;
-  font-size: 0.75rem !important;
+/* Clerk "Secured by" badge — readable and styled */
+.cl-internal-1scq7x4 {
+  color: rgba(255, 255, 255, 0.55) !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.02em !important;
+}
+
+/* Clerk logo in footer */
+.cl-internal-1scxde7 {
+  color: rgba(255, 255, 255, 0.55) !important;
+  opacity: 1 !important;
+}
+
+/* "Secured by" wrapper */
+.cl-internal-114jbce {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+/* "Secured by" outer container — add some separation */
+.cl-internal-1dauvpw {
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding-top: 12px !important;
+  margin-top: 4px !important;
 }
 
 /* Clerk divider line */

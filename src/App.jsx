@@ -50,6 +50,15 @@ function LoginPage() {
         <p className="login-subtitle">Enter the hub</p>
         <SignIn 
           appearance={{
+            variables: {
+              colorPrimary: '#6366f1',
+              colorBackground: 'transparent',
+              colorText: '#ffffff',
+              colorTextSecondary: 'rgba(255,255,255,0.7)',
+              colorInputBackground: 'rgba(255,255,255,0.06)',
+              colorInputText: '#ffffff',
+              borderRadius: '10px',
+            },
             elements: {
               rootBox: 'signin-box',
               card: 'signin-card',
@@ -58,7 +67,7 @@ function LoginPage() {
               socialButtonsBlockButton: 'social-button',
               formFieldInput: 'signin-input',
               formButtonPrimary: 'signin-button',
-              footerActionLink: 'signin-link'
+              footerActionLink: 'signin-link',
             }
           }}
         />
